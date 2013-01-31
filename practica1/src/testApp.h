@@ -4,27 +4,33 @@
 
 #define L_MOUSE 0
 #define R_MOUSE 3
+
 class Vertex {
+
+
 
     private:
 
     int x;
     int y;
     int z;
-    int draw = 0;
+    static int draw;
+    static int perpective;
 
     public:
 
-    Vertex() { x = 0; y = 0; z = 0;};
-    Vertex( int x_, int y_, int z_ ) { x = x_; y = y_; z = z_;};
-    void draw(); { draw = 1; };
-    void not_draw(); { draw = 0; };
+    Vertex() { x = 0; y = 0; z = 0; draw = 0; };
+    Vertex( int x_, int y_, int z_ ) { x = x_; y = y_; z = z_; draw = 0; };
+    void drawing() { draw = 1; };
+    void notDrawing() { draw = 0; };
+    void withPerpective() { perpective = 1; };
+    void withoutPerpective() { perpective = 0; };
     int getX();
     int getY();
     int getZ();
-    int setX( int x_ ) { x = x_; };
-    int setY( int y_ ) { y = y_; };
-    int setZ( int z_ ) { z = z_; };
+    void setX( int x_ ) { x = x_; };
+    void setY( int y_ ) { y = y_; };
+    void setZ( int z_ ) { z = z_; };
 };
 
 typedef struct Vertex Vertex;
@@ -47,8 +53,6 @@ class testApp : public ofBaseApp{
     private:
         Cube cube;
         Vertex pmouse;
-        //Center of the screen
-        Vertex center(512,384,0);
 	public:
 		void setup();
 		void update();
