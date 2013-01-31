@@ -19,7 +19,7 @@ void Cube::setVertices( Vertex vertex0, Vertex vertex1 ){
     int side, z;
     side = abs(vertex0.x - vertex1.x);
 
-    for(z = 0; z < 1; z++){
+    for(z = 0; z < 2; z++){
         vertices[0 + z*4].x = vertex0.x;
         vertices[0 + z*4].y = vertex0.y;
         vertices[0 + z*4].z = vertex0.z + z*side;
@@ -35,15 +35,18 @@ void Cube::setVertices( Vertex vertex0, Vertex vertex1 ){
         vertices[3 + z*4].x = vertex0.x;
         vertices[3 + z*4].y = vertex0.y + side;
         vertices[3 + z*4].z = vertex0.z + z*side;
-
-
     }
 }
 
 //--------------------------------------------------------------
 void Cube::draw(){
     for(int i = 0; i < 4; i++){
+        //Front face of the cube
         ofLine(vertices[i].x, vertices[i].y, vertices[(i+1)%4].x, vertices[(i+1)%4].y);
+        //Back face of the cube
+        ofLine(vertices[i + 4].x, vertices[i + 4].y, vertices[(i+1)%4 + 4].x, vertices[(i+1)%4 + 4].y);
+        //Lines between the two faces
+        ofLine(vertices[i].x, vertices[i].y, vertices[i + 4].x, vertices[i + 4].y,);
     }
 }
 
