@@ -1,6 +1,21 @@
 #include "testApp.h"
 
 //--------------------------------------------------------------
+Vertex::getX(){
+    return x + center.getX()*draw;
+}
+
+//--------------------------------------------------------------
+Vertex::getY(){
+    return y + center.getY()*draw;
+}
+
+//--------------------------------------------------------------
+Vertex::getZ(){
+    return z + center.getZ()*draw;
+}
+
+//--------------------------------------------------------------
 Cube::Cube(){
     for( int i = 0; i < 0; i++){
         vertices[i].x = 0;
@@ -85,6 +100,8 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
+    x = x - center.x;
+    y = y - center.y;
     if( button == L_MOUSE){
         pmouse.x = x;
         pmouse.y = y;
@@ -94,6 +111,8 @@ void testApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
+    x = x - center.x;
+    y = y - center.y;
     if( button == L_MOUSE){
         Vertex current(x, y, 0);
         cube.setVertices( pmouse, current );
