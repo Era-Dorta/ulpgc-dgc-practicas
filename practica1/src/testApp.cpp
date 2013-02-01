@@ -137,7 +137,13 @@ void testApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
-
+    //Force 0,0 at the center of the screen
+    x = x - center.getX();
+    y = y - center.getY();
+    if( button == L_MOUSE){
+        Vertex current(x, y, 0);
+        cube.setVertices( pmouse, current );
+    }
 }
 
 //--------------------------------------------------------------
@@ -154,6 +160,7 @@ void testApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
+    //Force 0,0 at the center of the screen
     x = x - center.getX();
     y = y - center.getY();
     if( button == L_MOUSE){
