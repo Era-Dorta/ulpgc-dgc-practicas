@@ -259,7 +259,30 @@ void Cube::rotate( Axis axis, double amount, int permanent){
         break;
     }
 
-    showMatrix(auxMatrix);
+    if(permanent){
+        //Multiply transMatrix by auxMatrix and save the
+        //result in transMAtrix, recalculate the transformed
+        //vertices
+        multiplyMatrix(transMatrix, auxMatrix);
+        for( int i = 0; i < 8; i++){
+            transVertices[i] = vertices[i]*transMatrix;
+        }
+    }else{
+        //Multiply transMatrix by auxMatrix and save the
+        //result in auxMatrix, recalculate the transformed
+        //vertices
+        multiplyMatrix(transMatrix, auxMatrix, 0);
+        for( int i = 0; i < 8; i++){
+            transVertices[i] = vertices[i]*auxMatrix;
+        }
+    }
+}
+
+//--------------------------------------------------------------
+void Cube::translate( double tX, double tY, int permanent){
+    resetAuxMatrix();
+    auxMatrix[3][0] = tX*0.1;
+    auxMatrix[3][1] = tY*0.1;
     if(permanent){
         //Multiply transMatrix by auxMatrix and save the
         //result in transMAtrix, recalculate the transformed
@@ -303,6 +326,10 @@ void Button::checkPress( Vertex mouse ){
             app->setState( state );
         }
     }
+    //Other button was pressed, disable this one
+    if(app->getState() != state){
+        pressed = false;
+    }
 }
 
 //--------------------------------------------------------------
@@ -341,6 +368,11 @@ void testApp::setup(){
         auxButton = new Button(this, *auxVertex, buttonNames[i], (AppStates)i);
         buttonList.push_back( *auxButton );
     }
+    //This lines make draw button, think it was pressed
+    //This is done because it is the default state of the app
+    auxVertex = new Vertex( x + 20, y + 5*60, 0 );
+    buttonList[5].checkPress(*auxVertex);
+    opReady = true;
 }
 
 //--------------------------------------------------------------
@@ -377,29 +409,34 @@ void testApp::mouseDragged(int x, int y, int button){
     y = y - center.getY();
     if( button == L_MOUSE){
         Vertex current(x, y, 0);
-        switch(state){
-        case ROTATING_X:
-            cube.rotate( X, pmouse.getY() - current.getY(), 0 );
-            break;
-        case ROTATING_Y:
-            cube.rotate( Y, pmouse.getX() - current.getX(), 0 );
-            break;
-        case ROTATING_Z:
-            cube.rotate( Z, pmouse.getY() - current.getY(), 0 );
-            break;
-        case ROTATING:
-            break;
-        case TRANSLATING:
-            break;
-        case DRAWING:
-            cube.setVertices( pmouse, current );
-            break;
+        if(opReady){
+            switch(state){
+            case ROTATING_X:
+                cube.rotate( X, pRawY - y, 0 );
+                break;
+            case ROTATING_Y:
+                cube.rotate( Y, pRawX - x, 0 );
+                break;
+            case ROTATING_Z:
+                cube.rotate( Z, pRawY - y, 0 );
+                break;
+            case ROTATING:
+                break;
+            case TRANSLATING:
+                cube.translate( pRawX - x, pRawY - y, 0 );
+                break;
+            case DRAWING:
+                cube.setVertices( pmouse, current );
+                break;
+            }
         }
     }
 }
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
+    pRawX = x;
+    pRawY = y;
     //Force 0,0 at the center of the screen
     x = x - center.getX();
     y = y - center.getY();
@@ -421,23 +458,28 @@ void testApp::mouseReleased(int x, int y, int button){
     y = y - center.getY();
     if( button == L_MOUSE){
         Vertex current(x, y, 0);
-        switch(state){
-        case ROTATING_X:
-            cube.rotate( X, pmouse.getY() - current.getY(), 1 );
-            break;
-        case ROTATING_Y:
-            cube.rotate( Y, pmouse.getX() - current.getX(), 1 );
-            break;
-        case ROTATING_Z:
-            cube.rotate( Z, pmouse.getY() - current.getY(), 1 );
-            break;
-        case ROTATING:
-            break;
-        case TRANSLATING:
-            break;
-        case DRAWING:
-            cube.setVertices( pmouse, current );
-            break;
+        if(opReady){
+            switch(state){
+            case ROTATING_X:
+                cube.rotate( X, pRawY - y, 1 );
+                break;
+            case ROTATING_Y:
+                cube.rotate( Y, pRawX - x, 1 );
+                break;
+            case ROTATING_Z:
+                cube.rotate( Z, pRawY - y, 1 );
+                break;
+            case ROTATING:
+                break;
+            case TRANSLATING:
+                cube.translate( pRawX - x, pRawY - y, 1 );
+                break;
+            case DRAWING:
+                cube.setVertices( pmouse, current );
+                break;
+            }
+        }else{
+            opReady = true;
         }
     }
 }
@@ -458,8 +500,14 @@ void testApp::dragEvent(ofDragInfo dragInfo){
 }
 
 //--------------------------------------------------------------
-void testApp::setState( int state_ ){
+void testApp::setState( AppStates state_ ){
     state = state_;
+    opReady = false;
+}
+
+//--------------------------------------------------------------
+AppStates testApp::getState(){
+    return state;
 }
 
 //--------------------------------------------------------------

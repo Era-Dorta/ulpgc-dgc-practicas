@@ -51,41 +51,39 @@ typedef struct Vertex Vertex;
 class Cube {
 
     private:
-
-    Vertex vertices[8];
-    Vertex transVertices[8];
-    double transMatrix[4][4];
-    double auxMatrix[4][4];
-    void multiplyMatrix( double matrix0[4][4], double matrix1[4][4], int firstSave = 1 );
+        Vertex vertices[8];
+        Vertex transVertices[8];
+        double transMatrix[4][4];
+        double auxMatrix[4][4];
+        void multiplyMatrix( double matrix0[4][4], double matrix1[4][4], int firstSave = 1 );
 
     public:
-    Cube();
-    Cube( Vertex vertex0, Vertex vertex1 );
-    void setVertices( Vertex vertex0, Vertex vertex1 );
-    void draw();
-    void resetTransMatrix();
-    void resetAuxMatrix();
-    void rotate( Axis axis, double amount, int permanent);
+        Cube();
+        Cube( Vertex vertex0, Vertex vertex1 );
+        void setVertices( Vertex vertex0, Vertex vertex1 );
+        void draw();
+        void resetTransMatrix();
+        void resetAuxMatrix();
+        void rotate( Axis axis, double amount, int permanent);
+        void translate( double tX, double tY, int permanent);
 };
 
 class Button{
 
     private:
-
-    Vertex vertices[4];
-    Vertex center;
-    bool pressed;
-    int size;
-    string buttonTex;
-    testApp *app;
-    AppStates state;
+        Vertex vertices[4];
+        Vertex center;
+        bool pressed;
+        int size;
+        string buttonTex;
+        testApp *app;
+        AppStates state;
 
     public:
-
-    Button( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_ );
-    void checkPress( Vertex mouse );
-    bool isPressed();
-    void draw();
+        Button( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_ );
+        void checkPress( Vertex mouse );
+        bool isPressed();
+        void draw();
 
 };
 
@@ -94,8 +92,11 @@ class testApp : public ofBaseApp{
     private:
         Cube cube;
         Vertex pmouse;
+        int pRawX, pRawY;
+        bool opReady;
         vector<Button> buttonList;
-        int state;
+        AppStates state;
+
 	public:
 		void setup();
 		void update();
@@ -110,7 +111,9 @@ class testApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-		void setState( int state_ );
+		void setState( AppStates state_ );
+		AppStates getState();
+
 	private:
         void resetMatrix();
 
