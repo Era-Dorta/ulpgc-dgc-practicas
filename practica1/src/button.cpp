@@ -1,4 +1,5 @@
-#include "button.hpp"
+#include "testApp.hpp"
+#include "ofMain.h"
 
 //--------------------------------------------------------------
 Button::Button( testApp *app_, Vertex vertex, string buttonTex_, AppStates state_ ){
