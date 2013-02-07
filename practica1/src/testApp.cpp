@@ -4,7 +4,7 @@
 Vertex center;
 int Vertex::draw = 0;
 int Vertex::perpective = 0;
-int k = 200;
+int k = 400;
 static double transMatrix[4][4];
 
 void showMatrix( const double matrix[4][4])
@@ -402,11 +402,8 @@ void testApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
-    //Force 0,0 at the center of the screen
-    x = x - center.getX();
-    y = y - center.getY();
+
     if( button == L_MOUSE){
-        Vertex current(x, y, 0);
         if(opReady){
             switch(state){
             case ROTATING_X:
@@ -424,6 +421,10 @@ void testApp::mouseDragged(int x, int y, int button){
                 cube.translate( x - pRawX, y - pRawY, 0 );
                 break;
             case DRAWING:
+                //Force 0,0 at the center of the screen
+                x = x - center.getX();
+                y = y - center.getY();
+                Vertex current(x, y, 0);
                 cube.setVertices( pmouse, current );
                 break;
             }
@@ -451,11 +452,8 @@ void testApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
-    //Force 0,0 at the center of the screen
-    x = x - center.getX();
-    y = y - center.getY();
+
     if( button == L_MOUSE){
-        Vertex current(x, y, 0);
         if(opReady){
             switch(state){
             case ROTATING_X:
@@ -473,6 +471,10 @@ void testApp::mouseReleased(int x, int y, int button){
                 cube.translate( x - pRawX, y - pRawY, 1 );
                 break;
             case DRAWING:
+                //Force 0,0 at the center of the screen
+                x = x - center.getX();
+                y = y - center.getY();
+                Vertex current(x, y, 0);
                 cube.setVertices( pmouse, current );
                 break;
             }
