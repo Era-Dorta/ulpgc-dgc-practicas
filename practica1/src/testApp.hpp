@@ -4,21 +4,18 @@
 #define TEST_APP_H
 
 #include "ofMain.h"
-#include "Vertex.hpp"
+#include "vertex.hpp"
+#include "button.hpp"
 #include <vector>
 #include <cmath>
 
 #define L_MOUSE 0
 #define R_MOUSE 3
 
-enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, ROTATING, TRANSLATING, DRAWING };
-enum Axis { X, Y, Z };
-
+//enum Axis { X, Y, Z };
 using namespace std;
 
-class testApp;
-
-class Cube {
+/*class Cube {
 
     private:
         Vertex vertices[8];
@@ -37,26 +34,8 @@ class Cube {
         void rotate( Axis axis, double amount, int permanent);
         void translate( double tX, double tY, int permanent);
 };
-
-class Button{
-
-    private:
-        Vertex vertices[4];
-        Vertex center;
-        bool pressed;
-        int size;
-        string buttonTex;
-        testApp *app;
-        AppStates state;
-
-    public:
-        Button( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_ );
-        void checkPress( Vertex mouse );
-        bool isPressed();
-        void draw();
-
-};
-
+*/
+/*
 class testApp : public ofBaseApp{
 
     private:
@@ -87,7 +66,7 @@ class testApp : public ofBaseApp{
 	private:
         void resetMatrix();
 
-};
+};*/
 
 #endif
 // TEST_APP_H

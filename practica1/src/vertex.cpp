@@ -1,4 +1,4 @@
-#include "Vertex.hpp"
+#include "vertex.hpp"
 #include <iostream>
 int Vertex::draw = 0;
 int Vertex::perpective = 0;
