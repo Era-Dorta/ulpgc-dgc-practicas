@@ -56,10 +56,11 @@ class Button{
     Vertex center;
     bool pressed;
     int size;
+    string buttonTex;
 
     public:
 
-    Button( Vertex vertex );
+    Button( Vertex vertex, string buttonTex_ );
     void checkPress( Vertex mouse );
     bool isPressed();
     void draw();

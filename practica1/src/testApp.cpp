@@ -108,9 +108,10 @@ void Cube::draw(){
 }
 
 //--------------------------------------------------------------
-Button::Button( Vertex vertex ){
+Button::Button( Vertex vertex, string buttonTex_ ){
     pressed = false;
     size = 50;
+    buttonTex = buttonTex_;
     vertices[0] = *(new Vertex( vertex.getX(), vertex.getY(), vertex.getZ()));
     vertices[1] = *(new Vertex( vertex.getX() + size*2, vertex.getY(), vertex.getZ()));
     vertices[2] = *(new Vertex( vertex.getX() + size*2, vertex.getY() + size, vertex.getZ()));
@@ -145,6 +146,7 @@ void Button::draw(){
     for(int i = 0; i < 4; i++){
         ofLine(vertices[i].getX(), vertices[i].getY(), vertices[(i + 1)%4].getX(), vertices[(i + 1)%4].getY());
     }
+    ofDrawBitmapString(buttonTex, vertices[3].getX() + size/2, vertices[3].getY() - size/2);
     vertices[0].notDrawing();
 }
 
@@ -155,7 +157,7 @@ void testApp::setup(){
     resetMatrix();
     //Create buttons
     Vertex auxVertex(200,-300,0);
-    Button auxButton(auxVertex);
+    Button auxButton(auxVertex, "Rotate");
     buttonList.push_back( auxButton );
 }
 
