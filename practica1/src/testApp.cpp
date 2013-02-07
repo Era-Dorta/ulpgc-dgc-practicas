@@ -5,9 +5,9 @@ Vertex center;
 int Vertex::draw = 0;
 int Vertex::perpective = 0;
 int k = 200;
-static float transMatrix[4][4];
+static double transMatrix[4][4];
 
-void showMatrix( const float matrix[4][4])
+void showMatrix( const double matrix[4][4])
 {
     cout << "[";
 	for( unsigned int i=0; i<4; i++ ){
@@ -20,12 +20,12 @@ void showMatrix( const float matrix[4][4])
 }
 
 //--------------------------------------------------------------
-float Vertex::getX() const {
+double Vertex::getX() const {
     if( this == &center ){
         return x;
     }else{
         if( perpective ){
-            return ( x / ( 1 - getZ() / (float)k ) + center.getX()*draw );
+            return ( x / ( 1 - getZ() / (double)k ) + center.getX()*draw );
         }else{
             return (x + center.getX()*draw);
         }
@@ -33,12 +33,12 @@ float Vertex::getX() const {
 }
 
 //--------------------------------------------------------------
-float Vertex::getY() const {
+double Vertex::getY() const {
     if( this == &center ){
         return y;
     }else{
         if( perpective ){
-            return ( y / ( 1 - getZ() / (float)k ) + center.getY()*draw );
+            return ( y / ( 1 - getZ() / (double)k ) + center.getY()*draw );
         }else{
             return (y + center.getY()*draw);
         }
@@ -46,7 +46,7 @@ float Vertex::getY() const {
 }
 
 //--------------------------------------------------------------
-float Vertex::getZ() const {
+double Vertex::getZ() const {
     if( this == &center ){
         return z;
     }else{
@@ -55,7 +55,7 @@ float Vertex::getZ() const {
 }
 
 //--------------------------------------------------------------
-void Vertex::set( int pos, float val ){
+void Vertex::set( int pos, double val ){
     switch(pos){
     case 0:
         setX(val);
@@ -85,15 +85,15 @@ void Vertex::operator=( const Vertex  &otherVertex ){
 }
 
 //--------------------------------------------------------------
-Vertex Vertex::operator*( const float matrix[4][4] ){
+Vertex Vertex::operator*( const double matrix[4][4] ){
     Vertex vRes;
-    float vAux[4];
+    double vAux[4];
     vAux[0] = getX();
     vAux[1] = getY();
     vAux[2] = getZ();
     vAux[3] = getH();
     for(int i = 0; i < 4; i++){
-        float res = 0;
+        double res = 0;
         for( int j = 0; j < 4; j++){
             res += matrix[j][i]*vAux[i];
         }
@@ -122,7 +122,7 @@ Cube::Cube( Vertex vertex0, Vertex vertex1 ){
 
 //--------------------------------------------------------------
 void Cube::setVertices( Vertex vertex0, Vertex vertex1 ){
-    float sideX, sideY, sideZ;
+    double sideX, sideY, sideZ;
     int z;
     sideX = vertex1.getX() - vertex0.getX();
     sideY = vertex1.getY() - vertex0.getY();
@@ -200,23 +200,22 @@ void Cube::resetAuxMatrix(){
 }
 
 //--------------------------------------------------------------
-void Cube::multiplyMatrix( float matrix0[4][4], float matrix1[4][4], int firstSave ){
+void Cube::multiplyMatrix( double matrix0[4][4], double matrix1[4][4], int firstSave ){
 
-    float aux[4][4];
+    double aux[4][4], res;
+
+    //Calcula matrix multiplication
     for( int i = 0; i < 4; i++){
         for( int j = 0; j < 4; j++){
-            aux[i][j] = 0;
-        }
-    }
-
-    for( int i = 0; i < 4; i++){
-        for( int j = 0; j < 4; j++){
+            res = 0;
             for( int k = 0; k < 4; k++){
-                aux[i][j] += matrix0[i][k]*matrix1[k][j];
+                res += matrix0[i][k]*matrix1[k][j];
             }
+            aux[i][j] = res;
         }
     }
 
+    //Save result in matrix0 or matrix1
     if(firstSave){
         for( int i = 0; i < 4; i++){
             for( int j = 0; j < 4; j++){
@@ -233,29 +232,47 @@ void Cube::multiplyMatrix( float matrix0[4][4], float matrix1[4][4], int firstSa
 }
 
 //--------------------------------------------------------------
-void Cube::rotate( int axis, float amount, int permanent){
-    float cosVal, sinVal;
+void Cube::rotate( Axis axis, double amount, int permanent){
+    double cosVal, sinVal;
     resetAuxMatrix();
-    cout << "Rota antes" << amount << endl;
     amount = 0.02*amount;
-    cout << "Rota despues" << amount << endl;
     cosVal = cos(amount);
     sinVal = sin(amount);
-    auxMatrix[1][1] = cosVal;
-    auxMatrix[2][2] = cosVal;
-    auxMatrix[1][2] = sinVal;
-    auxMatrix[2][1] = -sinVal;
+    switch(axis){
+    case X:
+        auxMatrix[1][1] = cosVal;
+        auxMatrix[1][2] = sinVal;
+        auxMatrix[2][1] = -sinVal;
+        auxMatrix[2][2] = cosVal;
+        break;
+    case Y:
+        auxMatrix[0][0] = cosVal;
+        auxMatrix[0][2] = -sinVal;
+        auxMatrix[3][0] = sinVal;
+        auxMatrix[2][2] = cosVal;
+        break;
+    case Z:
+        auxMatrix[0][0] = cosVal;
+        auxMatrix[0][1] = sinVal;
+        auxMatrix[1][0] = -sinVal;
+        auxMatrix[1][1] = cosVal;
+        break;
+    }
+
     showMatrix(auxMatrix);
     if(permanent){
+        //Multiply transMatrix by auxMatrix and save the
+        //result in transMAtrix, recalculate the transformed
+        //vertices
         multiplyMatrix(transMatrix, auxMatrix);
-        showMatrix(transMatrix);
         for( int i = 0; i < 8; i++){
             transVertices[i] = vertices[i]*transMatrix;
         }
-        resetAuxMatrix();
     }else{
+        //Multiply transMatrix by auxMatrix and save the
+        //result in auxMatrix, recalculate the transformed
+        //vertices
         multiplyMatrix(transMatrix, auxMatrix, 0);
-        showMatrix(transMatrix);
         for( int i = 0; i < 8; i++){
             transVertices[i] = vertices[i]*auxMatrix;
         }
@@ -364,6 +381,14 @@ void testApp::mouseDragged(int x, int y, int button){
         case ROTATING_X:
             cube.rotate( X, pmouse.getY() - current.getY(), 0 );
             break;
+        case ROTATING_Y:
+            cube.rotate( Y, pmouse.getX() - current.getX(), 0 );
+            break;
+        case ROTATING_Z:
+            cube.rotate( Z, pmouse.getY() - current.getY(), 0 );
+            break;
+        case ROTATING:
+            break;
         case TRANSLATING:
             break;
         case DRAWING:
@@ -382,15 +407,6 @@ void testApp::mousePressed(int x, int y, int button){
         pmouse.setX( x );
         pmouse.setY( y );
         pmouse.setZ( 0 );
-
-        switch(state){
-        case ROTATING_X:
-            break;
-        case TRANSLATING:
-            break;
-        case DRAWING:
-            break;
-        }
         //Check buttons
         for( unsigned int i = 0; i < buttonList.size(); i++){
             buttonList[i].checkPress(pmouse);
@@ -407,8 +423,15 @@ void testApp::mouseReleased(int x, int y, int button){
         Vertex current(x, y, 0);
         switch(state){
         case ROTATING_X:
-        cout << "Rotando" << endl;
             cube.rotate( X, pmouse.getY() - current.getY(), 1 );
+            break;
+        case ROTATING_Y:
+            cube.rotate( Y, pmouse.getX() - current.getX(), 1 );
+            break;
+        case ROTATING_Z:
+            cube.rotate( Z, pmouse.getY() - current.getY(), 1 );
+            break;
+        case ROTATING:
             break;
         case TRANSLATING:
             break;
