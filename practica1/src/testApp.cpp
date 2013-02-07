@@ -95,7 +95,7 @@ Vertex Vertex::operator*( const double matrix[4][4] ){
     for(int i = 0; i < 4; i++){
         double res = 0;
         for( int j = 0; j < 4; j++){
-            res += matrix[j][i]*vAux[i];
+            res += matrix[j][i]*vAux[j];
         }
         vRes.set(i,res);
     }
@@ -202,16 +202,15 @@ void Cube::resetAuxMatrix(){
 //--------------------------------------------------------------
 void Cube::multiplyMatrix( double matrix0[4][4], double matrix1[4][4], int firstSave ){
 
-    double aux[4][4], res;
+    double aux[4][4];
 
     //Calcula matrix multiplication
     for( int i = 0; i < 4; i++){
         for( int j = 0; j < 4; j++){
-            res = 0;
+            aux[i][j] = 0;
             for( int k = 0; k < 4; k++){
-                res += matrix0[i][k]*matrix1[k][j];
+                aux[i][j] += matrix0[i][k]*matrix1[k][j];
             }
-            aux[i][j] = res;
         }
     }
 
@@ -280,8 +279,8 @@ void Cube::rotate( Axis axis, double amount, int permanent){
 //--------------------------------------------------------------
 void Cube::translate( double tX, double tY, int permanent){
     resetAuxMatrix();
-    auxMatrix[3][0] = tX*0.1;
-    auxMatrix[3][1] = tY*0.1;
+    auxMatrix[3][0] = tX*0.5;
+    auxMatrix[3][1] = tY*0.5;
     if(permanent){
         //Multiply transMatrix by auxMatrix and save the
         //result in transMAtrix, recalculate the transformed
@@ -422,7 +421,7 @@ void testApp::mouseDragged(int x, int y, int button){
             case ROTATING:
                 break;
             case TRANSLATING:
-                cube.translate( pRawX - x, pRawY - y, 0 );
+                cube.translate( x - pRawX, y - pRawY, 0 );
                 break;
             case DRAWING:
                 cube.setVertices( pmouse, current );
@@ -471,7 +470,7 @@ void testApp::mouseReleased(int x, int y, int button){
             case ROTATING:
                 break;
             case TRANSLATING:
-                cube.translate( pRawX - x, pRawY - y, 1 );
+                cube.translate( x - pRawX, y - pRawY, 1 );
                 break;
             case DRAWING:
                 cube.setVertices( pmouse, current );
