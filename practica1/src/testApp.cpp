@@ -5,9 +5,9 @@ Vertex center;
 int Vertex::draw = 0;
 int Vertex::perpective = 0;
 int k = 200;
-
+static float transMatrix[4][4];
 //--------------------------------------------------------------
-int Vertex::getX() const {
+float Vertex::getX() const {
     if( this == &center ){
         return x;
     }else{
@@ -20,7 +20,7 @@ int Vertex::getX() const {
 }
 
 //--------------------------------------------------------------
-int Vertex::getY() const {
+float Vertex::getY() const {
     if( this == &center ){
         return y;
     }else{
@@ -33,7 +33,7 @@ int Vertex::getY() const {
 }
 
 //--------------------------------------------------------------
-int Vertex::getZ() const {
+float Vertex::getZ() const {
     if( this == &center ){
         return z;
     }else{
@@ -42,8 +42,47 @@ int Vertex::getZ() const {
 }
 
 //--------------------------------------------------------------
+void Vertex::set( int pos, float val ){
+    switch(pos){
+        case 0:
+            setX(val);
+        case 1:
+            setY(val);
+        case 2:
+            setZ(val);
+        default:
+            setH(val);
+    }
+}
+
+//--------------------------------------------------------------
 bool Vertex::operator==( const Vertex &otherVertex ){
     return ( getX() ==  otherVertex.getX() && getY() == otherVertex.getY() );
+}
+
+//--------------------------------------------------------------
+void Vertex::operator=( const Vertex  &otherVertex ){
+    setX(otherVertex.getX());
+    setY(otherVertex.getY());
+    setZ(otherVertex.getZ());
+}
+
+//--------------------------------------------------------------
+Vertex Vertex::operator*( const float matrix[4][4] ){
+    Vertex vRes;
+    float vAux[4];
+    vAux[0] = getX();
+    vAux[1] = getY();
+    vAux[2] = getZ();
+    vAux[3] = getH();
+    for(int i = 0; i < 4; i++){
+        float res = 0;
+        for( int j = 0; j < 4; j++){
+            res += matrix[j][i]*vAux[i];
+        }
+        vRes.set(i,res);
+    }
+    return vRes;
 }
 
 //--------------------------------------------------------------
@@ -62,7 +101,8 @@ Cube::Cube( Vertex vertex0, Vertex vertex1 ){
 
 //--------------------------------------------------------------
 void Cube::setVertices( Vertex vertex0, Vertex vertex1 ){
-    int sideX, sideY, sideZ, z;
+    float sideX, sideY, sideZ;
+    int z;
     sideX = vertex1.getX() - vertex0.getX();
     sideY = vertex1.getY() - vertex0.getY();
     //Depth of the cube is length of side x
@@ -84,6 +124,9 @@ void Cube::setVertices( Vertex vertex0, Vertex vertex1 ){
         vertices[3 + z*4].setX( vertex0.getX() );
         vertices[3 + z*4].setY( vertex0.getY() + sideY );
         vertices[3 + z*4].setZ( vertex0.getZ() - z*sideZ );
+    }
+    for( int i = 0; i < 8; i++){
+        transVertices[i] = vertices[i]*transMatrix;
     }
 }
 

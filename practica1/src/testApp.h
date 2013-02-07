@@ -10,27 +10,33 @@ using namespace std;
 class Vertex {
     private:
 
-    int x;
-    int y;
-    int z;
+    float x;
+    float y;
+    float z;
+    float h;
     static int draw;
     static int perpective;
 
     public:
 
-    Vertex() { x = 0; y = 0; z = 0; draw = 0; };
-    Vertex( int x_, int y_, int z_ ) { x = x_; y = y_; z = z_; draw = 0; };
+    Vertex() { x = 0; y = 0; z = 0; h = 1; draw = 0; };
+    Vertex( float x_, float y_, float z_ ) { x = x_; y = y_; z = z_; h = 1; draw = 0; };
     void drawing() { draw = 1; };
     void notDrawing() { draw = 0; };
     void withPerpective() { perpective = 1; };
     void withoutPerpective() { perpective = 0; };
-    int getX() const;
-    int getY() const;
-    int getZ() const;
-    void setX( int x_ ) { x = x_; };
-    void setY( int y_ ) { y = y_; };
-    void setZ( int z_ ) { z = z_; };
+    float getX() const;
+    float getY() const;
+    float getZ() const;
+    float getH() const { return h; };
+    void setX( float x_ ) { x = x_; };
+    void setY( float y_ ) { y = y_; };
+    void setZ( float z_ ) { z = z_; };
+    void setH( float h_ ) { h = h_; };
+    void set( int pos, float val );
     bool operator==( const Vertex &otherVertex );
+    Vertex operator*( const float matrix[4][4] );
+    void operator=( const Vertex &otherVertex );
 };
 
 typedef struct Vertex Vertex;
@@ -40,6 +46,7 @@ class Cube {
     private:
 
     Vertex vertices[8];
+    Vertex transVertices[8];
 
     public:
     Cube();
@@ -57,6 +64,7 @@ class Button{
     bool pressed;
     int size;
     string buttonTex;
+    float transMatrix[4][4];
 
     public:
 
@@ -72,7 +80,6 @@ class testApp : public ofBaseApp{
     private:
         Cube cube;
         Vertex pmouse;
-        float transMatrix[4][4];
         vector<Button> buttonList;
 	public:
 		void setup();
