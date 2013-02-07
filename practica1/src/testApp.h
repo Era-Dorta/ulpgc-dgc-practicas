@@ -7,7 +7,7 @@
 #define L_MOUSE 0
 #define R_MOUSE 3
 
-enum AppStates { ROTATING, TRANSLATING, DRAWING };
+enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, ROTATING, TRANSLATING, DRAWING };
 enum Axis { X, Y, Z };
 
 using namespace std;
@@ -55,15 +55,17 @@ class Cube {
     Vertex vertices[8];
     Vertex transVertices[8];
     float transMatrix[4][4];
-    void multiplyMatrix( float matrix[4][4] );
+    float auxMatrix[4][4];
+    void multiplyMatrix( float matrix0[4][4], float matrix1[4][4], int firstSave = 1 );
 
     public:
     Cube();
     Cube( Vertex vertex0, Vertex vertex1 );
     void setVertices( Vertex vertex0, Vertex vertex1 );
     void draw();
-    void resetMatrix();
-    void rotate( int axis, int amount);
+    void resetTransMatrix();
+    void resetAuxMatrix();
+    void rotate( int axis, float amount, int permanent);
 };
 
 class Button{
@@ -76,10 +78,11 @@ class Button{
     int size;
     string buttonTex;
     testApp *app;
+    AppStates state;
 
     public:
 
-    Button( testApp *app_, Vertex vertex, string buttonTex_ );
+    Button( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_ );
     void checkPress( Vertex mouse );
     bool isPressed();
     void draw();

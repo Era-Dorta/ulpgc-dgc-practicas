@@ -6,6 +6,19 @@ int Vertex::draw = 0;
 int Vertex::perpective = 0;
 int k = 200;
 static float transMatrix[4][4];
+
+void showMatrix( const float matrix[4][4])
+{
+    cout << "[";
+	for( unsigned int i=0; i<4; i++ ){
+		for( unsigned int j=0; j<4; j++ ){
+			cout << matrix[i][j] << " ";
+		}
+		cout << "; \n";
+	}
+	cout << "]\n";
+}
+
 //--------------------------------------------------------------
 float Vertex::getX() const {
     if( this == &center ){
@@ -96,11 +109,15 @@ Cube::Cube(){
         vertices[i].setY( 0 );
         vertices[i].setZ( 0 );
     }
+    resetTransMatrix();
+    resetAuxMatrix();
 }
 
 //--------------------------------------------------------------
 Cube::Cube( Vertex vertex0, Vertex vertex1 ){
     setVertices(vertex0, vertex1);
+    resetTransMatrix();
+    resetAuxMatrix();
 }
 
 //--------------------------------------------------------------
@@ -136,26 +153,26 @@ void Cube::setVertices( Vertex vertex0, Vertex vertex1 ){
 
 //--------------------------------------------------------------
 void Cube::draw(){
-    vertices[0].drawing();
-    vertices[0].withPerpective();
+    transVertices[0].drawing();
+    transVertices[0].withPerpective();
     for(int i = 0; i < 4; i++){
         //Back face of the cube
         ofSetColor ( 0 ,255 ,0 ); //Green
-        ofLine(vertices[i + 4].getX(), vertices[i + 4].getY(), vertices[(i+1)%4 + 4].getX(), vertices[(i+1)%4 + 4].getY());
+        ofLine(transVertices[i + 4].getX(), transVertices[i + 4].getY(), transVertices[(i+1)%4 + 4].getX(), transVertices[(i+1)%4 + 4].getY());
         //Lines between the two faces
         ofSetColor ( 0 ,0 ,255 ); //Blue
-        ofLine(vertices[i].getX(), vertices[i].getY(), vertices[i + 4].getX(), vertices[i + 4].getY());
+        ofLine(transVertices[i].getX(), transVertices[i].getY(), transVertices[i + 4].getX(), transVertices[i + 4].getY());
         //Front face of the cube
         ofSetColor ( 255 ,0 ,0 ); //Red
-        ofLine(vertices[i].getX(), vertices[i].getY(), vertices[(i+1)%4].getX(), vertices[(i+1)%4].getY());
+        ofLine(transVertices[i].getX(), transVertices[i].getY(), transVertices[(i+1)%4].getX(), transVertices[(i+1)%4].getY());
     }
     //getc(stdin);
-    vertices[0].withoutPerpective();
-    vertices[0].notDrawing();
+    transVertices[0].withoutPerpective();
+    transVertices[0].notDrawing();
 }
 
 //--------------------------------------------------------------
-void Cube::resetMatrix(){
+void Cube::resetTransMatrix(){
     //Set transformation matrix to its initial state
     for( int i = 0; i < 4; i++){
         for( int j = 0; j < 4; j++){
@@ -169,7 +186,21 @@ void Cube::resetMatrix(){
 }
 
 //--------------------------------------------------------------
-void Cube::multiplyMatrix( float matrix[4][4] ){
+void Cube::resetAuxMatrix(){
+    //Set transformation matrix to its initial state
+    for( int i = 0; i < 4; i++){
+        for( int j = 0; j < 4; j++){
+            if(i == j){
+                auxMatrix[i][j] = 1;
+            }else{
+                auxMatrix[i][j] = 0;
+            }
+        }
+    }
+}
+
+//--------------------------------------------------------------
+void Cube::multiplyMatrix( float matrix0[4][4], float matrix1[4][4], int firstSave ){
 
     float aux[4][4];
     for( int i = 0; i < 4; i++){
@@ -181,46 +212,63 @@ void Cube::multiplyMatrix( float matrix[4][4] ){
     for( int i = 0; i < 4; i++){
         for( int j = 0; j < 4; j++){
             for( int k = 0; k < 4; k++){
-                aux[i][j] += transMatrix[i][k]*matrix[k][j];
+                aux[i][j] += matrix0[i][k]*matrix1[k][j];
             }
         }
     }
 
-    for( int i = 0; i < 4; i++){
-        for( int j = 0; j < 4; j++){
-            transMatrix[i][k] = aux[i][j];
+    if(firstSave){
+        for( int i = 0; i < 4; i++){
+            for( int j = 0; j < 4; j++){
+                matrix0[i][j] = aux[i][j];
+            }
+        }
+    }else{
+        for( int i = 0; i < 4; i++){
+            for( int j = 0; j < 4; j++){
+                matrix1[i][j] = aux[i][j];
+            }
         }
     }
 }
 
 //--------------------------------------------------------------
-void Cube::rotate( int axis, int amount){
-    float aux[4][4], cosVal, sinVal;
-    for( int i = 0; i < 4; i++){
-        for( int j = 0; j < 4; j++){
-            if(i == j){
-                aux[i][j] = 1;
-            }else{
-                aux[i][j] = 0;
-            }
-        }
-    }
-    amount = 0.01*amount;
+void Cube::rotate( int axis, float amount, int permanent){
+    float cosVal, sinVal;
+    resetAuxMatrix();
+    cout << "Rota antes" << amount << endl;
+    amount = 0.02*amount;
+    cout << "Rota despues" << amount << endl;
     cosVal = cos(amount);
     sinVal = sin(amount);
-    aux[1][1] = cosVal;
-    aux[2][2] = cosVal;
-    aux[1][2] = sinVal;
-    aux[2][1] = -sinVal;
-    multiplyMatrix(aux);
+    auxMatrix[1][1] = cosVal;
+    auxMatrix[2][2] = cosVal;
+    auxMatrix[1][2] = sinVal;
+    auxMatrix[2][1] = -sinVal;
+    showMatrix(auxMatrix);
+    if(permanent){
+        multiplyMatrix(transMatrix, auxMatrix);
+        showMatrix(transMatrix);
+        for( int i = 0; i < 8; i++){
+            transVertices[i] = vertices[i]*transMatrix;
+        }
+        resetAuxMatrix();
+    }else{
+        multiplyMatrix(transMatrix, auxMatrix, 0);
+        showMatrix(transMatrix);
+        for( int i = 0; i < 8; i++){
+            transVertices[i] = vertices[i]*auxMatrix;
+        }
+    }
 }
 
 //--------------------------------------------------------------
-Button::Button( testApp *app_, Vertex vertex, string buttonTex_ ){
+Button::Button( testApp *app_, Vertex vertex, string buttonTex_, AppStates state_ ){
     pressed = false;
     size = 50;
     buttonTex = buttonTex_;
     app = app_;
+    state = state_;
     vertices[0] = *(new Vertex( vertex.getX(), vertex.getY(), vertex.getZ()));
     vertices[1] = *(new Vertex( vertex.getX() + size*2, vertex.getY(), vertex.getZ()));
     vertices[2] = *(new Vertex( vertex.getX() + size*2, vertex.getY() + size, vertex.getZ()));
@@ -235,7 +283,7 @@ void Button::checkPress( Vertex mouse ){
             pressed = false;
         }else{
             pressed = true;
-            app->setState( ROTATING );
+            app->setState( state );
         }
     }
 }
@@ -256,7 +304,7 @@ void Button::draw(){
     for(int i = 0; i < 4; i++){
         ofLine(vertices[i].getX(), vertices[i].getY(), vertices[(i + 1)%4].getX(), vertices[(i + 1)%4].getY());
     }
-    ofDrawBitmapString(buttonTex, vertices[3].getX() + size/2, vertices[3].getY() - size/2);
+    ofDrawBitmapString(buttonTex, vertices[3].getX() + size/3, vertices[3].getY() - size/2);
     vertices[0].notDrawing();
 }
 
@@ -267,9 +315,15 @@ void testApp::setup(){
     //Initialize matrix
     resetMatrix();
     //Create buttons
-    Vertex auxVertex(200,-300,0);
-    Button auxButton(this, auxVertex, "Rotate");
-    buttonList.push_back( auxButton );
+    int x = 400, y = -300;
+    Vertex* auxVertex;
+    string buttonNames[6] = { "Rotate X", "Rotate Y", "Rotate Z", "Rotate", "Translate", "Draw" };
+    Button* auxButton;
+    for(int i = 0; i < 6; i++){
+        auxVertex = new Vertex( x, y + i*60, 0 );
+        auxButton = new Button(this, *auxVertex, buttonNames[i], (AppStates)i);
+        buttonList.push_back( *auxButton );
+    }
 }
 
 //--------------------------------------------------------------
@@ -307,8 +361,8 @@ void testApp::mouseDragged(int x, int y, int button){
     if( button == L_MOUSE){
         Vertex current(x, y, 0);
         switch(state){
-        case ROTATING:
-            cube.rotate( X, pmouse.getX() - current.getX() );
+        case ROTATING_X:
+            cube.rotate( X, pmouse.getY() - current.getY(), 0 );
             break;
         case TRANSLATING:
             break;
@@ -330,7 +384,7 @@ void testApp::mousePressed(int x, int y, int button){
         pmouse.setZ( 0 );
 
         switch(state){
-        case ROTATING:
+        case ROTATING_X:
             break;
         case TRANSLATING:
             break;
@@ -352,8 +406,9 @@ void testApp::mouseReleased(int x, int y, int button){
     if( button == L_MOUSE){
         Vertex current(x, y, 0);
         switch(state){
-        case ROTATING:
-            cube.rotate( X, pmouse.getX() - current.getX() );
+        case ROTATING_X:
+        cout << "Rotando" << endl;
+            cube.rotate( X, pmouse.getY() - current.getY(), 1 );
             break;
         case TRANSLATING:
             break;
