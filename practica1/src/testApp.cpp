@@ -235,9 +235,8 @@ void Cube::multiplyMatrix( double matrix0[4][4], double matrix1[4][4], int first
 void Cube::rotate( Axis axis, double amount, int permanent){
     double cosVal, sinVal;
     resetAuxMatrix();
-    amount = 0.02*amount;
-    cosVal = cos(amount);
-    sinVal = sin(amount);
+    cosVal = cos(0.02*amount);
+    sinVal = sin(0.02*amount);
     switch(axis){
     case X:
         auxMatrix[1][1] = cosVal;
