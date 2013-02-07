@@ -1,14 +1,13 @@
 #pragma once
 
 #include "ofMain.h"
+#include <vector>
 
 #define L_MOUSE 0
 #define R_MOUSE 3
+using namespace std;
 
 class Vertex {
-
-
-
     private:
 
     int x;
@@ -25,12 +24,13 @@ class Vertex {
     void notDrawing() { draw = 0; };
     void withPerpective() { perpective = 1; };
     void withoutPerpective() { perpective = 0; };
-    int getX();
-    int getY();
-    int getZ();
+    int getX() const;
+    int getY() const;
+    int getZ() const;
     void setX( int x_ ) { x = x_; };
     void setY( int y_ ) { y = y_; };
     void setZ( int z_ ) { z = z_; };
+    bool operator==( const Vertex &otherVertex );
 };
 
 typedef struct Vertex Vertex;
@@ -48,11 +48,31 @@ class Cube {
     void draw();
 };
 
+class Button{
+
+    private:
+
+    Vertex vertices[4];
+    Vertex center;
+    bool pressed;
+    int size;
+
+    public:
+
+    Button( Vertex vertex );
+    void checkPress( Vertex mouse );
+    bool isPressed();
+    void draw();
+
+};
+
 class testApp : public ofBaseApp{
 
     private:
         Cube cube;
         Vertex pmouse;
+        float transMatrix[4][4];
+        vector<Button> buttonList;
 	public:
 		void setup();
 		void update();
@@ -67,6 +87,8 @@ class testApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+	private:
+        void resetMatrix();
 
 };
 
