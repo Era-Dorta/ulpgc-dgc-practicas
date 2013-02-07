@@ -44,14 +44,18 @@ float Vertex::getZ() const {
 //--------------------------------------------------------------
 void Vertex::set( int pos, float val ){
     switch(pos){
-        case 0:
-            setX(val);
-        case 1:
-            setY(val);
-        case 2:
-            setZ(val);
-        default:
-            setH(val);
+    case 0:
+        setX(val);
+        break;
+    case 1:
+        setY(val);
+        break;
+    case 2:
+        setZ(val);
+        break;
+    default:
+        setH(val);
+        break;
     }
 }
 
@@ -151,10 +155,72 @@ void Cube::draw(){
 }
 
 //--------------------------------------------------------------
-Button::Button( Vertex vertex, string buttonTex_ ){
+void Cube::resetMatrix(){
+    //Set transformation matrix to its initial state
+    for( int i = 0; i < 4; i++){
+        for( int j = 0; j < 4; j++){
+            if(i == j){
+                transMatrix[i][j] = 1;
+            }else{
+                transMatrix[i][j] = 0;
+            }
+        }
+    }
+}
+
+//--------------------------------------------------------------
+void Cube::multiplyMatrix( float matrix[4][4] ){
+
+    float aux[4][4];
+    for( int i = 0; i < 4; i++){
+        for( int j = 0; j < 4; j++){
+            aux[i][j] = 0;
+        }
+    }
+
+    for( int i = 0; i < 4; i++){
+        for( int j = 0; j < 4; j++){
+            for( int k = 0; k < 4; k++){
+                aux[i][j] += transMatrix[i][k]*matrix[k][j];
+            }
+        }
+    }
+
+    for( int i = 0; i < 4; i++){
+        for( int j = 0; j < 4; j++){
+            transMatrix[i][k] = aux[i][j];
+        }
+    }
+}
+
+//--------------------------------------------------------------
+void Cube::rotate( int axis, int amount){
+    float aux[4][4], cosVal, sinVal;
+    for( int i = 0; i < 4; i++){
+        for( int j = 0; j < 4; j++){
+            if(i == j){
+                aux[i][j] = 1;
+            }else{
+                aux[i][j] = 0;
+            }
+        }
+    }
+    amount = 0.01*amount;
+    cosVal = cos(amount);
+    sinVal = sin(amount);
+    aux[1][1] = cosVal;
+    aux[2][2] = cosVal;
+    aux[1][2] = sinVal;
+    aux[2][1] = -sinVal;
+    multiplyMatrix(aux);
+}
+
+//--------------------------------------------------------------
+Button::Button( testApp *app_, Vertex vertex, string buttonTex_ ){
     pressed = false;
     size = 50;
     buttonTex = buttonTex_;
+    app = app_;
     vertices[0] = *(new Vertex( vertex.getX(), vertex.getY(), vertex.getZ()));
     vertices[1] = *(new Vertex( vertex.getX() + size*2, vertex.getY(), vertex.getZ()));
     vertices[2] = *(new Vertex( vertex.getX() + size*2, vertex.getY() + size, vertex.getZ()));
@@ -169,6 +235,7 @@ void Button::checkPress( Vertex mouse ){
             pressed = false;
         }else{
             pressed = true;
+            app->setState( ROTATING );
         }
     }
 }
@@ -196,11 +263,12 @@ void Button::draw(){
 //--------------------------------------------------------------
 void testApp::setup(){
     center = Vertex(512,384,0);
+    state = DRAWING;
     //Initialize matrix
     resetMatrix();
     //Create buttons
     Vertex auxVertex(200,-300,0);
-    Button auxButton(auxVertex, "Rotate");
+    Button auxButton(this, auxVertex, "Rotate");
     buttonList.push_back( auxButton );
 }
 
@@ -238,7 +306,16 @@ void testApp::mouseDragged(int x, int y, int button){
     y = y - center.getY();
     if( button == L_MOUSE){
         Vertex current(x, y, 0);
-        cube.setVertices( pmouse, current );
+        switch(state){
+        case ROTATING:
+            cube.rotate( X, pmouse.getX() - current.getX() );
+            break;
+        case TRANSLATING:
+            break;
+        case DRAWING:
+            cube.setVertices( pmouse, current );
+            break;
+        }
     }
 }
 
@@ -251,6 +328,15 @@ void testApp::mousePressed(int x, int y, int button){
         pmouse.setX( x );
         pmouse.setY( y );
         pmouse.setZ( 0 );
+
+        switch(state){
+        case ROTATING:
+            break;
+        case TRANSLATING:
+            break;
+        case DRAWING:
+            break;
+        }
         //Check buttons
         for( unsigned int i = 0; i < buttonList.size(); i++){
             buttonList[i].checkPress(pmouse);
@@ -265,7 +351,16 @@ void testApp::mouseReleased(int x, int y, int button){
     y = y - center.getY();
     if( button == L_MOUSE){
         Vertex current(x, y, 0);
-        cube.setVertices( pmouse, current );
+        switch(state){
+        case ROTATING:
+            cube.rotate( X, pmouse.getX() - current.getX() );
+            break;
+        case TRANSLATING:
+            break;
+        case DRAWING:
+            cube.setVertices( pmouse, current );
+            break;
+        }
     }
 }
 
@@ -282,6 +377,11 @@ void testApp::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 void testApp::dragEvent(ofDragInfo dragInfo){
 
+}
+
+//--------------------------------------------------------------
+void testApp::setState( int state_ ){
+    state = state_;
 }
 
 //--------------------------------------------------------------

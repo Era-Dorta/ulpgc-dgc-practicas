@@ -2,10 +2,17 @@
 
 #include "ofMain.h"
 #include <vector>
+#include <cmath>
 
 #define L_MOUSE 0
 #define R_MOUSE 3
+
+enum AppStates { ROTATING, TRANSLATING, DRAWING };
+enum Axis { X, Y, Z };
+
 using namespace std;
+
+class testApp;
 
 class Vertex {
     private:
@@ -47,12 +54,16 @@ class Cube {
 
     Vertex vertices[8];
     Vertex transVertices[8];
+    float transMatrix[4][4];
+    void multiplyMatrix( float matrix[4][4] );
 
     public:
     Cube();
     Cube( Vertex vertex0, Vertex vertex1 );
     void setVertices( Vertex vertex0, Vertex vertex1 );
     void draw();
+    void resetMatrix();
+    void rotate( int axis, int amount);
 };
 
 class Button{
@@ -64,11 +75,11 @@ class Button{
     bool pressed;
     int size;
     string buttonTex;
-    float transMatrix[4][4];
+    testApp *app;
 
     public:
 
-    Button( Vertex vertex, string buttonTex_ );
+    Button( testApp *app_, Vertex vertex, string buttonTex_ );
     void checkPress( Vertex mouse );
     bool isPressed();
     void draw();
@@ -81,6 +92,7 @@ class testApp : public ofBaseApp{
         Cube cube;
         Vertex pmouse;
         vector<Button> buttonList;
+        int state;
 	public:
 		void setup();
 		void update();
@@ -95,6 +107,7 @@ class testApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+		void setState( int state_ );
 	private:
         void resetMatrix();
 
