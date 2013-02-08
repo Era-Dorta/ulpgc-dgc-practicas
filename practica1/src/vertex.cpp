@@ -16,7 +16,7 @@ Vertex::Vertex( const double x, const double y, const double z ) {
 //--------------------------------------------------------------
 Vertex::Vertex( const Vertex& otherVertex ){
     for(int i = 0; i < 4; i++){
-        coordinates[i] = otherVertex.get(i);
+        coordinates[i] = otherVertex.coordinates[i];
     }
 }
 
@@ -80,10 +80,9 @@ bool Vertex::operator==( const Vertex &otherVertex ){
 
 //--------------------------------------------------------------
 void Vertex::operator=( const Vertex  &otherVertex ){
-    setX(otherVertex.getX());
-    setY(otherVertex.getY());
-    setZ(otherVertex.getZ());
-    setH(otherVertex.getH());
+    for(int i = 0; i < 4; i++){
+        coordinates[i] = otherVertex.coordinates[i];
+    }
 }
 
 //--------------------------------------------------------------

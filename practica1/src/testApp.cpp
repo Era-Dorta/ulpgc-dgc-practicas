@@ -44,7 +44,10 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    cube.draw();
+
+    for( unsigned int i = 0; i < objectList.size(); i++){
+        objectList[i]->draw();
+    }
     for( unsigned int i = 0; i < buttonList.size(); i++){
         buttonList[i].draw();
     }
@@ -72,25 +75,25 @@ void testApp::mouseDragged(int x, int y, int button){
         if(opReady){
             switch(state){
             case ROTATING_X:
-                cube.rotate( X, pRawY - y, 0 );
+                objectList.back()->rotate( X, pRawY - y, 0 );
                 break;
             case ROTATING_Y:
-                cube.rotate( Y, pRawX - x, 0 );
+                objectList.back()->rotate( Y, pRawX - x, 0 );
                 break;
             case ROTATING_Z:
-                cube.rotate( Z, pRawY - y, 0 );
+                objectList.back()->rotate( Z, pRawY - y, 0 );
                 break;
             case ROTATING:
                 break;
             case TRANSLATING:
-                cube.translate( x - pRawX, y - pRawY, 0 );
+                objectList.back()->translate( x - pRawX, y - pRawY, 0 );
                 break;
             case DRAWING:
                 //Force 0,0 at the center of the screen
                 x = x - center.getX();
                 y = y - center.getY();
                 Vertex current(x, y, 0);
-                cube.setVertices( pmouse, current );
+                objectList.back()->setVertices( pmouse, current );
                 break;
             }
         }
@@ -112,6 +115,10 @@ void testApp::mousePressed(int x, int y, int button){
         for( unsigned int i = 0; i < buttonList.size(); i++){
             buttonList[i].checkPress(pmouse);
         }
+
+        if( state == DRAWING ){
+            objectList.push_back( new Cube() );
+        }
     }
 }
 
@@ -122,25 +129,25 @@ void testApp::mouseReleased(int x, int y, int button){
         if(opReady){
             switch(state){
             case ROTATING_X:
-                cube.rotate( X, pRawY - y, 1 );
+                objectList.back()->rotate( X, pRawY - y, 1 );
                 break;
             case ROTATING_Y:
-                cube.rotate( Y, pRawX - x, 1 );
+                objectList.back()->rotate( Y, pRawX - x, 1 );
                 break;
             case ROTATING_Z:
-                cube.rotate( Z, pRawY - y, 1 );
+                objectList.back()->rotate( Z, pRawY - y, 1 );
                 break;
             case ROTATING:
                 break;
             case TRANSLATING:
-                cube.translate( x - pRawX, y - pRawY, 1 );
+                objectList.back()->translate( x - pRawX, y - pRawY, 1 );
                 break;
             case DRAWING:
                 //Force 0,0 at the center of the screen
                 x = x - center.getX();
                 y = y - center.getY();
                 Vertex current(x, y, 0);
-                cube.setVertices( pmouse, current );
+                objectList.back()->setVertices( pmouse, current );
                 break;
             }
         }else{

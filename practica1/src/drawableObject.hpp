@@ -19,8 +19,11 @@ class DrawableObject {
 
     public:
         DrawableObject( int totalVertices_ );
+        DrawableObject( const DrawableObject& otherDrawableObject );
         virtual ~DrawableObject();
         virtual void draw(){};
+        virtual int getTotalVertices() { return totalVertices; };
+        virtual void setVertices( Vertex vertex0, Vertex vertex1 ){};
         virtual void rotate( Axis axis, double amount, int permanent);
         virtual void translate( double tX, double tY, int permanent);
         virtual void resetTransMatrix();

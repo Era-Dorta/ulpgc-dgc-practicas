@@ -4,16 +4,33 @@
 //--------------------------------------------------------------
 DrawableObject::DrawableObject( int totalVertices_ ){
     totalVertices = totalVertices_;
-    //vertices = (Vertex*)malloc( sizeof(Vertex*)*totalVertices );
-    //transVertices = (Vertex*)malloc( sizeof(Vertex*)*totalVertices );
     vertices = new Vertex[totalVertices];
     transVertices = new Vertex[totalVertices];
 }
 
 //--------------------------------------------------------------
+DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
+    //Copy how much vertices the object has
+    totalVertices = otherDrawableObject.totalVertices;
+    //Get memory for the vertices
+    vertices = new Vertex[totalVertices];
+    transVertices = new Vertex[totalVertices];
+    //Copy vertices content
+    for( int i = 0; i < totalVertices; i++ ){
+        vertices[i] = otherDrawableObject.vertices[i];
+        transVertices[i] = otherDrawableObject.transVertices[i];
+    }
+    //Copy matrices content
+    for( int i = 0; i < 4; i++ ){
+        for( int j = 0; i < 4; i++ ){
+            transMatrix[i][j] = otherDrawableObject.transMatrix[i][j];
+            auxMatrix[i][j] = otherDrawableObject.auxMatrix[i][j];
+        }
+    }
+}
+
+//--------------------------------------------------------------
 DrawableObject::~DrawableObject(){
-    //free(vertices);
-    //free(transVertices);
     delete[] vertices;
     delete[] transVertices;
 }

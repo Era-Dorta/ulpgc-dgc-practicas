@@ -6,6 +6,7 @@
 #include "ofMain.h"
 #include "vertex.hpp"
 #include "cube.hpp"
+#include "drawableObject.hpp"
 #include <vector>
 #include <cmath>
 
@@ -20,7 +21,8 @@ enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, ROTATING, TRANSLATING, DRAWIN
 class testApp : public ofBaseApp{
 
     private:
-        Cube cube;
+        vector<DrawableObject*> objectList;
+        //Cube cube;
         Vertex pmouse;
         int pRawX, pRawY;
         bool opReady;
