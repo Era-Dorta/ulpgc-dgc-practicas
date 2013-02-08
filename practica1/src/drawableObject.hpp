@@ -23,6 +23,7 @@ class DrawableObject {
         virtual ~DrawableObject();
         virtual void draw(){};
         virtual int getTotalVertices() { return totalVertices; };
+        //FIXME SetVertices should be on Cube, not here
         virtual void setVertices( Vertex vertex0, Vertex vertex1 ){};
         virtual void rotate( Axis axis, double amount, int permanent);
         virtual void translate( double tX, double tY, int permanent);
