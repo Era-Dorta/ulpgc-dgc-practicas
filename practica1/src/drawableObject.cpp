@@ -84,8 +84,8 @@ void DrawableObject::rotate( Axis axis, double amount, int permanent){
 //--------------------------------------------------------------
 void DrawableObject::translate( double tX, double tY, int permanent){
     resetAuxMatrix();
-    auxMatrix[3][0] = tX*0.5;
-    auxMatrix[3][1] = tY*0.5;
+    auxMatrix[3][0] = tX;
+    auxMatrix[3][1] = tY;
     if(permanent){
         //Multiply transMatrix by auxMatrix and save the
         //result in transMAtrix, recalculate the transformed
