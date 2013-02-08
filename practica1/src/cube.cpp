@@ -85,7 +85,7 @@ void Cube::rotate( Axis axis, double amount, int permanent){
     case Y:
         auxMatrix[0][0] = cosVal;
         auxMatrix[0][2] = -sinVal;
-        auxMatrix[3][0] = sinVal;
+        auxMatrix[2][0] = sinVal;
         auxMatrix[2][2] = cosVal;
         break;
     case Z:
