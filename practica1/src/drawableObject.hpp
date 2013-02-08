@@ -21,8 +21,8 @@ class DrawableObject {
         DrawableObject( int totalVertices_ );
         virtual ~DrawableObject();
         virtual void draw(){};
-        virtual void rotate( Axis axis, double amount, int permanent){};
-        virtual void translate( double tX, double tY, int permanent){};
+        virtual void rotate( Axis axis, double amount, int permanent);
+        virtual void translate( double tX, double tY, int permanent);
         virtual void resetTransMatrix();
         virtual void resetAuxMatrix();
 };

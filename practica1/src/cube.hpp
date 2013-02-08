@@ -11,8 +11,6 @@ class Cube : public DrawableObject{
         Cube( Vertex vertex0, Vertex vertex1 );
         void setVertices( Vertex vertex0, Vertex vertex1 );
         virtual void draw();
-        virtual void rotate( Axis axis, double amount, int permanent);
-        virtual void translate( double tX, double tY, int permanent);
 };
 
 #endif
