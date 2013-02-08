@@ -6,10 +6,6 @@
 
 class Cube : public DrawableObject{
 
-    private:
-        Vertex vertices[8];
-        Vertex transVertices[8];
-
     public:
         Cube();
         Cube( Vertex vertex0, Vertex vertex1 );

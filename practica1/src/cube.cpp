@@ -1,7 +1,7 @@
 #include "cube.hpp"
 #include "ofMain.h"
 //--------------------------------------------------------------
-Cube::Cube(){
+Cube::Cube() :DrawableObject(8) {
     for( int i = 0; i < 0; i++){
         vertices[i].setX( 0 );
         vertices[i].setY( 0 );
@@ -12,7 +12,7 @@ Cube::Cube(){
 }
 
 //--------------------------------------------------------------
-Cube::Cube( Vertex vertex0, Vertex vertex1 ){
+Cube::Cube( Vertex vertex0, Vertex vertex1 ) :DrawableObject(8) {
     setVertices(vertex0, vertex1);
     DrawableObject::resetTransMatrix();
     DrawableObject::resetAuxMatrix();

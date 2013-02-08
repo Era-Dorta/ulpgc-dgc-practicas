@@ -1,4 +1,22 @@
 #include "drawableObject.hpp"
+#include <cstdlib>
+
+//--------------------------------------------------------------
+DrawableObject::DrawableObject( int totalVertices_ ){
+    totalVertices = totalVertices_;
+    //vertices = (Vertex*)malloc( sizeof(Vertex*)*totalVertices );
+    //transVertices = (Vertex*)malloc( sizeof(Vertex*)*totalVertices );
+    vertices = new Vertex[totalVertices];
+    transVertices = new Vertex[totalVertices];
+}
+
+//--------------------------------------------------------------
+DrawableObject::~DrawableObject(){
+    //free(vertices);
+    //free(transVertices);
+    delete[] vertices;
+    delete[] transVertices;
+}
 
 //--------------------------------------------------------------
 void DrawableObject::resetTransMatrix(){
