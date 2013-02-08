@@ -6,17 +6,15 @@
 class Vertex {
     private:
 
-    double x;
-    double y;
-    double z;
-    double h;
+    double coordinates[4];
     static int draw;
     static int perpective;
 
     public:
 
-    Vertex() { x = 0; y = 0; z = 0; h = 1; draw = 0; };
-    Vertex( double x_, double y_, double z_ ) { x = x_; y = y_; z = z_; h = 1; draw = 0; };
+    Vertex() { coordinates[0] = 0; coordinates[1] = 0; coordinates[2] = 0; coordinates[3] = 1; draw = 0; };
+    Vertex( const double x, const double y, const double z );
+    Vertex( const Vertex& otherVertex );
     void drawing() { draw = 1; };
     void notDrawing() { draw = 0; };
     void withPerpective() { perpective = 1; };
@@ -24,11 +22,12 @@ class Vertex {
     double getX() const;
     double getY() const;
     double getZ() const;
-    double getH() const { return h; };
-    void setX( double x_ ) { x = x_; };
-    void setY( double y_ ) { y = y_; };
-    void setZ( double z_ ) { z = z_; };
-    void setH( double h_ ) { h = h_; };
+    double getH() const { return coordinates[3]; };
+    double get(int pos) const { return coordinates[pos]; };
+    void setX( double x ) { coordinates[0] = x; };
+    void setY( double y ) { coordinates[1] = y; };
+    void setZ( double z ) { coordinates[2] = z; };
+    void setH( double h ) { coordinates[3] = h; };
     void set( int pos, double val );
     bool operator==( const Vertex &otherVertex );
     Vertex operator*( const double matrix[4][4] );

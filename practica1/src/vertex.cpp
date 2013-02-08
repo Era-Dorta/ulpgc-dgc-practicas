@@ -5,14 +5,30 @@ int Vertex::perpective = 0;
 int k = 400;
 
 //--------------------------------------------------------------
+Vertex::Vertex( const double x, const double y, const double z ) {
+    coordinates[0] = x;
+    coordinates[1] = y;
+    coordinates[2] = z;
+    coordinates[3] = 1;
+    draw = 0;
+}
+
+//--------------------------------------------------------------
+Vertex::Vertex( const Vertex& otherVertex ){
+    for(int i = 0; i < 4; i++){
+        coordinates[i] = otherVertex.get(i);
+    }
+}
+
+//--------------------------------------------------------------
 double Vertex::getX() const {
     if( this == &center ){
-        return x;
+        return coordinates[0];
     }else{
         if( perpective ){
-            return ( x / ( 1 - getZ() / (double)k ) + center.getX()*draw );
+            return ( coordinates[0] / ( 1 - getZ() / (double)k ) + center.getX()*draw );
         }else{
-            return (x + center.getX()*draw);
+            return (coordinates[0] + center.getX()*draw);
         }
     }
 }
@@ -20,12 +36,12 @@ double Vertex::getX() const {
 //--------------------------------------------------------------
 double Vertex::getY() const {
     if( this == &center ){
-        return y;
+        return coordinates[1];
     }else{
         if( perpective ){
-            return ( y / ( 1 - getZ() / (double)k ) + center.getY()*draw );
+            return ( coordinates[1] / ( 1 - getZ() / (double)k ) + center.getY()*draw );
         }else{
-            return (y + center.getY()*draw);
+            return (coordinates[1] + center.getY()*draw);
         }
     }
 }
@@ -33,9 +49,9 @@ double Vertex::getY() const {
 //--------------------------------------------------------------
 double Vertex::getZ() const {
     if( this == &center ){
-        return z;
+        return coordinates[2];
     }else{
-        return (z + center.getZ()*draw);
+        return (coordinates[2] + center.getZ()*draw);
     }
 }
 
@@ -67,20 +83,16 @@ void Vertex::operator=( const Vertex  &otherVertex ){
     setX(otherVertex.getX());
     setY(otherVertex.getY());
     setZ(otherVertex.getZ());
+    setH(otherVertex.getH());
 }
 
 //--------------------------------------------------------------
 Vertex Vertex::operator*( const double matrix[4][4] ){
     Vertex vRes;
-    double vAux[4];
-    vAux[0] = getX();
-    vAux[1] = getY();
-    vAux[2] = getZ();
-    vAux[3] = getH();
     for(int i = 0; i < 4; i++){
         double res = 0;
         for( int j = 0; j < 4; j++){
-            res += matrix[j][i]*vAux[j];
+            res += coordinates[j]*matrix[j][i];
         }
         vRes.set(i,res);
     }
