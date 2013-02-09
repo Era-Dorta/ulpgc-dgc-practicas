@@ -9,7 +9,7 @@
 #include <vector>
 
 #define L_MOUSE 0
-#define R_MOUSE 3
+#define R_MOUSE 2
 
 using namespace std;
 

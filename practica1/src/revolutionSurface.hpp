@@ -8,6 +8,7 @@ class RevolutionSurface : public DrawableObject{
 
     private:
         bool hasAllVertices_;
+        int lineVerticesAmount;
 
     public:
         RevolutionSurface();
