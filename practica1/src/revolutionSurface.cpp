@@ -63,9 +63,14 @@ void RevolutionSurface::noMoreVertices(){
 }
 
 //--------------------------------------------------------------
+void RevolutionSurface::setDrawHelper( Vertex &mouse ){
+    pmouse = mouse;
+}
+
+//--------------------------------------------------------------
 void RevolutionSurface::draw(){
     int i, j;
-    if( totalVertices > 1 ){
+    if( totalVertices >= 1 ){
         transVertices[0].drawing();
         transVertices[0].withPerpective();
         if(hasAllVertices_){
@@ -90,6 +95,8 @@ void RevolutionSurface::draw(){
                 ofLine(transVertices[i - 1].getX(), transVertices[i -1].getY(),
                     transVertices[i].getX(), transVertices[i].getY());
             }
+            ofLine(transVertices[i - 1].getX(), transVertices[i - 1].getY(),
+                    pmouse.getX(), pmouse.getY());
         }
         transVertices[0].withoutPerpective();
         transVertices[0].notDrawing();

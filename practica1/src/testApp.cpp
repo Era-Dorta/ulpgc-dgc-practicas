@@ -70,7 +70,18 @@ void testApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y ){
-
+    if(opReady){
+        //Force 0,0 at the center of the screen
+        Vertex current(x - center.getX(), y - center.getY(), 0);
+        //While drawing a revolution object, draw a line from las vertex
+        //to current mouse position
+        if( state == DRAW_REVOLUTION ){
+            if( objectList.size() > 0 && objectList.back()->getSubtype() == REVOLUTION ){
+                RevolutionSurface* revObject = (RevolutionSurface*)objectList.back();
+                    revObject->setDrawHelper(current);
+            }
+        }
+    }
 }
 
 //--------------------------------------------------------------
