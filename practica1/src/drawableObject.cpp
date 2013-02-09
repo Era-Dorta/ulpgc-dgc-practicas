@@ -4,8 +4,14 @@
 //--------------------------------------------------------------
 DrawableObject::DrawableObject( int totalVertices_ ){
     totalVertices = totalVertices_;
-    vertices = new Vertex[totalVertices];
-    transVertices = new Vertex[totalVertices];
+    if( totalVertices ){
+        vertices = new Vertex[totalVertices];
+        transVertices = new Vertex[totalVertices];
+    }else{
+        vertices =  NULL;
+        transVertices = NULL;
+    }
+
 }
 
 //--------------------------------------------------------------

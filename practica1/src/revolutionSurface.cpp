@@ -15,19 +15,25 @@ RevolutionSurface::RevolutionSurface()
 void RevolutionSurface::setVertex( Vertex vertex ){
     cout << "total antes "  << totalVertices << endl;
     Vertex* auxVertices,* auxTransVertices;
+
     auxVertices = new Vertex[totalVertices + 1];
     auxTransVertices = new Vertex[totalVertices + 1];
+
     for( int i = 0; i < totalVertices; i++){
         auxVertices[i] = vertices[i];
         auxTransVertices[i] = transVertices[i];
     }
+
     auxVertices[totalVertices] = vertex;
     auxTransVertices[totalVertices] = vertex;
+
     delete[] vertices;
     delete[] transVertices;
+
     vertices = auxVertices;
     transVertices = auxTransVertices;
     totalVertices++;
+
     cout << "total despues "  << totalVertices << endl;
 }
 
