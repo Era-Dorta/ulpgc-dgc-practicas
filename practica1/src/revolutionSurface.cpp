@@ -1,71 +1,95 @@
 #include "revolutionSurface.hpp"
 #include "ofMain.h"
+
 //--------------------------------------------------------------
-RevolutionSurface::RevolutionSurface() :DrawableObject(8) {
-    DrawableObject::resetTransMatrix();
-    DrawableObject::resetAuxMatrix();
-    for( int i = 0; i < 0; i++){
-        vertices[i].setX( 0 );
-        vertices[i].setY( 0 );
-        vertices[i].setZ( 0 );
+void RevolutionSurface::operator=( const RevolutionSurface& otherRevolutionSurface ){
+    //Copy how much vertices the object has
+    totalVertices = otherRevolutionSurface.totalVertices;
+    //Get memory for the vertices
+    /*
+    vertices = otherRevolutionSurface.vertices;
+    transVertices = otherRevolutionSurface.transVertices;
+    */
+    delete[] vertices;
+    delete[] transVertices;
+    vertices = new Vertex[totalVertices];
+    transVertices = new Vertex[totalVertices];
+    //Copy vertices content
+    for( int i = 0; i < (totalVertices - 1); i++ ){
+        vertices[i] = otherRevolutionSurface.vertices[i];
+        transVertices[i] = otherRevolutionSurface.transVertices[i];
+    }
+    //Copy matrices content
+    for( int i = 0; i < 4; i++ ){
+        for( int j = 0; i < 4; i++ ){
+            transMatrix[i][j] = otherRevolutionSurface.transMatrix[i][j];
+            auxMatrix[i][j] = otherRevolutionSurface.auxMatrix[i][j];
+        }
     }
 }
 
 //--------------------------------------------------------------
-RevolutionSurface::RevolutionSurface( Vertex vertex0, Vertex vertex1 ) :DrawableObject(8) {
+RevolutionSurface::RevolutionSurface( const RevolutionSurface &otherRevolutionSurface )
+:DrawableObject(otherRevolutionSurface.totalVertices + 1)
+{
+    hasAllVertices_ = false;
+    subtype = REVOLUTION;
+    //DrawableObject::DrawableObject(otherRevolutionSurface.totalVertices + 1);
     DrawableObject::resetTransMatrix();
     DrawableObject::resetAuxMatrix();
-    setVertices(vertex0, vertex1);
+    //Copy vertices content
+    for( int i = 0; i < (totalVertices - 1); i++ ){
+        cout << "Copiando " << i << "vertice\n";
+        vertices[i] = otherRevolutionSurface.vertices[i];
+        transVertices[i] = otherRevolutionSurface.transVertices[i];
+    }
 }
 
 //--------------------------------------------------------------
-void RevolutionSurface::setVertices( Vertex vertex0, Vertex vertex1 ){
-    double sideX, sideY, sideZ;
-    int z;
-    sideX = vertex1.getX() - vertex0.getX();
-    sideY = vertex1.getY() - vertex0.getY();
-    //Depth of the cube is length of side x
-    sideZ = abs(sideX);
+RevolutionSurface::RevolutionSurface()
+:DrawableObject(0)
+{
+    hasAllVertices_ = false;
+    subtype = REVOLUTION;
+    DrawableObject::resetTransMatrix();
+    DrawableObject::resetAuxMatrix();
+}
 
-    for(z = 0; z < 2; z++){
-        vertices[0 + z*4].setX( vertex0.getX() );
-        vertices[0 + z*4].setY( vertex0.getY() );
-        vertices[0 + z*4].setZ( vertex0.getZ() - z*sideZ );
+//--------------------------------------------------------------
+void RevolutionSurface::setVertex( Vertex vertex ){
+    cout << "total antes "  << totalVertices << endl;
+    (*this) = *(new RevolutionSurface( (*this) ));
+    vertices[totalVertices - 1] = vertex;
+    transVertices[totalVertices - 1] = vertex;
+    cout << "total despues "  << totalVertices << endl;
+}
 
-        vertices[1 + z*4].setX( vertex0.getX() + sideX );
-        vertices[1 + z*4].setY( vertex0.getY() );
-        vertices[1 + z*4].setZ( vertex0.getZ() - z*sideZ );
-
-        vertices[2 + z*4].setX( vertex0.getX() + sideX );
-        vertices[2 + z*4].setY( vertex0.getY() + sideY );
-        vertices[2 + z*4].setZ( vertex0.getZ() - z*sideZ );
-
-        vertices[3 + z*4].setX( vertex0.getX() );
-        vertices[3 + z*4].setY( vertex0.getY() + sideY );
-        vertices[3 + z*4].setZ( vertex0.getZ() - z*sideZ );
-    }
-    for( int i = 0; i < 8; i++){
-        transVertices[i] = vertices[i]*transMatrix;
-    }
+//--------------------------------------------------------------
+void RevolutionSurface::noMoreVertices(){
+    DrawableObject::resetTransMatrix();
+    DrawableObject::resetAuxMatrix();
+    hasAllVertices_ = true;
 }
 
 //--------------------------------------------------------------
 void RevolutionSurface::draw(){
-    transVertices[0].drawing();
-    transVertices[0].withPerpective();
-    for(int i = 0; i < 4; i++){
-        //Back face of the cube
-        ofSetColor ( 0 ,255 ,0 ); //Green
-        ofLine(transVertices[i + 4].getX(), transVertices[i + 4].getY(), transVertices[(i+1)%4 + 4].getX(), transVertices[(i+1)%4 + 4].getY());
-        //Lines between the two faces
-        ofSetColor ( 0 ,0 ,255 ); //Blue
-        ofLine(transVertices[i].getX(), transVertices[i].getY(), transVertices[i + 4].getX(), transVertices[i + 4].getY());
-        //Front face of the cube
-        ofSetColor ( 255 ,0 ,0 ); //Red
-        ofLine(transVertices[i].getX(), transVertices[i].getY(), transVertices[(i+1)%4].getX(), transVertices[(i+1)%4].getY());
-    }
-    //getc(stdin);
-    transVertices[0].withoutPerpective();
-    transVertices[0].notDrawing();
-}
+    if( totalVertices > 1 ){
+        transVertices[0].drawing();
+        transVertices[0].withPerpective();
+        if(hasAllVertices_){
 
+        }else{
+
+
+            for(int i = 1; i < totalVertices; i++){
+                //Lines
+                //cout << "Dibjuando vertices"<< i <<  " \n";
+                ofSetColor ( 0 ,0 ,255 ); //Blue
+                ofLine(transVertices[i - 1].getX(), transVertices[i -1].getY(),
+                    transVertices[i].getX(), transVertices[i].getY());
+            }
+        }
+        transVertices[0].withoutPerpective();
+        transVertices[0].notDrawing();
+    }
+}

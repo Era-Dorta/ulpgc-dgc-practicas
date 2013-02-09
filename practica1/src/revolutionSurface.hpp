@@ -6,11 +6,17 @@
 
 class RevolutionSurface : public DrawableObject{
 
+    private:
+        bool hasAllVertices_;
+        void operator=( const RevolutionSurface& otherRevolutionSurface );
+        RevolutionSurface( const RevolutionSurface &otherRevolutionSurface  );
+
     public:
         RevolutionSurface();
-        RevolutionSurface( Vertex vertex0, Vertex vertex1 );
-        virtual void setVertices( Vertex vertex0, Vertex vertex1 );
+        void setVertex( Vertex vertex );
+        void noMoreVertices();
         virtual void draw();
+        bool hasAllVertices() { return hasAllVertices_; }
 };
 
 #endif

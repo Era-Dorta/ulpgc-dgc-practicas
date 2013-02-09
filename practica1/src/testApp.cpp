@@ -22,20 +22,21 @@ void showMatrix( const double matrix[4][4])
 
 //--------------------------------------------------------------
 void testApp::setup(){
-    state = CUBE;
+    state = DRAW_CUBE;
     //Initialize matrix
     resetMatrix();
     //Create buttons
     int x = 400, y = -300;
     Vertex* auxVertex;
-    string buttonNames[N_BUTTONS] = { "Rotate X", "Rotate Y", "Rotate Z", "Rotate", "Translate", "Cube", "Revolution" };
+    string buttonNames[N_BUTTONS] = { "Rotate X", "Rotate Y", "Rotate Z",
+        "Rotate", "Translate", "Cube", "Revolution" };
     Button* auxButton;
     for(int i = 0; i < N_BUTTONS; i++){
         auxVertex = new Vertex( x, y + i*60, 0 );
         auxButton = new Button(this, *auxVertex, buttonNames[i], (AppStates)i);
         buttonList.push_back( *auxButton );
     }
-    //This lines make draw button, think it was pressed
+    //This lines make draw button think it was pressed
     //This is done because it is the default state of the app
     auxVertex = new Vertex( x + 20, y + 5*60, 0 );
     buttonList[5].checkPress(*auxVertex);
@@ -94,10 +95,10 @@ void testApp::mouseDragged(int x, int y, int button){
             case TRANSLATING:
                 objectList.back()->translate( x - pRawX, y - pRawY, 0 );
                 break;
-            case CUBE:
+            case DRAW_CUBE:
                 ((Cube*)objectList.back())->setVertices( pmouse, current );
                 break;
-            case REVOLUTION:
+            case DRAW_REVOLUTION:
                 ((Cube*)objectList.back())->setVertices( pmouse, current );
                 break;
             }
@@ -121,8 +122,36 @@ void testApp::mousePressed(int x, int y, int button){
             buttonList[i].checkPress(pmouse);
         }
 
-        if( state == CUBE ){
+        switch(state){
+        case DRAW_CUBE:
             objectList.push_back( new Cube() );
+            break;
+        case DRAW_REVOLUTION:
+            //First click on revolution, and previous object is not
+            //a revolution objetc
+            if( objectList.size() == 0 || objectList.back()->getSubtype() != REVOLUTION ){
+                objectList.push_back( new RevolutionSurface() );
+            }else{
+                RevolutionSurface* revObject = (RevolutionSurface*)objectList.back();
+                //Previous object is done, so make a new one
+                if( revObject->hasAllVertices() ){
+                    objectList.push_back( new RevolutionSurface() );
+                //Still adding vertices to revolution object
+                }else{
+                    revObject->setVertex( pmouse );
+                }
+            }
+            break;
+        default:
+            //FIXME How to nop??
+            x--;
+        }
+    }else{
+        //Right click and drawing a revolution object
+        if( button == R_MOUSE && state == DRAW_REVOLUTION ){
+            //User finished adding vertices, construct the object
+            RevolutionSurface* revObject = (RevolutionSurface*)objectList.back();
+            revObject->noMoreVertices();
         }
     }
 }
@@ -149,11 +178,10 @@ void testApp::mouseReleased(int x, int y, int button){
             case TRANSLATING:
                 objectList.back()->translate( x - pRawX, y - pRawY, 1 );
                 break;
-            case CUBE:
+            case DRAW_CUBE:
                 ((Cube*)objectList.back())->setVertices( pmouse, current );
                 break;
-            case REVOLUTION:
-                ((Cube*)objectList.back())->setVertices( pmouse, current );
+            case DRAW_REVOLUTION:
                 break;
             }
         }else{

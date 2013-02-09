@@ -14,7 +14,7 @@
 using namespace std;
 
 class Button;
-enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, ROTATING, TRANSLATING, CUBE, REVOLUTION };
+enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, ROTATING, TRANSLATING, DRAW_CUBE, DRAW_REVOLUTION };
 
 class testApp : public ofBaseApp{
 

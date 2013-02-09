@@ -12,6 +12,7 @@ DrawableObject::DrawableObject( int totalVertices_ ){
 DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
     //Copy how much vertices the object has
     totalVertices = otherDrawableObject.totalVertices;
+    subtype = otherDrawableObject.subtype;
     //Get memory for the vertices
     vertices = new Vertex[totalVertices];
     transVertices = new Vertex[totalVertices];
