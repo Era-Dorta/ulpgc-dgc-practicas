@@ -3,6 +3,7 @@
 #include "cube.hpp"
 #include <cmath>
 
+#define N_BUTTONS 7
 static double transMatrix[4][4];
 //Center of the screen
 extern Vertex center;
@@ -21,15 +22,15 @@ void showMatrix( const double matrix[4][4])
 
 //--------------------------------------------------------------
 void testApp::setup(){
-    state = DRAWING;
+    state = CUBE;
     //Initialize matrix
     resetMatrix();
     //Create buttons
     int x = 400, y = -300;
     Vertex* auxVertex;
-    string buttonNames[6] = { "Rotate X", "Rotate Y", "Rotate Z", "Rotate", "Translate", "Draw" };
+    string buttonNames[N_BUTTONS] = { "Rotate X", "Rotate Y", "Rotate Z", "Rotate", "Translate", "Cube", "Revolution" };
     Button* auxButton;
-    for(int i = 0; i < 6; i++){
+    for(int i = 0; i < N_BUTTONS; i++){
         auxVertex = new Vertex( x, y + i*60, 0 );
         auxButton = new Button(this, *auxVertex, buttonNames[i], (AppStates)i);
         buttonList.push_back( *auxButton );
@@ -76,6 +77,8 @@ void testApp::mouseDragged(int x, int y, int button){
 
     if( button == L_MOUSE){
         if(opReady){
+            //Force 0,0 at the center of the screen
+            Vertex current(x - center.getX(), y - center.getY(), 0);
             switch(state){
             case ROTATING_X:
                 objectList.back()->rotate( X, pRawY - y, 0 );
@@ -91,11 +94,10 @@ void testApp::mouseDragged(int x, int y, int button){
             case TRANSLATING:
                 objectList.back()->translate( x - pRawX, y - pRawY, 0 );
                 break;
-            case DRAWING:
-                //Force 0,0 at the center of the screen
-                x = x - center.getX();
-                y = y - center.getY();
-                Vertex current(x, y, 0);
+            case CUBE:
+                ((Cube*)objectList.back())->setVertices( pmouse, current );
+                break;
+            case REVOLUTION:
                 ((Cube*)objectList.back())->setVertices( pmouse, current );
                 break;
             }
@@ -119,7 +121,7 @@ void testApp::mousePressed(int x, int y, int button){
             buttonList[i].checkPress(pmouse);
         }
 
-        if( state == DRAWING ){
+        if( state == CUBE ){
             objectList.push_back( new Cube() );
         }
     }
@@ -130,6 +132,8 @@ void testApp::mouseReleased(int x, int y, int button){
 
     if( button == L_MOUSE){
         if(opReady){
+            //Force 0,0 at the center of the screen
+            Vertex current(x - center.getX(), y - center.getY(), 0);
             switch(state){
             case ROTATING_X:
                 objectList.back()->rotate( X, pRawY - y, 1 );
@@ -145,11 +149,10 @@ void testApp::mouseReleased(int x, int y, int button){
             case TRANSLATING:
                 objectList.back()->translate( x - pRawX, y - pRawY, 1 );
                 break;
-            case DRAWING:
-                //Force 0,0 at the center of the screen
-                x = x - center.getX();
-                y = y - center.getY();
-                Vertex current(x, y, 0);
+            case CUBE:
+                ((Cube*)objectList.back())->setVertices( pmouse, current );
+                break;
+            case REVOLUTION:
                 ((Cube*)objectList.back())->setVertices( pmouse, current );
                 break;
             }

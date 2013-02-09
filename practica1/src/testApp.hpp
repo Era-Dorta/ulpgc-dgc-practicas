@@ -14,13 +14,12 @@
 using namespace std;
 
 class Button;
-enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, ROTATING, TRANSLATING, DRAWING };
+enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, ROTATING, TRANSLATING, CUBE, REVOLUTION };
 
 class testApp : public ofBaseApp{
 
     private:
         vector<DrawableObject*> objectList;
-        //Cube cube;
         Vertex pmouse;
         int pRawX, pRawY;
         bool opReady;
