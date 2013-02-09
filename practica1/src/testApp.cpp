@@ -1,4 +1,7 @@
 #include "testApp.hpp"
+#include "revolutionSurface.hpp"
+#include "cube.hpp"
+#include <cmath>
 
 static double transMatrix[4][4];
 //Center of the screen
@@ -93,7 +96,7 @@ void testApp::mouseDragged(int x, int y, int button){
                 x = x - center.getX();
                 y = y - center.getY();
                 Vertex current(x, y, 0);
-                objectList.back()->setVertices( pmouse, current );
+                ((Cube*)objectList.back())->setVertices( pmouse, current );
                 break;
             }
         }
@@ -147,7 +150,7 @@ void testApp::mouseReleased(int x, int y, int button){
                 x = x - center.getX();
                 y = y - center.getY();
                 Vertex current(x, y, 0);
-                objectList.back()->setVertices( pmouse, current );
+                ((Cube*)objectList.back())->setVertices( pmouse, current );
                 break;
             }
         }else{

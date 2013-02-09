@@ -5,10 +5,8 @@
 
 #include "ofMain.h"
 #include "vertex.hpp"
-#include "cube.hpp"
 #include "drawableObject.hpp"
 #include <vector>
-#include <cmath>
 
 #define L_MOUSE 0
 #define R_MOUSE 3
