@@ -8,8 +8,6 @@ class RevolutionSurface : public DrawableObject{
 
     private:
         bool hasAllVertices_;
-        void operator=( const RevolutionSurface& otherRevolutionSurface );
-        RevolutionSurface( const RevolutionSurface &otherRevolutionSurface  );
 
     public:
         RevolutionSurface();

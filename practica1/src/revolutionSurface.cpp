@@ -2,50 +2,6 @@
 #include "ofMain.h"
 
 //--------------------------------------------------------------
-void RevolutionSurface::operator=( const RevolutionSurface& otherRevolutionSurface ){
-    //Copy how much vertices the object has
-    totalVertices = otherRevolutionSurface.totalVertices;
-    //Get memory for the vertices
-    /*
-    vertices = otherRevolutionSurface.vertices;
-    transVertices = otherRevolutionSurface.transVertices;
-    */
-    delete[] vertices;
-    delete[] transVertices;
-    vertices = new Vertex[totalVertices];
-    transVertices = new Vertex[totalVertices];
-    //Copy vertices content
-    for( int i = 0; i < (totalVertices - 1); i++ ){
-        vertices[i] = otherRevolutionSurface.vertices[i];
-        transVertices[i] = otherRevolutionSurface.transVertices[i];
-    }
-    //Copy matrices content
-    for( int i = 0; i < 4; i++ ){
-        for( int j = 0; i < 4; i++ ){
-            transMatrix[i][j] = otherRevolutionSurface.transMatrix[i][j];
-            auxMatrix[i][j] = otherRevolutionSurface.auxMatrix[i][j];
-        }
-    }
-}
-
-//--------------------------------------------------------------
-RevolutionSurface::RevolutionSurface( const RevolutionSurface &otherRevolutionSurface )
-:DrawableObject(otherRevolutionSurface.totalVertices + 1)
-{
-    hasAllVertices_ = false;
-    subtype = REVOLUTION;
-    //DrawableObject::DrawableObject(otherRevolutionSurface.totalVertices + 1);
-    DrawableObject::resetTransMatrix();
-    DrawableObject::resetAuxMatrix();
-    //Copy vertices content
-    for( int i = 0; i < (totalVertices - 1); i++ ){
-        cout << "Copiando " << i << "vertice\n";
-        vertices[i] = otherRevolutionSurface.vertices[i];
-        transVertices[i] = otherRevolutionSurface.transVertices[i];
-    }
-}
-
-//--------------------------------------------------------------
 RevolutionSurface::RevolutionSurface()
 :DrawableObject(0)
 {
@@ -58,9 +14,20 @@ RevolutionSurface::RevolutionSurface()
 //--------------------------------------------------------------
 void RevolutionSurface::setVertex( Vertex vertex ){
     cout << "total antes "  << totalVertices << endl;
-    (*this) = *(new RevolutionSurface( (*this) ));
-    vertices[totalVertices - 1] = vertex;
-    transVertices[totalVertices - 1] = vertex;
+    Vertex* auxVertices,* auxTransVertices;
+    auxVertices = new Vertex[totalVertices + 1];
+    auxTransVertices = new Vertex[totalVertices + 1];
+    for( int i = 0; i < totalVertices; i++){
+        auxVertices[i] = vertices[i];
+        auxTransVertices[i] = transVertices[i];
+    }
+    auxVertices[totalVertices] = vertex;
+    auxTransVertices[totalVertices] = vertex;
+    delete[] vertices;
+    delete[] transVertices;
+    vertices = auxVertices;
+    transVertices = auxTransVertices;
+    totalVertices++;
     cout << "total despues "  << totalVertices << endl;
 }
 
@@ -79,8 +46,6 @@ void RevolutionSurface::draw(){
         if(hasAllVertices_){
 
         }else{
-
-
             for(int i = 1; i < totalVertices; i++){
                 //Lines
                 //cout << "Dibjuando vertices"<< i <<  " \n";
