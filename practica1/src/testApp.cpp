@@ -99,7 +99,6 @@ void testApp::mouseDragged(int x, int y, int button){
                 ((Cube*)objectList.back())->setVertices( pmouse, current );
                 break;
             case DRAW_REVOLUTION:
-                ((Cube*)objectList.back())->setVertices( pmouse, current );
                 break;
             }
         }
@@ -131,17 +130,14 @@ void testApp::mousePressed(int x, int y, int button){
             //a revolution objetc
             if( objectList.size() == 0 || objectList.back()->getSubtype() != REVOLUTION ){
                 objectList.push_back( new RevolutionSurface() );
-                cout << "Meti un objeto rev nuevo\n";
             }else{
                 RevolutionSurface* revObject = (RevolutionSurface*)objectList.back();
                 //Previous object is done, so make a new one
                 if( revObject->hasAllVertices() ){
-                    cout << "Meti un objeto rev nuevo\n";
                     objectList.push_back( new RevolutionSurface() );
                 //Still adding vertices to revolution object
                 }else{
                     revObject->setVertex( pmouse );
-                    cout << "Nuevo Vertex en revolucion\n";
                 }
             }
             break;
@@ -153,7 +149,6 @@ void testApp::mousePressed(int x, int y, int button){
         //Right click and drawing a revolution object
         if( button == R_MOUSE && state == DRAW_REVOLUTION ){
             //User finished adding vertices, construct the object
-            cout << "Creando la revolucion\n";
             RevolutionSurface* revObject = (RevolutionSurface*)objectList.back();
             revObject->noMoreVertices();
         }

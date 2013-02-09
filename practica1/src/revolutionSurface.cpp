@@ -12,8 +12,7 @@ RevolutionSurface::RevolutionSurface()
 }
 
 //--------------------------------------------------------------
-void RevolutionSurface::setVertex( Vertex vertex ){
-    cout << "total antes "  << totalVertices << endl;
+void RevolutionSurface::setVertex( Vertex &vertex ){
     Vertex* auxVertices,* auxTransVertices;
 
     auxVertices = new Vertex[totalVertices + 1];
@@ -33,8 +32,6 @@ void RevolutionSurface::setVertex( Vertex vertex ){
     vertices = auxVertices;
     transVertices = auxTransVertices;
     totalVertices++;
-
-    cout << "total despues "  << totalVertices << endl;
 }
 
 //--------------------------------------------------------------
@@ -53,8 +50,6 @@ void RevolutionSurface::draw(){
 
         }else{
             for(int i = 1; i < totalVertices; i++){
-                //Lines
-                //cout << "Dibjuando vertices"<< i <<  " \n";
                 ofSetColor ( 0 ,0 ,255 ); //Blue
                 ofLine(transVertices[i - 1].getX(), transVertices[i -1].getY(),
                     transVertices[i].getX(), transVertices[i].getY());

@@ -15,7 +15,7 @@ Cube::Cube()
 }
 
 //--------------------------------------------------------------
-Cube::Cube( Vertex vertex0, Vertex vertex1 )
+Cube::Cube( Vertex &vertex0, Vertex &vertex1 )
 :DrawableObject(8)
 {
     subtype = CUBE;
@@ -25,7 +25,7 @@ Cube::Cube( Vertex vertex0, Vertex vertex1 )
 }
 
 //--------------------------------------------------------------
-void Cube::setVertices( Vertex vertex0, Vertex vertex1 ){
+void Cube::setVertices( Vertex &vertex0, Vertex &vertex1 ){
     double sideX, sideY, sideZ;
     int z;
     sideX = vertex1.getX() - vertex0.getX();

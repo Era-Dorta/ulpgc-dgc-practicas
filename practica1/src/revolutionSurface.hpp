@@ -11,7 +11,7 @@ class RevolutionSurface : public DrawableObject{
 
     public:
         RevolutionSurface();
-        void setVertex( Vertex vertex );
+        void setVertex( Vertex &vertex );
         void noMoreVertices();
         virtual void draw();
         bool hasAllVertices() { return hasAllVertices_; }

@@ -8,8 +8,8 @@ class Cube : public DrawableObject{
 
     public:
         Cube();
-        Cube( Vertex vertex0, Vertex vertex1 );
-        void setVertices( Vertex vertex0, Vertex vertex1 );
+        Cube( Vertex &vertex0, Vertex &vertex1 );
+        void setVertices( Vertex &vertex0, Vertex &vertex1 );
         virtual void draw();
 };
 
