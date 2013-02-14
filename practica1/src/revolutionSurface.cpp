@@ -6,8 +6,8 @@
 //is rotated
 #define ROT 4
 //--------------------------------------------------------------
-RevolutionSurface::RevolutionSurface()
-:DrawableObject(0)
+RevolutionSurface::RevolutionSurface(ofColor color_)
+:DrawableObject(0, color_)
 {
     hasAllVertices_ = false;
     subtype = REVOLUTION;
@@ -72,7 +72,7 @@ void RevolutionSurface::draw(Renderer* renderer){
     int i, j;
     if( totalVertices >= 1 ){
         renderer->perspective(true);
-        ofSetColor ( ofColor::white );
+        ofSetColor ( color );
         if(hasAllVertices_){
             for( i = 0; i < ROT; i++ ){
                 for( j = 1; j < lineVerticesAmount; j++ ){

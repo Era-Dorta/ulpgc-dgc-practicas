@@ -126,20 +126,20 @@ void testApp::mousePressed(int x, int y, int button){
 
         switch(state){
         case DRAW_CUBE:
-            objectList.push_back( new Cube( ofColor::fromHex(rand() ) ));
+            objectList.push_back( new Cube( ofColor::fromHex(rand())) );
             currentObject = objectList.back();
             break;
         case DRAW_REVOLUTION:
             //First click on revolution, and previous object is not
             //a revolution objetc
             if( objectList.size() == 0 || objectList.back()->getSubtype() != REVOLUTION ){
-                objectList.push_back( new RevolutionSurface() );
+                objectList.push_back( new RevolutionSurface( ofColor::fromHex(rand())) );
                 currentObject = objectList.back();
             }else{
                 RevolutionSurface* revObject = (RevolutionSurface*)objectList.back();
                 //Previous object is done, so make a new one
                 if( revObject->hasAllVertices() ){
-                    objectList.push_back( new RevolutionSurface() );
+                    objectList.push_back( new RevolutionSurface( ofColor::fromHex(rand())) );
                     currentObject = objectList.back();
                 //Still adding vertices to revolution object
                 }else{

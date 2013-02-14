@@ -11,7 +11,7 @@ class RevolutionSurface : public DrawableObject{
         int lineVerticesAmount;
         Vertex pmouse;
     public:
-        RevolutionSurface();
+        RevolutionSurface( ofColor color_ = ofColor::white );
         void setVertex( Vertex &vertex );
         void noMoreVertices();
         void setDrawHelper( Vertex &mouse );
