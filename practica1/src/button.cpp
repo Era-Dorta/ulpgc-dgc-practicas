@@ -1,9 +1,6 @@
 #include "button.hpp"
 #include "ofMain.h"
 
-Renderer* Button::renderer = NULL;
-int Button::nObjects = 0;
-
 class testApp : public ofBaseApp{
     public:
 		void setState( AppStates state_ );
@@ -23,10 +20,6 @@ Button::Button( testApp *app_, Vertex vertex, string buttonTex_, AppStates state
     vertices[2].set(vertex.getX() + size*2, vertex.getY() + size, vertex.getZ());
     vertices[3].set(vertex.getX(), vertex.getY() + size, vertex.getZ());
     vertices[4].set(vertices[3].getX() + size/3, vertices[3].getY() - size/2, vertex.getZ());
-    if(nObjects == 0){
-        renderer = new Renderer();
-    }
-    nObjects++;
 }
 
 //--------------------------------------------------------------
@@ -41,15 +34,6 @@ Button::Button( const Button& otherButton ){
     vertices[2] = otherButton.vertices[2];
     vertices[3] = otherButton.vertices[3];
     vertices[4] = otherButton.vertices[4];
-    nObjects++;
-}
-
-//--------------------------------------------------------------
-Button::~Button(){
-    nObjects--;
-    if(nObjects == 0){
-        delete renderer;
-    }
 }
 
 //--------------------------------------------------------------
@@ -79,7 +63,7 @@ void Button::update(){
 }
 
 //--------------------------------------------------------------
-void Button::draw(){
+void Button::draw(Renderer* renderer){
     if( pressed ){
         ofSetColor ( 0 ,0 ,255 ); //Blue
     }else{

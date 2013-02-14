@@ -56,7 +56,7 @@ void Cube::setVertices( Vertex &vertex0, Vertex &vertex1 ){
 }
 
 //--------------------------------------------------------------
-void Cube::draw(){
+void Cube::draw(Renderer* renderer){
     renderer->perspective(true);
     ofSetColor ( ofColor::white );
     for(int i = 0; i < 4; i++){

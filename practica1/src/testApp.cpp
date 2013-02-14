@@ -4,28 +4,14 @@
 #include <cmath>
 
 #define N_BUTTONS 7
-static double transMatrix[4][4];
+
 //Center of the screen
 extern Vertex center;
-
-void showMatrix( const double matrix[4][4])
-{
-    cout << "[";
-	for( unsigned int i=0; i<4; i++ ){
-		for( unsigned int j=0; j<4; j++ ){
-			cout << matrix[i][j] << " ";
-		}
-		cout << "; \n";
-	}
-	cout << "]\n";
-}
 
 //--------------------------------------------------------------
 void testApp::setup(){
     state = DRAW_CUBE;
     currentObject = NULL;
-    //Initialize matrix
-    resetMatrix();
     //Create buttons
     int x = 400, y = -300;
     nextObjButPos.set(-500,300,0);
@@ -51,10 +37,10 @@ void testApp::update(){
 void testApp::draw(){
 
     for( unsigned int i = 0; i < objectList.size(); i++){
-        objectList[i]->draw();
+        objectList[i]->draw(&renderer);
     }
     for( unsigned int i = 0; i < buttonList.size(); i++){
-        buttonList[i]->draw();
+        buttonList[i]->draw(&renderer);
     }
 }
 
@@ -247,17 +233,4 @@ void testApp::setCurrentObject( DrawableObject* currentObject_ ){
 //--------------------------------------------------------------
 DrawableObject* testApp::getCurrentObject(){
     return currentObject;
-}
-
-//--------------------------------------------------------------
-void testApp::resetMatrix(){
-    for( int i = 0; i < 4; i++){
-        for( int j = 0; j < 4; j++){
-            if(i == j){
-                transMatrix[i][j] = 1;
-            }else{
-                transMatrix[i][j] = 0;
-            }
-        }
-    }
 }

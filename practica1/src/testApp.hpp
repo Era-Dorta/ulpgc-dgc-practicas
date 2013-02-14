@@ -26,6 +26,7 @@ class testApp : public ofBaseApp{
         vector<Button*> buttonList;
         AppStates state;
         DrawableObject* currentObject;
+        Renderer renderer;
 
 	public:
 		void setup();
@@ -45,10 +46,6 @@ class testApp : public ofBaseApp{
 		void setCurrentObject( DrawableObject* currentObject_ );
 		DrawableObject* getCurrentObject();
 		AppStates getState();
-
-	private:
-        void resetMatrix();
-
 };
 
 #endif

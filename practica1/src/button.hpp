@@ -26,14 +26,10 @@ class Button{
     public:
         Button( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_, int size_ = 50 );
         Button( const Button& otherButton );
-        ~Button();
         virtual void checkPress( Vertex mouse );
         bool isPressed();
         virtual void update();
-        void draw();
-        static Renderer* renderer;
-        static int nObjects;
-
+        void draw(Renderer* renderer);
 };
 
 #endif

@@ -10,7 +10,7 @@ class Cube : public DrawableObject{
         Cube();
         Cube( Vertex &vertex0, Vertex &vertex1 );
         void setVertices( Vertex &vertex0, Vertex &vertex1 );
-        virtual void draw();
+        virtual void draw(Renderer* renderer);
 };
 
 #endif

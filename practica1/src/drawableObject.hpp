@@ -25,15 +25,13 @@ class DrawableObject {
         DrawableObject( int totalVertices_ );
         DrawableObject( const DrawableObject& otherDrawableObject );
         virtual ~DrawableObject();
-        virtual void draw(){};
+        virtual void draw(Renderer* renderer){};
         virtual int getTotalVertices() { return totalVertices; };
         virtual void rotate( Axis axis, double amount, int permanent);
         virtual void translate( double tX, double tY, int permanent);
         virtual void resetTransMatrix();
         virtual void resetAuxMatrix();
         virtual Subtype getSubtype() { return subtype; };
-        static int nObjects;
-        static Renderer* renderer;
 };
 
 #endif

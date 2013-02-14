@@ -1,9 +1,6 @@
 #include "drawableObject.hpp"
 #include <cstdlib>
 
-Renderer* DrawableObject::renderer = NULL;
-int DrawableObject::nObjects = 0;
-
 //--------------------------------------------------------------
 DrawableObject::DrawableObject( int totalVertices_ ){
     totalVertices = totalVertices_;
@@ -14,10 +11,6 @@ DrawableObject::DrawableObject( int totalVertices_ ){
         vertices =  NULL;
         transVertices = NULL;
     }
-    if(nObjects == 0){
-        renderer = new Renderer();
-    }
-    nObjects++;
 }
 
 //--------------------------------------------------------------
@@ -40,17 +33,12 @@ DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
             auxMatrix[i][j] = otherDrawableObject.auxMatrix[i][j];
         }
     }
-    nObjects++;
 }
 
 //--------------------------------------------------------------
 DrawableObject::~DrawableObject(){
     delete[] vertices;
     delete[] transVertices;
-    nObjects--;
-    if(nObjects == 0){
-        delete renderer;
-    }
 }
 
 //--------------------------------------------------------------

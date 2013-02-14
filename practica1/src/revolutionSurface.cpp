@@ -68,7 +68,7 @@ void RevolutionSurface::setDrawHelper( Vertex &mouse ){
 }
 
 //--------------------------------------------------------------
-void RevolutionSurface::draw(){
+void RevolutionSurface::draw(Renderer* renderer){
     int i, j;
     if( totalVertices >= 1 ){
         renderer->perspective(true);
