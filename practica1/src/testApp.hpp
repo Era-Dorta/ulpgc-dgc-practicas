@@ -6,15 +6,13 @@
 #include "ofMain.h"
 #include "vertex.hpp"
 #include "drawableObject.hpp"
+#include "button.hpp"
 #include <vector>
 
 #define L_MOUSE 0
 #define R_MOUSE 2
 
 using namespace std;
-
-class Button;
-enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, ROTATING, TRANSLATING, DRAW_CUBE, DRAW_REVOLUTION };
 
 class testApp : public ofBaseApp{
 
@@ -45,27 +43,6 @@ class testApp : public ofBaseApp{
 
 	private:
         void resetMatrix();
-
-};
-
-//Class button is declared here to avoid some nasty
-//circular problems
-class Button{
-
-    private:
-        Vertex vertices[4];
-        Vertex center;
-        bool pressed;
-        int size;
-        string buttonTex;
-        testApp *app;
-        AppStates state;
-
-    public:
-        Button( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_ );
-        void checkPress( Vertex mouse );
-        bool isPressed();
-        void draw();
 
 };
 

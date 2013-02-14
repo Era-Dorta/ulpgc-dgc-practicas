@@ -1,5 +1,12 @@
-#include "testApp.hpp"
+#include "button.hpp"
 #include "ofMain.h"
+
+class testApp : public ofBaseApp{
+    public:
+		void setState( AppStates state_ );
+		AppStates getState();
+
+};
 
 //--------------------------------------------------------------
 Button::Button( testApp *app_, Vertex vertex, string buttonTex_, AppStates state_ ){
