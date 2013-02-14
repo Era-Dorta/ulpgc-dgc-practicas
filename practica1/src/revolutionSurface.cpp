@@ -85,7 +85,7 @@ void RevolutionSurface::draw(Renderer* renderer){
                 renderer->rLine(transVertices[(j - 1+i*lineVerticesAmount)%totalVertices], transVertices[(j - 1+(i+1)*lineVerticesAmount)%totalVertices]);
                }
         }else{
-            ofSetColor ( 0 ,0 ,255 ); //Blue
+            ofSetColor ( ofColor::white);
             for( i = 1; i < totalVertices; i++ ){
                 renderer->rLine(transVertices[i - 1], transVertices[i]);
             }

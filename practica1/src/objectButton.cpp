@@ -9,8 +9,8 @@ class testApp : public ofBaseApp{
 
 
 //--------------------------------------------------------------
-ObjectButton::ObjectButton( testApp *app_, Vertex vertex, string buttonTex_, DrawableObject* object_, int size_ )
-:Button(app_, vertex, buttonTex_, OBJECT_BUTTON, size_ )
+ObjectButton::ObjectButton( testApp *app_, Vertex vertex, string buttonTex_, DrawableObject* object_, ofColor color, int size_ )
+:Button(app_, vertex, buttonTex_, OBJECT_BUTTON, color, size_ )
 {
     object = object_;
     pressed = true;

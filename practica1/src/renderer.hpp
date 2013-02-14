@@ -17,6 +17,7 @@ class Renderer{
         void perspective( const bool activate );
         void rLine(const Vertex& vertex0, const Vertex& vertex1);
         void rDrawBitmapString( string tex, const Vertex& vertex);
+        void rRect( const Vertex& vertex, const float w, const float h);
 };
 
 #endif

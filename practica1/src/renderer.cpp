@@ -34,3 +34,8 @@ void Renderer::rLine(const Vertex& vertex0, const Vertex& vertex1){
 void Renderer::rDrawBitmapString( string tex, const Vertex& vertex){
     ofDrawBitmapString(tex, vertex.getX() + center.getX(), vertex.getY() + center.getY());
 }
+
+//--------------------------------------------------------------
+void Renderer::rRect( const Vertex& vertex, const float w, const float h){
+    ofRect(vertex.getX() + center.getX(), vertex.getY() + center.getY(), w, h);
+}

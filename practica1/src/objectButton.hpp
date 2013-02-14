@@ -12,7 +12,7 @@ class ObjectButton : public Button{
         DrawableObject* object;
 
     public:
-        ObjectButton( testApp *app_, Vertex vertex, string buttonTex_, DrawableObject* object_, int size_ = 25);
+        ObjectButton( testApp *app_, Vertex vertex, string buttonTex_, DrawableObject* object_, ofColor color = ofColor::blue, int size_ = 25 );
         void checkPress( Vertex mouse );
         void update();
         DrawableObject* getObject();

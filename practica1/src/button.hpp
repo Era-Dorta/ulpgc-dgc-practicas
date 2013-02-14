@@ -3,6 +3,7 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
+#include "ofMain.h"
 #include "vertex.hpp"
 #include "renderer.hpp"
 #include <string>
@@ -22,9 +23,11 @@ class Button{
         string buttonTex;
         testApp *app;
         AppStates state;
+        ofColor color;
+        ofColor colorInverted;
 
     public:
-        Button( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_, int size_ = 50 );
+        Button( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_, ofColor color_ = ofColor::white, int size_ = 50 );
         Button( const Button& otherButton );
         virtual void checkPress( Vertex mouse );
         bool isPressed();

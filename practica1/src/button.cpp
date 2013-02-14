@@ -9,12 +9,15 @@ class testApp : public ofBaseApp{
 };
 
 //--------------------------------------------------------------
-Button::Button( testApp *app_, Vertex vertex, string buttonTex_, AppStates state_, int size_ ){
+Button::Button( testApp *app_, Vertex vertex, string buttonTex_, AppStates state_, ofColor color_, int size_ ){
     pressed = false;
     size = size_;
     buttonTex = buttonTex_;
     app = app_;
     state = state_;
+    color = color_;
+    colorInverted = color;
+    colorInverted.invert();
     vertices[0].set(vertex.getX(), vertex.getY(), vertex.getZ());
     vertices[1].set(vertex.getX() + size*2, vertex.getY(), vertex.getZ());
     vertices[2].set(vertex.getX() + size*2, vertex.getY() + size, vertex.getZ());
@@ -29,6 +32,8 @@ Button::Button( const Button& otherButton ){
     buttonTex = otherButton.buttonTex;
     app = otherButton.app;
     state = otherButton.state;
+    color = otherButton.color;
+    colorInverted = otherButton.colorInverted;
     vertices[0] = otherButton.vertices[0];
     vertices[1] = otherButton.vertices[1];
     vertices[2] = otherButton.vertices[2];
@@ -64,15 +69,14 @@ void Button::update(){
 
 //--------------------------------------------------------------
 void Button::draw(Renderer* renderer){
+    ofSetColor ( color );
     if( pressed ){
-        ofSetColor ( 0 ,0 ,255 ); //Blue
+        ofFill();
     }else{
-        ofSetColor ( 255 ,0 ,0 ); //Red
+        ofNoFill();
     }
-    renderer->perspective(false);
-    for(int i = 0; i < 4; i++){
-        renderer->rLine(vertices[i], vertices[(i + 1)%4]);
-    }
+    renderer->rRect(vertices[0], size*2, size);
+    ofSetColor ( colorInverted );
     renderer->rDrawBitmapString(buttonTex, vertices[4]);
 }
 

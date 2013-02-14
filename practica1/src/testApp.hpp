@@ -28,6 +28,7 @@ class testApp : public ofBaseApp{
         AppStates state;
         DrawableObject* currentObject;
         Renderer renderer;
+        ofColor currentColor;
 
 	public:
 		void setup();

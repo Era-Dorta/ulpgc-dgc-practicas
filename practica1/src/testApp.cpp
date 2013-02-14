@@ -126,20 +126,23 @@ void testApp::mousePressed(int x, int y, int button){
 
         switch(state){
         case DRAW_CUBE:
-            objectList.push_back( new Cube( ofColor::fromHex(rand())) );
+            currentColor = ofColor::fromHex(rand());
+            objectList.push_back( new Cube(currentColor) );
             currentObject = objectList.back();
             break;
         case DRAW_REVOLUTION:
             //First click on revolution, and previous object is not
             //a revolution objetc
             if( objectList.size() == 0 || objectList.back()->getSubtype() != REVOLUTION ){
-                objectList.push_back( new RevolutionSurface( ofColor::fromHex(rand())) );
+                currentColor = ofColor::fromHex(rand());
+                objectList.push_back( new RevolutionSurface(currentColor) );
                 currentObject = objectList.back();
             }else{
                 RevolutionSurface* revObject = (RevolutionSurface*)objectList.back();
                 //Previous object is done, so make a new one
                 if( revObject->hasAllVertices() ){
-                    objectList.push_back( new RevolutionSurface( ofColor::fromHex(rand())) );
+                    currentColor = ofColor::fromHex(rand());
+                    objectList.push_back( new RevolutionSurface(currentColor) );
                     currentObject = objectList.back();
                 //Still adding vertices to revolution object
                 }else{
@@ -156,7 +159,7 @@ void testApp::mousePressed(int x, int y, int button){
             //User finished adding vertices, construct the object
             RevolutionSurface* revObject = (RevolutionSurface*)objectList.back();
             revObject->noMoreVertices();
-            buttonList.push_back( new ObjectButton(this, nextObjButPos, "Rev", revObject) );
+            buttonList.push_back( new ObjectButton(this, nextObjButPos, "Rev", revObject, currentColor) );
             nextObjButPos.setX(nextObjButPos.getX() + 50);
         }
     }
@@ -187,7 +190,7 @@ void testApp::mouseReleased(int x, int y, int button){
                 break;
             case DRAW_CUBE:
                 ((Cube*)objectList.back())->setVertices( pmouse, current );
-                auxButton = new ObjectButton(this, nextObjButPos, "Cube", objectList.back());
+                auxButton = new ObjectButton(this, nextObjButPos, "Cube", objectList.back(), currentColor);
                 buttonList.push_back( auxButton );
                 nextObjButPos.setX(nextObjButPos.getX() + 50);
                 break;
