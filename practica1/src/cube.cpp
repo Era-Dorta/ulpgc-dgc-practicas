@@ -57,23 +57,14 @@ void Cube::setVertices( Vertex &vertex0, Vertex &vertex1 ){
 
 //--------------------------------------------------------------
 void Cube::draw(){
-    transVertices[0].drawing();
-    transVertices[0].withPerpective();
+    renderer->perspective(true);
+    ofSetColor ( ofColor::white );
     for(int i = 0; i < 4; i++){
         //Back face of the cube
-        ofSetColor ( 0 ,255 ,0 ); //Green
-        ofLine(transVertices[i + 4].getX(), transVertices[i + 4].getY(),
-            transVertices[(i+1)%4 + 4].getX(), transVertices[(i+1)%4 + 4].getY());
+        renderer->rLine(transVertices[i + 4], transVertices[(i+1)%4 + 4]);
         //Lines between the two faces
-        ofSetColor ( 0 ,0 ,255 ); //Blue
-        ofLine(transVertices[i].getX(), transVertices[i].getY(),
-            transVertices[i + 4].getX(), transVertices[i + 4].getY());
+        renderer->rLine(transVertices[i], transVertices[i + 4]);
         //Front face of the cube
-        ofSetColor ( 255 ,0 ,0 ); //Red
-        ofLine(transVertices[i].getX(), transVertices[i].getY(),
-            transVertices[(i+1)%4].getX(), transVertices[(i+1)%4].getY());
+        renderer->rLine(transVertices[i], transVertices[(i+1)%4]);
     }
-    //getc(stdin);
-    transVertices[0].withoutPerpective();
-    transVertices[0].notDrawing();
 }

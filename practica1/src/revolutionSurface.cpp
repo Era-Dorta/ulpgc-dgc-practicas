@@ -71,34 +71,25 @@ void RevolutionSurface::setDrawHelper( Vertex &mouse ){
 void RevolutionSurface::draw(){
     int i, j;
     if( totalVertices >= 1 ){
-        transVertices[0].drawing();
-        transVertices[0].withPerpective();
+        renderer->perspective(true);
+        ofSetColor ( ofColor::white );
         if(hasAllVertices_){
-
-            ofSetColor ( 0 ,0 ,255 ); //Blue
             for( i = 0; i < ROT; i++ ){
                 for( j = 1; j < lineVerticesAmount; j++ ){
                 //Vertical lines
-                ofLine(transVertices[j - 1+i*lineVerticesAmount].getX(), transVertices[j -1 + i*lineVerticesAmount].getY(),
-                    transVertices[j+i*lineVerticesAmount].getX(), transVertices[j+i*lineVerticesAmount].getY());
+                renderer->rLine(transVertices[j - 1+i*lineVerticesAmount],transVertices[j+i*lineVerticesAmount]);
                 //Horizontal lines
-                ofLine(transVertices[(j - 1+i*lineVerticesAmount)%totalVertices].getX(), transVertices[(j -1+i*lineVerticesAmount)%totalVertices].getY(),
-                    transVertices[((j - 1) + (i+1)*lineVerticesAmount)%totalVertices].getX(), transVertices[(j - 1+(i+1)*lineVerticesAmount)%totalVertices].getY());
+                renderer->rLine(transVertices[(j - 1+i*lineVerticesAmount)%totalVertices], transVertices[(j - 1+(i+1)*lineVerticesAmount)%totalVertices]);
                 }
                 //Bottom horizontal lines
-                ofLine(transVertices[(j - 1+i*lineVerticesAmount)%totalVertices].getX(), transVertices[(j -1+i*lineVerticesAmount)%totalVertices].getY(),
-                    transVertices[((j - 1) + (i+1)*lineVerticesAmount)%totalVertices].getX(), transVertices[(j - 1+(i+1)*lineVerticesAmount)%totalVertices].getY());
-            }
+                renderer->rLine(transVertices[(j - 1+i*lineVerticesAmount)%totalVertices], transVertices[(j - 1+(i+1)*lineVerticesAmount)%totalVertices]);
+               }
         }else{
+            ofSetColor ( 0 ,0 ,255 ); //Blue
             for( i = 1; i < totalVertices; i++ ){
-                ofSetColor ( 0 ,0 ,255 ); //Blue
-                ofLine(transVertices[i - 1].getX(), transVertices[i -1].getY(),
-                    transVertices[i].getX(), transVertices[i].getY());
+                renderer->rLine(transVertices[i - 1], transVertices[i]);
             }
-            ofLine(transVertices[i - 1].getX(), transVertices[i - 1].getY(),
-                    pmouse.getX(), pmouse.getY());
+            renderer->rLine(transVertices[i - 1], pmouse);
         }
-        transVertices[0].withoutPerpective();
-        transVertices[0].notDrawing();
     }
 }

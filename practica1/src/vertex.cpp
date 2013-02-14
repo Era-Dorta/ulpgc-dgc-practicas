@@ -1,8 +1,5 @@
 #include "vertex.hpp"
 #include <iostream>
-int Vertex::draw = 0;
-int Vertex::perpective = 0;
-int k = 400;
 
 //--------------------------------------------------------------
 Vertex::Vertex( const double x, const double y, const double z ) {
@@ -10,7 +7,6 @@ Vertex::Vertex( const double x, const double y, const double z ) {
     coordinates[1] = y;
     coordinates[2] = z;
     coordinates[3] = 1;
-    draw = 0;
 }
 
 //--------------------------------------------------------------
@@ -22,37 +18,17 @@ Vertex::Vertex( const Vertex& otherVertex ){
 
 //--------------------------------------------------------------
 double Vertex::getX() const {
-    if( this == &center ){
-        return coordinates[0];
-    }else{
-        if( perpective ){
-            return ( coordinates[0] / ( 1 - getZ() / (double)k ) + center.getX()*draw );
-        }else{
-            return (coordinates[0] + center.getX()*draw);
-        }
-    }
+    return coordinates[0];
 }
 
 //--------------------------------------------------------------
 double Vertex::getY() const {
-    if( this == &center ){
-        return coordinates[1];
-    }else{
-        if( perpective ){
-            return ( coordinates[1] / ( 1 - getZ() / (double)k ) + center.getY()*draw );
-        }else{
-            return (coordinates[1] + center.getY()*draw);
-        }
-    }
+    return coordinates[1];
 }
 
 //--------------------------------------------------------------
 double Vertex::getZ() const {
-    if( this == &center ){
-        return coordinates[2];
-    }else{
-        return (coordinates[2] + center.getZ()*draw);
-    }
+    return coordinates[2];
 }
 
 //--------------------------------------------------------------

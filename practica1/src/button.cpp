@@ -1,6 +1,9 @@
 #include "button.hpp"
 #include "ofMain.h"
 
+Renderer* Button::renderer = NULL;
+int Button::nObjects = 0;
+
 class testApp : public ofBaseApp{
     public:
 		void setState( AppStates state_ );
@@ -15,10 +18,38 @@ Button::Button( testApp *app_, Vertex vertex, string buttonTex_, AppStates state
     buttonTex = buttonTex_;
     app = app_;
     state = state_;
-    vertices[0] = *(new Vertex( vertex.getX(), vertex.getY(), vertex.getZ()));
-    vertices[1] = *(new Vertex( vertex.getX() + size*2, vertex.getY(), vertex.getZ()));
-    vertices[2] = *(new Vertex( vertex.getX() + size*2, vertex.getY() + size, vertex.getZ()));
-    vertices[3] = *(new Vertex( vertex.getX(), vertex.getY() + size, vertex.getZ()));
+    vertices[0].set(vertex.getX(), vertex.getY(), vertex.getZ());
+    vertices[1].set(vertex.getX() + size*2, vertex.getY(), vertex.getZ());
+    vertices[2].set(vertex.getX() + size*2, vertex.getY() + size, vertex.getZ());
+    vertices[3].set(vertex.getX(), vertex.getY() + size, vertex.getZ());
+    vertices[4].set(vertices[3].getX() + size/3, vertices[3].getY() - size/2, vertex.getZ());
+    if(nObjects == 0){
+        renderer = new Renderer();
+    }
+    nObjects++;
+}
+
+//--------------------------------------------------------------
+Button::Button( const Button& otherButton ){
+    pressed = otherButton.pressed;
+    size = otherButton.size;
+    buttonTex = otherButton.buttonTex;
+    app = otherButton.app;
+    state = otherButton.state;
+    vertices[0] = otherButton.vertices[0];
+    vertices[1] = otherButton.vertices[1];
+    vertices[2] = otherButton.vertices[2];
+    vertices[3] = otherButton.vertices[3];
+    vertices[4] = otherButton.vertices[4];
+    nObjects++;
+}
+
+//--------------------------------------------------------------
+Button::~Button(){
+    nObjects--;
+    if(nObjects == 0){
+        delete renderer;
+    }
 }
 
 //--------------------------------------------------------------
@@ -54,10 +85,10 @@ void Button::draw(){
     }else{
         ofSetColor ( 255 ,0 ,0 ); //Red
     }
-    vertices[0].drawing();
+    renderer->perspective(false);
     for(int i = 0; i < 4; i++){
-        ofLine(vertices[i].getX(), vertices[i].getY(), vertices[(i + 1)%4].getX(), vertices[(i + 1)%4].getY());
+        renderer->rLine(vertices[i], vertices[(i + 1)%4]);
     }
-    ofDrawBitmapString(buttonTex, vertices[3].getX() + size/3, vertices[3].getY() - size/2);
-    vertices[0].notDrawing();
+    renderer->rDrawBitmapString(buttonTex, vertices[4]);
 }
+

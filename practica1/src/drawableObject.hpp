@@ -2,6 +2,7 @@
 #define DRAWABLE_OBJECT_H
 
 #include "vertex.hpp"
+#include "renderer.hpp"
 #include <cmath>
 using namespace std;
 
@@ -19,6 +20,7 @@ class DrawableObject {
         double auxMatrix[4][4];
         void multiplyMatrix( double matrix0[4][4], double matrix1[4][4], int firstSave = 1 );
 
+
     public:
         DrawableObject( int totalVertices_ );
         DrawableObject( const DrawableObject& otherDrawableObject );
@@ -30,6 +32,8 @@ class DrawableObject {
         virtual void resetTransMatrix();
         virtual void resetAuxMatrix();
         virtual Subtype getSubtype() { return subtype; };
+        static int nObjects;
+        static Renderer* renderer;
 };
 
 #endif
