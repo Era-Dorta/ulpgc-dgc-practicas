@@ -9,6 +9,7 @@
 #include "button.hpp"
 #include "objectButton.hpp"
 #include <vector>
+#include <cstdlib>
 
 #define L_MOUSE 0
 #define R_MOUSE 2

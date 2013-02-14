@@ -2,7 +2,7 @@
 #include <cstdlib>
 
 //--------------------------------------------------------------
-DrawableObject::DrawableObject( int totalVertices_ ){
+DrawableObject::DrawableObject( int totalVertices_, ofColor color_  ){
     totalVertices = totalVertices_;
     if( totalVertices ){
         vertices = new Vertex[totalVertices];
@@ -11,6 +11,7 @@ DrawableObject::DrawableObject( int totalVertices_ ){
         vertices =  NULL;
         transVertices = NULL;
     }
+    color = color_;
 }
 
 //--------------------------------------------------------------
@@ -33,6 +34,7 @@ DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
             auxMatrix[i][j] = otherDrawableObject.auxMatrix[i][j];
         }
     }
+    color = otherDrawableObject.color;
 }
 
 //--------------------------------------------------------------

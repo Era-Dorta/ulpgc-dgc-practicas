@@ -7,7 +7,7 @@
 class Cube : public DrawableObject{
 
     public:
-        Cube();
+        Cube( ofColor color_ = ofColor::white );
         Cube( Vertex &vertex0, Vertex &vertex1 );
         void setVertices( Vertex &vertex0, Vertex &vertex1 );
         virtual void draw(Renderer* renderer);

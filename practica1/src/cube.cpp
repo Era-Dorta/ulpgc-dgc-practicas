@@ -1,8 +1,8 @@
 #include "cube.hpp"
 #include "ofMain.h"
 //--------------------------------------------------------------
-Cube::Cube()
-:DrawableObject(8)
+Cube::Cube( ofColor color_ )
+:DrawableObject(8, color_)
 {
     subtype = CUBE;
     DrawableObject::resetTransMatrix();
@@ -58,7 +58,7 @@ void Cube::setVertices( Vertex &vertex0, Vertex &vertex1 ){
 //--------------------------------------------------------------
 void Cube::draw(Renderer* renderer){
     renderer->perspective(true);
-    ofSetColor ( ofColor::white );
+    ofSetColor ( color );
     for(int i = 0; i < 4; i++){
         //Back face of the cube
         renderer->rLine(transVertices[i + 4], transVertices[(i+1)%4 + 4]);

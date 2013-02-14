@@ -126,7 +126,7 @@ void testApp::mousePressed(int x, int y, int button){
 
         switch(state){
         case DRAW_CUBE:
-            objectList.push_back( new Cube() );
+            objectList.push_back( new Cube( ofColor::fromHex(rand() ) ));
             currentObject = objectList.back();
             break;
         case DRAW_REVOLUTION:

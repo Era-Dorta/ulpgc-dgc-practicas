@@ -3,6 +3,7 @@
 
 #include "vertex.hpp"
 #include "renderer.hpp"
+#include "ofMain.h"
 #include <cmath>
 using namespace std;
 
@@ -19,10 +20,11 @@ class DrawableObject {
         double transMatrix[4][4];
         double auxMatrix[4][4];
         void multiplyMatrix( double matrix0[4][4], double matrix1[4][4], int firstSave = 1 );
+        ofColor color;
 
 
     public:
-        DrawableObject( int totalVertices_ );
+        DrawableObject( int totalVertices_, ofColor color_ = ofColor::white );
         DrawableObject( const DrawableObject& otherDrawableObject );
         virtual ~DrawableObject();
         virtual void draw(Renderer* renderer){};
