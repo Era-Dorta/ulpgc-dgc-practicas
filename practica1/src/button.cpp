@@ -32,15 +32,19 @@ void Button::checkPress( Vertex mouse ){
             app->setState( state );
         }
     }
-    //Other button was pressed, disable this one
-    if(app->getState() != state){
-        pressed = false;
-    }
 }
 
 //--------------------------------------------------------------
 bool Button::isPressed(){
     return pressed;
+}
+
+//--------------------------------------------------------------
+void Button::update(){
+    //Other button was pressed, disable this one
+    if(app->getState() != state){
+        pressed = false;
+    }
 }
 
 //--------------------------------------------------------------

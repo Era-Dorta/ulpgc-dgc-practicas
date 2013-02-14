@@ -25,6 +25,7 @@ class Button{
         Button( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_ );
         void checkPress( Vertex mouse );
         bool isPressed();
+        void update();
         void draw();
 
 };

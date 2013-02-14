@@ -132,6 +132,10 @@ void testApp::mousePressed(int x, int y, int button){
             buttonList[i].checkPress(pmouse);
         }
 
+        for( unsigned int i = 0; i < buttonList.size(); i++){
+            buttonList[i].update();
+        }
+
         switch(state){
         case DRAW_CUBE:
             objectList.push_back( new Cube() );
