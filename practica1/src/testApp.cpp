@@ -221,13 +221,13 @@ void testApp::mouseReleased(int x, int y, int button){
                     currentObject = objectList.back();
                     nextObjButPos.setX(nextObjButPos.getX() - 50);
                 }
-                for( unsigned int i = 0; i < buttonList.size(); i++){
-                    buttonList[i]->update();
-                }
             }else{
                 opReady = true;
             }
         }
+    }
+    for( unsigned int i = 0; i < buttonList.size(); i++){
+        buttonList[i]->update();
     }
 }
 
