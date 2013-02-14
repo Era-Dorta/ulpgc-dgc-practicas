@@ -14,7 +14,7 @@ enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, ROTATING, TRANSLATING, DRAW_C
 //circular problems
 class Button{
 
-    private:
+    protected:
         Vertex vertices[5];
         Vertex center;
         bool pressed;
@@ -27,9 +27,9 @@ class Button{
         Button( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_, int size_ = 50 );
         Button( const Button& otherButton );
         ~Button();
-        void checkPress( Vertex mouse );
+        virtual void checkPress( Vertex mouse );
         bool isPressed();
-        void update();
+        virtual void update();
         void draw();
         static Renderer* renderer;
         static int nObjects;

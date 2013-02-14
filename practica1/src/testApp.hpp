@@ -7,6 +7,7 @@
 #include "vertex.hpp"
 #include "drawableObject.hpp"
 #include "button.hpp"
+#include "objectButton.hpp"
 #include <vector>
 
 #define L_MOUSE 0
@@ -22,7 +23,7 @@ class testApp : public ofBaseApp{
         int pRawX, pRawY;
         Vertex nextObjButPos;
         bool opReady;
-        vector<Button> buttonList;
+        vector<Button*> buttonList;
         AppStates state;
         DrawableObject* currentObject;
 
@@ -41,6 +42,8 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		void setState( AppStates state_ );
+		void setCurrentObject( DrawableObject* currentObject_ );
+		DrawableObject* getCurrentObject();
 		AppStates getState();
 
 	private:

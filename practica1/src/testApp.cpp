@@ -32,16 +32,14 @@ void testApp::setup(){
     Vertex* auxVertex;
     string buttonNames[N_BUTTONS] = { "Rotate X", "Rotate Y", "Rotate Z",
         "Rotate", "Translate", "New Cube", "Revolution" };
-    Button* auxButton;
     for(int i = 0; i < N_BUTTONS; i++){
         auxVertex = new Vertex( x, y + i*60, 0 );
-        auxButton = new Button(this, *auxVertex, buttonNames[i], (AppStates)i);
-        buttonList.push_back( *auxButton );
+        buttonList.push_back( new Button(this, *auxVertex, buttonNames[i], (AppStates)i) );
     }
     //This lines make draw button think it was pressed
     //This is done because it is the default state of the app
     auxVertex = new Vertex( x + 20, y + 5*60, 0 );
-    buttonList[5].checkPress(*auxVertex);
+    buttonList[5]->checkPress(*auxVertex);
     opReady = true;
 }
 
@@ -56,7 +54,7 @@ void testApp::draw(){
         objectList[i]->draw();
     }
     for( unsigned int i = 0; i < buttonList.size(); i++){
-        buttonList[i].draw();
+        buttonList[i]->draw();
     }
 }
 
@@ -133,11 +131,11 @@ void testApp::mousePressed(int x, int y, int button){
         pmouse.setZ( 0 );
         //Check buttons
         for( unsigned int i = 0; i < buttonList.size(); i++){
-            buttonList[i].checkPress(pmouse);
+            buttonList[i]->checkPress(pmouse);
         }
 
         for( unsigned int i = 0; i < buttonList.size(); i++){
-            buttonList[i].update();
+            buttonList[i]->update();
         }
 
         switch(state){
@@ -164,8 +162,7 @@ void testApp::mousePressed(int x, int y, int button){
             }
             break;
         default:
-            //FIXME How to nop??
-            x--;
+            break;
         }
     }else{
         //Right click and drawing a revolution object
@@ -173,8 +170,7 @@ void testApp::mousePressed(int x, int y, int button){
             //User finished adding vertices, construct the object
             RevolutionSurface* revObject = (RevolutionSurface*)objectList.back();
             revObject->noMoreVertices();
-            Button* auxButton = new Button(this, nextObjButPos, "Rev", OBJECT_BUTTON, 25);
-            buttonList.push_back( *auxButton );
+            buttonList.push_back( new ObjectButton(this, nextObjButPos, "Rev", revObject) );
             nextObjButPos.setX(nextObjButPos.getX() + 50);
         }
     }
@@ -182,7 +178,7 @@ void testApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
-    Button* auxButton;
+    ObjectButton* auxButton;
     if( button == L_MOUSE){
         if(opReady){
             //Force 0,0 at the center of the screen
@@ -204,8 +200,8 @@ void testApp::mouseReleased(int x, int y, int button){
                 break;
             case DRAW_CUBE:
                 ((Cube*)objectList.back())->setVertices( pmouse, current );
-                auxButton = new Button(this, nextObjButPos, "Cube", OBJECT_BUTTON, 25);
-                buttonList.push_back( *auxButton );
+                auxButton = new ObjectButton(this, nextObjButPos, "Cube", objectList.back());
+                buttonList.push_back( auxButton );
                 nextObjButPos.setX(nextObjButPos.getX() + 50);
                 break;
             default:
@@ -241,6 +237,16 @@ void testApp::setState( AppStates state_ ){
 //--------------------------------------------------------------
 AppStates testApp::getState(){
     return state;
+}
+
+//--------------------------------------------------------------
+void testApp::setCurrentObject( DrawableObject* currentObject_ ){
+    currentObject = currentObject_;
+}
+
+//--------------------------------------------------------------
+DrawableObject* testApp::getCurrentObject(){
+    return currentObject;
 }
 
 //--------------------------------------------------------------
