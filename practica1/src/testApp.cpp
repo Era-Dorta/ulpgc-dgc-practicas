@@ -23,13 +23,15 @@ void showMatrix( const double matrix[4][4])
 //--------------------------------------------------------------
 void testApp::setup(){
     state = DRAW_CUBE;
+    currentObject = NULL;
     //Initialize matrix
     resetMatrix();
     //Create buttons
     int x = 400, y = -300;
+    nextObjButPos.set(-500,300,0);
     Vertex* auxVertex;
     string buttonNames[N_BUTTONS] = { "Rotate X", "Rotate Y", "Rotate Z",
-        "Rotate", "Translate", "Cube", "Revolution" };
+        "Rotate", "Translate", "New Cube", "Revolution" };
     Button* auxButton;
     for(int i = 0; i < N_BUTTONS; i++){
         auxVertex = new Vertex( x, y + i*60, 0 );
@@ -93,23 +95,25 @@ void testApp::mouseDragged(int x, int y, int button){
             Vertex current(x - center.getX(), y - center.getY(), 0);
             switch(state){
             case ROTATING_X:
-                objectList.back()->rotate( X, pRawY - y, 0 );
+                currentObject->rotate( X, pRawY - y, 0 );
                 break;
             case ROTATING_Y:
-                objectList.back()->rotate( Y, pRawX - x, 0 );
+                currentObject->rotate( Y, pRawX - x, 0 );
                 break;
             case ROTATING_Z:
-                objectList.back()->rotate( Z, pRawY - y, 0 );
+                currentObject->rotate( Z, pRawY - y, 0 );
                 break;
             case ROTATING:
                 break;
             case TRANSLATING:
-                objectList.back()->translate( x - pRawX, y - pRawY, 0 );
+                currentObject->translate( x - pRawX, y - pRawY, 0 );
                 break;
             case DRAW_CUBE:
                 ((Cube*)objectList.back())->setVertices( pmouse, current );
                 break;
             case DRAW_REVOLUTION:
+                break;
+            default:
                 break;
             }
         }
@@ -139,17 +143,20 @@ void testApp::mousePressed(int x, int y, int button){
         switch(state){
         case DRAW_CUBE:
             objectList.push_back( new Cube() );
+            currentObject = objectList.back();
             break;
         case DRAW_REVOLUTION:
             //First click on revolution, and previous object is not
             //a revolution objetc
             if( objectList.size() == 0 || objectList.back()->getSubtype() != REVOLUTION ){
                 objectList.push_back( new RevolutionSurface() );
+                currentObject = objectList.back();
             }else{
                 RevolutionSurface* revObject = (RevolutionSurface*)objectList.back();
                 //Previous object is done, so make a new one
                 if( revObject->hasAllVertices() ){
                     objectList.push_back( new RevolutionSurface() );
+                    currentObject = objectList.back();
                 //Still adding vertices to revolution object
                 }else{
                     revObject->setVertex( pmouse );
@@ -166,36 +173,42 @@ void testApp::mousePressed(int x, int y, int button){
             //User finished adding vertices, construct the object
             RevolutionSurface* revObject = (RevolutionSurface*)objectList.back();
             revObject->noMoreVertices();
+            Button* auxButton = new Button(this, nextObjButPos, "Rev", OBJECT_BUTTON, 25);
+            buttonList.push_back( *auxButton );
+            nextObjButPos.setX(nextObjButPos.getX() + 50);
         }
     }
 }
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
-
+    Button* auxButton;
     if( button == L_MOUSE){
         if(opReady){
             //Force 0,0 at the center of the screen
             Vertex current(x - center.getX(), y - center.getY(), 0);
             switch(state){
             case ROTATING_X:
-                objectList.back()->rotate( X, pRawY - y, 1 );
+                currentObject->rotate( X, pRawY - y, 1 );
                 break;
             case ROTATING_Y:
-                objectList.back()->rotate( Y, pRawX - x, 1 );
+                currentObject->rotate( Y, pRawX - x, 1 );
                 break;
             case ROTATING_Z:
-                objectList.back()->rotate( Z, pRawY - y, 1 );
+                currentObject->rotate( Z, pRawY - y, 1 );
                 break;
             case ROTATING:
                 break;
             case TRANSLATING:
-                objectList.back()->translate( x - pRawX, y - pRawY, 1 );
+                currentObject->translate( x - pRawX, y - pRawY, 1 );
                 break;
             case DRAW_CUBE:
                 ((Cube*)objectList.back())->setVertices( pmouse, current );
+                auxButton = new Button(this, nextObjButPos, "Cube", OBJECT_BUTTON, 25);
+                buttonList.push_back( *auxButton );
+                nextObjButPos.setX(nextObjButPos.getX() + 50);
                 break;
-            case DRAW_REVOLUTION:
+            default:
                 break;
             }
         }else{

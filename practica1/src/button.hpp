@@ -9,7 +9,7 @@
 #include <iostream>
 using namespace std;
 class testApp;
-enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, ROTATING, TRANSLATING, DRAW_CUBE, DRAW_REVOLUTION };
+enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, ROTATING, TRANSLATING, DRAW_CUBE, DRAW_REVOLUTION, OBJECT_BUTTON };
 //Class button is declared here to avoid some nasty
 //circular problems
 class Button{
@@ -24,7 +24,7 @@ class Button{
         AppStates state;
 
     public:
-        Button( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_ );
+        Button( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_, int size_ = 50 );
         Button( const Button& otherButton );
         ~Button();
         void checkPress( Vertex mouse );

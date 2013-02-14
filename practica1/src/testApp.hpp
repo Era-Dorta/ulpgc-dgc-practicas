@@ -20,9 +20,11 @@ class testApp : public ofBaseApp{
         vector<DrawableObject*> objectList;
         Vertex pmouse;
         int pRawX, pRawY;
+        Vertex nextObjButPos;
         bool opReady;
         vector<Button> buttonList;
         AppStates state;
+        DrawableObject* currentObject;
 
 	public:
 		void setup();

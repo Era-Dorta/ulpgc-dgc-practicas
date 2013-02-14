@@ -12,9 +12,9 @@ class testApp : public ofBaseApp{
 };
 
 //--------------------------------------------------------------
-Button::Button( testApp *app_, Vertex vertex, string buttonTex_, AppStates state_ ){
+Button::Button( testApp *app_, Vertex vertex, string buttonTex_, AppStates state_, int size_ ){
     pressed = false;
-    size = 50;
+    size = size_;
     buttonTex = buttonTex_;
     app = app_;
     state = state_;
