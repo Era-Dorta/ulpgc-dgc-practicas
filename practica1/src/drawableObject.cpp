@@ -7,10 +7,15 @@ DrawableObject::DrawableObject( int totalVertices_, ofColor color_  ){
     if( totalVertices ){
         vertices = new Vertex[totalVertices];
         transVertices = new Vertex[totalVertices];
+        triangles = NULL;
+        totalTriangles = 0;
     }else{
         vertices =  NULL;
         transVertices = NULL;
+        triangles = NULL;
+        totalTriangles = 0;
     }
+    drawTriangles_ = false;
     color = color_;
 }
 
@@ -19,6 +24,8 @@ DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
     //Copy how much vertices the object has
     totalVertices = otherDrawableObject.totalVertices;
     subtype = otherDrawableObject.subtype;
+    totalTriangles = otherDrawableObject.totalTriangles;
+    drawTriangles_ = otherDrawableObject.drawTriangles_;
     //Get memory for the vertices
     vertices = new Vertex[totalVertices];
     transVertices = new Vertex[totalVertices];
@@ -34,6 +41,18 @@ DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
             auxMatrix[i][j] = otherDrawableObject.auxMatrix[i][j];
         }
     }
+    if(otherDrawableObject.triangles){
+        triangles = new int*[otherDrawableObject.totalTriangles];
+        //Copy triangles indices
+        for( int i = 0; i < totalTriangles; i++ ){
+            triangles[i] = new int[3];
+            for( int j = 0; i < 3; i++ ){
+                triangles[i][j] = otherDrawableObject.triangles[i][j];
+            }
+        }
+    }else{
+        triangles = NULL;
+    }
     color = otherDrawableObject.color;
 }
 
@@ -41,6 +60,10 @@ DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
 DrawableObject::~DrawableObject(){
     delete[] vertices;
     delete[] transVertices;
+    for( int i = 0; i < totalTriangles; i++ ){
+        delete[] triangles[i];
+    }
+    delete[] triangles;
 }
 
 //--------------------------------------------------------------

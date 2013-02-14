@@ -12,6 +12,21 @@ Cube::Cube( ofColor color_ )
         vertices[i].setY( 0 );
         vertices[i].setZ( 0 );
     }
+    totalTriangles = 12;
+    triangles = new int*[totalTriangles];
+
+    triangles[0] = new int[3] {0,1,2};
+    triangles[1] = new int[3] {0,2,3};
+    triangles[2] = new int[3] {1,5,6};
+    triangles[3] = new int[3] {1,6,2};
+    triangles[4] = new int[3] {5,4,7};
+    triangles[5] = new int[3] {5,7,6};
+    triangles[6] = new int[3] {4,5,1};
+    triangles[7] = new int[3] {4,1,0};
+    triangles[8] = new int[3] {7,6,2};
+    triangles[9] = new int[3] {7,2,3};
+    triangles[10] = new int[3] {4,0,3};
+    triangles[11] = new int[3] {4,3,7};
 }
 
 //--------------------------------------------------------------
@@ -22,9 +37,30 @@ Cube::Cube( Vertex &vertex0, Vertex &vertex1 )
     DrawableObject::resetTransMatrix();
     DrawableObject::resetAuxMatrix();
     setVertices(vertex0, vertex1);
+    totalTriangles = 12;
+    triangles = new int*[totalTriangles];
+
+    triangles[0] = new int[3] {0,1,2};
+    triangles[1] = new int[3] {0,2,3};
+    triangles[2] = new int[3] {1,5,6};
+    triangles[3] = new int[3] {1,6,2};
+    triangles[4] = new int[3] {5,4,7};
+    triangles[5] = new int[3] {5,7,6};
+    triangles[6] = new int[3] {4,5,1};
+    triangles[7] = new int[3] {4,1,0};
+    triangles[8] = new int[3] {7,6,2};
+    triangles[9] = new int[3] {7,2,3};
+    triangles[10] = new int[3] {4,0,3};
+    triangles[11] = new int[3] {4,3,7};
+
 }
 
 //--------------------------------------------------------------
+//Vertices order
+//  0____1      Then goes the back face in the same order
+//  |   |
+//  |   |
+// 3|___|2
 void Cube::setVertices( Vertex &vertex0, Vertex &vertex1 ){
     double sideX, sideY, sideZ;
     int z;
@@ -66,5 +102,13 @@ void Cube::draw(Renderer* renderer){
         renderer->rLine(transVertices[i], transVertices[i + 4]);
         //Front face of the cube
         renderer->rLine(transVertices[i], transVertices[(i+1)%4]);
+    }
+
+    if(drawTriangles_){
+        for( int i = 0; i < totalTriangles; i++ ){
+            for(int j = 0; j < 3; j++){
+                renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
+            }
+        }
     }
 }

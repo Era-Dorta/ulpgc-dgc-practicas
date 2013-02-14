@@ -3,7 +3,7 @@
 #include "cube.hpp"
 #include <cmath>
 
-#define N_BUTTONS 8
+#define N_BUTTONS 9
 
 //Center of the screen
 extern Vertex center;
@@ -17,7 +17,7 @@ void testApp::setup(){
     nextObjButPos.set(-500,300,0);
     Vertex* auxVertex;
     string buttonNames[N_BUTTONS] = { "Rotate X", "Rotate Y", "Rotate Z",
-        "Rotate", "Translate", "New Cube", "Revolution", "Delete" };
+        "Rotate", "Translate", "New Cube", "Revolution", "Triangles", "Delete" };
     for(int i = 0; i < N_BUTTONS; i++){
         auxVertex = new Vertex( x, y + i*60, 0 );
         buttonList.push_back( new Button(this, *auxVertex, buttonNames[i], (AppStates)i) );
@@ -198,7 +198,8 @@ void testApp::mouseReleased(int x, int y, int button){
                 break;
             }
         }else{
-            if(state == DELETE){
+            switch(state){
+            case DELETE:
                 //Find object's button  and delete
                 for( i = N_BUTTONS - 1; i < buttonList.size(); i++){
                     if( ((ObjectButton*)buttonList[i])->getObject() == currentObject ){
@@ -224,8 +225,10 @@ void testApp::mouseReleased(int x, int y, int button){
                     currentObject = objectList.back();
                     nextObjButPos.setX(nextObjButPos.getX() - 50);
                 }
-            }else{
+                break;
+            default:
                 opReady = true;
+                break;
             }
         }
     }

@@ -15,12 +15,15 @@ class DrawableObject {
     protected:
         Vertex* vertices;
         Vertex* transVertices;
+        int** triangles;
+        int totalTriangles;
         int totalVertices;
         Subtype subtype;
         double transMatrix[4][4];
         double auxMatrix[4][4];
         void multiplyMatrix( double matrix0[4][4], double matrix1[4][4], int firstSave = 1 );
         ofColor color;
+        bool drawTriangles_;
 
 
     public:
@@ -34,6 +37,8 @@ class DrawableObject {
         virtual void resetTransMatrix();
         virtual void resetAuxMatrix();
         virtual Subtype getSubtype() { return subtype; };
+        virtual void changeDrawTriangles(){ drawTriangles_ = !drawTriangles_; };
+        bool getDrawTriangles(){ return drawTriangles_; };
 };
 
 #endif
