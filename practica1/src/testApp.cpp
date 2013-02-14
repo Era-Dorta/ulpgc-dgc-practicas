@@ -3,7 +3,7 @@
 #include "cube.hpp"
 #include <cmath>
 
-#define N_BUTTONS 7
+#define N_BUTTONS 8
 
 //Center of the screen
 extern Vertex center;
@@ -17,7 +17,7 @@ void testApp::setup(){
     nextObjButPos.set(-500,300,0);
     Vertex* auxVertex;
     string buttonNames[N_BUTTONS] = { "Rotate X", "Rotate Y", "Rotate Z",
-        "Rotate", "Translate", "New Cube", "Revolution" };
+        "Rotate", "Translate", "New Cube", "Revolution", "Delete" };
     for(int i = 0; i < N_BUTTONS; i++){
         auxVertex = new Vertex( x, y + i*60, 0 );
         buttonList.push_back( new Button(this, *auxVertex, buttonNames[i], (AppStates)i) );
@@ -165,6 +165,7 @@ void testApp::mousePressed(int x, int y, int button){
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
     ObjectButton* auxButton;
+    unsigned int i;
     if( button == L_MOUSE){
         if(opReady){
             //Force 0,0 at the center of the screen
@@ -194,7 +195,38 @@ void testApp::mouseReleased(int x, int y, int button){
                 break;
             }
         }else{
-            opReady = true;
+            if(state == DELETE){
+                //Find object's button  and delete
+                for( i = N_BUTTONS - 1; i < buttonList.size(); i++){
+                    if( ((ObjectButton*)buttonList[i])->getObject() == currentObject ){
+                        buttonList.erase (buttonList.begin()+i);
+                        break;
+                    }
+                }
+                //Move all object's button who are on the right to the one eliminate
+                //one place to the left
+                for( ; i < buttonList.size(); i++){
+                    ((ObjectButton*)buttonList[i])->moveX(-50);
+                }
+                //Eliminate object from object's list
+                for(i = 0; i < objectList.size(); i++){
+                    if(objectList[i] == currentObject ){
+                        objectList.erase (objectList.begin()+i);
+                    }
+                }
+                if(objectList.size() == 0){
+                    currentObject = NULL;
+                    nextObjButPos.setX(-500);
+                }else{
+                    currentObject = objectList.back();
+                    nextObjButPos.setX(nextObjButPos.getX() - 50);
+                }
+                for( unsigned int i = 0; i < buttonList.size(); i++){
+                    buttonList[i]->update();
+                }
+            }else{
+                opReady = true;
+            }
         }
     }
 }

@@ -9,7 +9,7 @@
 #include <iostream>
 using namespace std;
 class testApp;
-enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, ROTATING, TRANSLATING, DRAW_CUBE, DRAW_REVOLUTION, OBJECT_BUTTON };
+enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, ROTATING, TRANSLATING, DRAW_CUBE, DRAW_REVOLUTION, DELETE, OBJECT_BUTTON };
 //Class button is declared here to avoid some nasty
 //circular problems
 class Button{

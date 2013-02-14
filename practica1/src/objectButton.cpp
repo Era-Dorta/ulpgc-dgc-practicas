@@ -35,3 +35,15 @@ void ObjectButton::update(){
         pressed = true;
     }
 }
+
+//--------------------------------------------------------------
+DrawableObject* ObjectButton::getObject(){
+    return object;
+}
+
+//--------------------------------------------------------------
+void ObjectButton::moveX(const int amount){
+    for(int i = 0; i < 5; i++){
+        vertices[i].setX(vertices[i].getX() + amount);
+    }
+}
