@@ -46,7 +46,7 @@ DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
         //Copy triangles indices
         for( int i = 0; i < totalTriangles; i++ ){
             triangles[i] = new int[3];
-            for( int j = 0; i < 3; i++ ){
+            for( int j = 0; j < 3; j++ ){
                 triangles[i][j] = otherDrawableObject.triangles[i][j];
             }
         }

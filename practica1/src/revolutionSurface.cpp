@@ -4,7 +4,7 @@
 
 //ROT defines how many times a revolution object
 //is rotated
-#define ROT 32
+#define ROT 4
 //--------------------------------------------------------------
 RevolutionSurface::RevolutionSurface(ofColor color_)
 :DrawableObject(0, color_)
@@ -18,18 +18,21 @@ RevolutionSurface::RevolutionSurface(ofColor color_)
 //--------------------------------------------------------------
 void RevolutionSurface::setVertex( Vertex &vertex ){
     Vertex* auxVertices,* auxTransVertices;
-
+    //Get memory for current vertices plus one
     auxVertices = new Vertex[totalVertices + 1];
     auxTransVertices = new Vertex[totalVertices + 1];
 
+    //Copy old vertices in allocated memory
     for( int i = 0; i < totalVertices; i++){
         auxVertices[i] = vertices[i];
         auxTransVertices[i] = transVertices[i];
     }
 
+    //Add the new vertex
     auxVertices[totalVertices] = vertex;
     auxTransVertices[totalVertices] = vertex;
 
+    //Delete old vertices
     delete[] vertices;
     delete[] transVertices;
 
@@ -45,6 +48,8 @@ void RevolutionSurface::noMoreVertices(){
     double rotation = (2*PI/ROT)/0.02;
     Vertex* auxVertices,* auxTransVertices;
 
+    //Rotate the vertices ROT times and save them
+    //as new vertices
     auxVertices = new Vertex[totalVertices*ROT];
     auxTransVertices = new Vertex[totalVertices*ROT];
     for(int i = 0; i < ROT; i++){
@@ -60,6 +65,33 @@ void RevolutionSurface::noMoreVertices(){
     totalVertices = totalVertices*ROT;
     vertices = auxVertices;
     transVertices = auxTransVertices;
+
+    //Conect the vertices in triangles
+    totalTriangles = (lineVerticesAmount - 1)*2*ROT;
+    triangles = new int*[totalTriangles];
+    int index = 0;
+    //Clockwise order
+    for(int i = 0; i < ROT; i++){
+        for( int j = 0; j < lineVerticesAmount - 1; j++){
+
+            int vIndex = j+i*lineVerticesAmount;
+            triangles[index] = new int[3];
+
+            triangles[index][0] = vIndex;
+            triangles[index][1] = (vIndex + lineVerticesAmount)%totalVertices;
+            triangles[index][2] = (vIndex + 1 + lineVerticesAmount)%totalVertices;
+
+            index++;
+            triangles[index] = new int[3];
+
+            triangles[index][0] = vIndex;
+            triangles[index][1] = (vIndex + 1 + lineVerticesAmount)%totalVertices;
+            triangles[index][2] = (vIndex + 1)%totalVertices;
+
+            index++;
+        }
+    }
+
 }
 
 //--------------------------------------------------------------
@@ -73,6 +105,7 @@ void RevolutionSurface::draw(Renderer* renderer){
     if( totalVertices >= 1 ){
         ofSetColor ( color );
         if(hasAllVertices_){
+            //User ended drawing the object
             for( i = 0; i < ROT; i++ ){
                 for( j = 1; j < lineVerticesAmount; j++ ){
                 //Vertical lines
@@ -83,7 +116,15 @@ void RevolutionSurface::draw(Renderer* renderer){
                 //Bottom horizontal lines
                 renderer->rLine(transVertices[(j - 1+i*lineVerticesAmount)%totalVertices], transVertices[(j - 1+(i+1)*lineVerticesAmount)%totalVertices]);
                }
+            if(drawTriangles_){
+                for( int i = 0; i < totalTriangles; i++ ){
+                    for(int j = 0; j < 3; j++){
+                        renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
+                    }
+                }
+            }
         }else{
+            //User is still drawing the object
             ofSetColor ( ofColor::white);
             for( i = 1; i < totalVertices; i++ ){
                 renderer->rLine(transVertices[i - 1], transVertices[i]);
