@@ -3,13 +3,15 @@
 #include "cube.hpp"
 #include <cmath>
 
-#define N_BUTTONS 9
+#define N_BUTTONS 8
+#define N_STATUS_BUTTONS 1
 
 //Center of the screen
 extern Vertex center;
 
 //--------------------------------------------------------------
 void testApp::setup(){
+    int i = 0;
     state = DRAW_CUBE;
     currentObject = NULL;
     //Create buttons
@@ -17,8 +19,8 @@ void testApp::setup(){
     nextObjButPos.set(-500,300,0);
     Vertex* auxVertex;
     string buttonNames[N_BUTTONS] = { "Rotate X", "Rotate Y", "Rotate Z",
-        "Rotate", "Translate", "New Cube", "Revolution", "Triangles", "Delete" };
-    for(int i = 0; i < N_BUTTONS; i++){
+        "Rotate", "Translate", "New Cube", "Revolution", "Delete" };
+    for(i = 0; i < N_BUTTONS; i++){
         auxVertex = new Vertex( x, y + i*60, 0 );
         buttonList.push_back( new Button(this, *auxVertex, buttonNames[i], (AppStates)i) );
     }
@@ -26,6 +28,12 @@ void testApp::setup(){
     //This is done because it is the default state of the app
     auxVertex = new Vertex( x + 20, y + 5*60, 0 );
     buttonList[5]->checkPress(*auxVertex);
+
+    string sButtonNames[N_STATUS_BUTTONS] = { "Triangles" };
+    for(i = N_BUTTONS; i < N_STATUS_BUTTONS + N_BUTTONS; i++){
+        auxVertex = new Vertex( x, y + i*60, 0 );
+        buttonList.push_back( new StatusButton(this, *auxVertex, sButtonNames[i - N_BUTTONS], (AppStates)i) );
+    }
     opReady = true;
 }
 

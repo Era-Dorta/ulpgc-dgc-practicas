@@ -11,7 +11,7 @@
 using namespace std;
 class testApp;
 enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, ROTATING, TRANSLATING,
-    DRAW_CUBE, DRAW_REVOLUTION, DRAW_TRIANGLES, DELETE, OBJECT_BUTTON };
+    DRAW_CUBE, DRAW_REVOLUTION, DELETE, DRAW_TRIANGLES, OBJECT_BUTTON };
 //Class button is declared here to avoid some nasty
 //circular problems
 class Button{
@@ -31,9 +31,9 @@ class Button{
         Button( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_, ofColor color_ = ofColor::white, int size_ = 50 );
         Button( const Button& otherButton );
         virtual void checkPress( Vertex mouse );
-        bool isPressed();
+        virtual bool isPressed();
         virtual void update();
-        void draw(Renderer* renderer);
+        virtual void draw(Renderer* renderer);
 };
 
 #endif

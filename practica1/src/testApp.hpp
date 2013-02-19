@@ -8,6 +8,7 @@
 #include "drawableObject.hpp"
 #include "button.hpp"
 #include "objectButton.hpp"
+#include "statusButton.hpp"
 #include <vector>
 #include <cstdlib>
 

@@ -5,7 +5,6 @@
 class testApp : public ofBaseApp{
     public:
 		void setState( AppStates state_ );
-		DrawableObject* getCurrentObject();
 		AppStates getState();
 
 };
@@ -47,17 +46,11 @@ Button::Button( const Button& otherButton ){
 void Button::checkPress( Vertex mouse ){
     if( mouse.getX() >= vertices[0].getX() &&  mouse.getX() <= vertices[1].getX() &&
         mouse.getY() >= vertices[0].getY() && mouse.getY() <= vertices[2].getY() ){
-        if( state == DRAW_TRIANGLES){
-            pressed = !pressed;
-            app->setState( state );
-            app->getCurrentObject()->changeDrawTriangles();
+        if( pressed ){
+            pressed = false;
         }else{
-            if( pressed ){
-                pressed = false;
-            }else{
-                pressed = true;
-                app->setState( state );
-            }
+            pressed = true;
+            app->setState( state );
         }
     }
 }
@@ -69,21 +62,10 @@ bool Button::isPressed(){
 
 //--------------------------------------------------------------
 void Button::update(){
-
-    if( state == DRAW_TRIANGLES){
-        if(app->getCurrentObject() && app->getCurrentObject()->getDrawTriangles()){
-            pressed = true;
-        }else{
-            pressed = false;
-        }
-    }else{
-        //Other button was pressed, disable this one
-        if(app->getState() != state){
-            pressed = false;
-        }
+    //Other button was pressed, disable this one
+    if(app->getState() != state){
+        pressed = false;
     }
-
-
 }
 
 //--------------------------------------------------------------

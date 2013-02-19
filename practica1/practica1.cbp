@@ -45,6 +45,8 @@
 		<Unit filename="src/renderer.hpp" />
 		<Unit filename="src/revolutionSurface.cpp" />
 		<Unit filename="src/revolutionSurface.hpp" />
+		<Unit filename="src/statusButton.cpp" />
+		<Unit filename="src/statusButton.hpp" />
 		<Unit filename="src/testApp.cpp">
 			<Option virtualFolder="src/" />
 		</Unit>
