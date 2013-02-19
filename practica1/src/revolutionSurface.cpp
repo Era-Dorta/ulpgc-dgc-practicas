@@ -4,7 +4,7 @@
 
 //ROT defines how many times a revolution object
 //is rotated
-#define ROT 4
+#define ROT 32
 //--------------------------------------------------------------
 RevolutionSurface::RevolutionSurface(ofColor color_)
 :DrawableObject(0, color_)
@@ -71,7 +71,6 @@ void RevolutionSurface::setDrawHelper( Vertex &mouse ){
 void RevolutionSurface::draw(Renderer* renderer){
     int i, j;
     if( totalVertices >= 1 ){
-        renderer->perspective(true);
         ofSetColor ( color );
         if(hasAllVertices_){
             for( i = 0; i < ROT; i++ ){

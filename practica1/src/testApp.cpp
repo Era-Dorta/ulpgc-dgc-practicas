@@ -3,8 +3,9 @@
 #include "cube.hpp"
 #include <cmath>
 
-#define N_BUTTONS 8
-#define N_STATUS_BUTTONS 1
+#define N_BUTTONS 10
+#define N_ACTION_BUTTONS 8
+#define N_STATUS_BUTTONS 2
 
 //Center of the screen
 extern Vertex center;
@@ -12,28 +13,34 @@ extern Vertex center;
 //--------------------------------------------------------------
 void testApp::setup(){
     int i = 0;
+    withPerspective = true;
     state = DRAW_CUBE;
     currentObject = NULL;
     //Create buttons
     int x = 400, y = -300;
     nextObjButPos.set(-500,300,0);
-    Vertex* auxVertex;
-    string buttonNames[N_BUTTONS] = { "Rotate X", "Rotate Y", "Rotate Z",
+    Vertex auxVertex;
+    string buttonNames[N_ACTION_BUTTONS] = { "Rotate X", "Rotate Y", "Rotate Z",
         "Rotate", "Translate", "New Cube", "Revolution", "Delete" };
-    for(i = 0; i < N_BUTTONS; i++){
-        auxVertex = new Vertex( x, y + i*60, 0 );
-        buttonList.push_back( new Button(this, *auxVertex, buttonNames[i], (AppStates)i) );
+    for(i = 0; i < N_ACTION_BUTTONS; i++){
+        auxVertex.set(x, y + i*60, 0);
+        buttonList.push_back( new Button(this, auxVertex, buttonNames[i], (AppStates)i) );
     }
-    //This lines make draw button think it was pressed
-    //This is done because it is the default state of the app
-    auxVertex = new Vertex( x + 20, y + 5*60, 0 );
-    buttonList[5]->checkPress(*auxVertex);
+;
 
-    string sButtonNames[N_STATUS_BUTTONS] = { "Triangles" };
-    for(i = N_BUTTONS; i < N_STATUS_BUTTONS + N_BUTTONS; i++){
-        auxVertex = new Vertex( x, y + i*60, 0 );
-        buttonList.push_back( new StatusButton(this, *auxVertex, sButtonNames[i - N_BUTTONS], (AppStates)i) );
+    string sButtonNames[N_STATUS_BUTTONS] = { "Perspective","Triangles" };
+    for(i = N_ACTION_BUTTONS; i < N_BUTTONS; i++){
+        auxVertex.set( x, y + i*60, 0 );
+        buttonList.push_back( new StatusButton(this, auxVertex, sButtonNames[i - N_ACTION_BUTTONS], (AppStates)i) );
     }
+
+    //By default activate perspective and draw cube
+    auxVertex.set( x + 20, y + PERSPECTIVE*60, 0 );
+    buttonList[PERSPECTIVE]->checkPress(auxVertex);
+
+    auxVertex.set( x + 20, y + DRAW_REVOLUTION*60, 0 );
+    buttonList[DRAW_REVOLUTION]->checkPress(auxVertex);
+
     opReady = true;
 }
 
@@ -44,9 +51,11 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 
+    renderer.perspective(withPerspective);
     for( unsigned int i = 0; i < objectList.size(); i++){
         objectList[i]->draw(&renderer);
     }
+    renderer.perspective(false);
     for( unsigned int i = 0; i < buttonList.size(); i++){
         buttonList[i]->draw(&renderer);
     }
@@ -140,7 +149,7 @@ void testApp::mousePressed(int x, int y, int button){
             break;
         case DRAW_REVOLUTION:
             //First click on revolution, and previous object is not
-            //a revolution objetc
+            //a revolution object
             if( objectList.size() == 0 || objectList.back()->getSubtype() != REVOLUTION ){
                 currentColor = ofColor::fromHex(rand());
                 objectList.push_back( new RevolutionSurface(currentColor) );
@@ -152,11 +161,18 @@ void testApp::mousePressed(int x, int y, int button){
                     currentColor = ofColor::fromHex(rand());
                     objectList.push_back( new RevolutionSurface(currentColor) );
                     currentObject = objectList.back();
-                //Still adding vertices to revolution object
-                }else{
-                    revObject->setVertex( pmouse );
                 }
             }
+
+            //If not opReady the user only clicked the button, so that is
+            //not a valid vertex
+            if(opReady){
+                //Add vertex to revolution object
+                ((RevolutionSurface*)currentObject)->setVertex( pmouse );
+                //The user just clicked so avoid drawing a new line
+                ((RevolutionSurface*)currentObject)->setDrawHelper(pmouse);
+            }
+
             break;
         default:
             break;
@@ -269,6 +285,16 @@ void testApp::setState( AppStates state_ ){
 //--------------------------------------------------------------
 AppStates testApp::getState(){
     return state;
+}
+
+//--------------------------------------------------------------
+void testApp::setPerspective( bool active ){
+    withPerspective = active;
+}
+
+//--------------------------------------------------------------
+bool testApp::getPerspective(){
+    return withPerspective;
 }
 
 //--------------------------------------------------------------

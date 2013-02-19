@@ -93,7 +93,6 @@ void Cube::setVertices( Vertex &vertex0, Vertex &vertex1 ){
 
 //--------------------------------------------------------------
 void Cube::draw(Renderer* renderer){
-    renderer->perspective(true);
     ofSetColor ( color );
     for(int i = 0; i < 4; i++){
         //Back face of the cube

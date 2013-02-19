@@ -5,6 +5,7 @@ class testApp : public ofBaseApp{
 		void setCurrentObject( DrawableObject* currentObject_ );
 		void setState( AppStates state_ );
 		DrawableObject* getCurrentObject();
+		void setPerspective( bool active );
 };
 
 //--------------------------------------------------------------
@@ -20,15 +21,34 @@ void StatusButton::checkPress( Vertex mouse )
         mouse.getY() >= vertices[0].getY() && mouse.getY() <= vertices[2].getY() ){
         pressed = !pressed;
         app->setState( state );
-        app->getCurrentObject()->changeDrawTriangles();
+        switch(state){
+        case DRAW_TRIANGLES:
+            if(app->getCurrentObject()){
+                app->getCurrentObject()->changeDrawTriangles();
+            }
+            break;
+        case PERSPECTIVE:
+            app->setPerspective(pressed);
+            break;
+        default:
+            break;
+        }
     }
 }
 
 //--------------------------------------------------------------
 void StatusButton::update(){
-    if(app->getCurrentObject() && app->getCurrentObject()->getDrawTriangles()){
-        pressed = true;
-    }else{
-        pressed = false;
+
+    switch(state){
+    case DRAW_TRIANGLES:
+        if(app->getCurrentObject() && app->getCurrentObject()->getDrawTriangles()){
+            pressed = true;
+        }else{
+            pressed = false;
+        }
+        break;
+    default:
+        break;
     }
+
 }

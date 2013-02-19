@@ -25,6 +25,7 @@ class testApp : public ofBaseApp{
         int pRawX, pRawY;
         Vertex nextObjButPos;
         bool opReady;
+        bool withPerspective;
         vector<Button*> buttonList;
         AppStates state;
         DrawableObject* currentObject;
@@ -47,6 +48,8 @@ class testApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 		void setState( AppStates state_ );
 		void setCurrentObject( DrawableObject* currentObject_ );
+		void setPerspective( bool active );
+		bool getPerspective();
 		DrawableObject* getCurrentObject();
 		AppStates getState();
 };
