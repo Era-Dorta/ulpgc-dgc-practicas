@@ -3,9 +3,9 @@
 #include "cube.hpp"
 #include <cmath>
 
-#define N_BUTTONS 10
 #define N_ACTION_BUTTONS 8
 #define N_STATUS_BUTTONS 2
+#define N_BUTTONS N_ACTION_BUTTONS + N_STATUS_BUTTONS
 
 //Center of the screen
 extern Vertex center;
