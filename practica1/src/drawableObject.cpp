@@ -8,11 +8,15 @@ DrawableObject::DrawableObject( int totalVertices_, ofColor color_  ){
         vertices = new Vertex[totalVertices];
         transVertices = new Vertex[totalVertices];
         triangles = NULL;
+        normals = NULL;
+        triangleCentroids = NULL;
         totalTriangles = 0;
     }else{
         vertices =  NULL;
         transVertices = NULL;
         triangles = NULL;
+        normals = NULL;
+        triangleCentroids = NULL;
         totalTriangles = 0;
     }
     drawTriangles_ = false;
@@ -43,15 +47,21 @@ DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
     }
     if(otherDrawableObject.triangles){
         triangles = new int*[otherDrawableObject.totalTriangles];
+        normals = new Vertex[otherDrawableObject.totalTriangles];
+        triangleCentroids = new Vertex[otherDrawableObject.totalTriangles];
         //Copy triangles indices
         for( int i = 0; i < totalTriangles; i++ ){
             triangles[i] = new int[3];
+            normals[i] = otherDrawableObject.normals[i];
+            triangleCentroids[i] = otherDrawableObject.triangleCentroids[i];
             for( int j = 0; j < 3; j++ ){
                 triangles[i][j] = otherDrawableObject.triangles[i][j];
             }
         }
     }else{
         triangles = NULL;
+        normals = NULL;
+        triangleCentroids = NULL;
     }
     color = otherDrawableObject.color;
 }
@@ -64,6 +74,8 @@ DrawableObject::~DrawableObject(){
         delete[] triangles[i];
     }
     delete[] triangles;
+    delete[] normals;
+    delete[] triangleCentroids;
 }
 
 //--------------------------------------------------------------
@@ -192,5 +204,15 @@ void DrawableObject::multiplyMatrix( double matrix0[4][4], double matrix1[4][4],
                 matrix1[i][j] = aux[i][j];
             }
         }
+    }
+}
+
+//--------------------------------------------------------------
+void DrawableObject::calculateNormals(){
+    Vertex d1, d2;
+    for(int i = 0; i < totalTriangles; i++){
+        d1 = vertices[triangles[i][1]] - vertices[triangles[i][0]];
+        d2 = vertices[triangles[i][2]] - vertices[triangles[i][1]];
+        normals[i] = d1*d2;
     }
 }

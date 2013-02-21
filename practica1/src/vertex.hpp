@@ -25,7 +25,9 @@ class Vertex {
         void set (double x, double y, double z){ coordinates[0] = x; coordinates[1] = y; coordinates[2] = z;};
         bool operator==( const Vertex &otherVertex );
         Vertex operator*( const double matrix[4][4] );
+        Vertex operator*( const Vertex &otherVertex );
         void operator=( const Vertex &otherVertex );
+        Vertex operator-( const Vertex &otherVertex );
 };
 
 typedef struct Vertex Vertex;

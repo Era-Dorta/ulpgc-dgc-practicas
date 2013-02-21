@@ -16,6 +16,8 @@ class DrawableObject {
         Vertex* vertices;
         Vertex* transVertices;
         int** triangles;
+        Vertex* normals;
+        Vertex* triangleCentroids;
         int totalTriangles;
         int totalVertices;
         Subtype subtype;
@@ -39,6 +41,9 @@ class DrawableObject {
         virtual Subtype getSubtype() { return subtype; };
         virtual void changeDrawTriangles(){ drawTriangles_ = !drawTriangles_; };
         bool getDrawTriangles(){ return drawTriangles_; };
+
+    protected:
+        void calculateNormals();
 };
 
 #endif

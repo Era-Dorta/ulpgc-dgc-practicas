@@ -73,3 +73,21 @@ Vertex Vertex::operator*( const double matrix[4][4] ){
     }
     return vRes;
 }
+
+//--------------------------------------------------------------
+Vertex Vertex::operator*( const Vertex &otherVertex ){
+    Vertex vRes;
+    vRes.setX( coordinates[1]*otherVertex.coordinates[2] - coordinates[2]*otherVertex.coordinates[1] );
+    vRes.setY( coordinates[2]*otherVertex.coordinates[0] - coordinates[0]*otherVertex.coordinates[2] );
+    vRes.setZ( coordinates[0]*otherVertex.coordinates[1] - coordinates[1]*otherVertex.coordinates[0] );
+    return vRes;
+}
+
+//--------------------------------------------------------------
+Vertex Vertex::operator-( const Vertex &otherVertex ){
+    Vertex vRes;
+    for(int i = 0; i < 3; i++){
+        vRes.set(i, coordinates[i] - otherVertex.coordinates[i] );
+    }
+    return vRes;
+}
