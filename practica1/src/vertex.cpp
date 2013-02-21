@@ -50,6 +50,23 @@ void Vertex::set( int pos, double val ){
 }
 
 //--------------------------------------------------------------
+double Vertex::module(){
+    double res = 0;
+    for(int i = 0; i < 3; i++){
+        res += coordinates[i]*coordinates[i];
+    }
+    return sqrt(res);
+}
+
+//--------------------------------------------------------------
+void Vertex::normalize(){
+    double mod = module();
+    for(int i = 0; i < 3; i++){
+        coordinates[i] = coordinates[i]/mod;
+    }
+}
+
+//--------------------------------------------------------------
 bool Vertex::operator==( const Vertex &otherVertex ){
     return ( getX() ==  otherVertex.getX() && getY() == otherVertex.getY() );
 }
@@ -106,6 +123,15 @@ Vertex Vertex::operator/( const double &val ){
     Vertex vRes;
     for(int i = 0; i < 3; i++){
         vRes.set(i, coordinates[i] / val );
+    }
+    return vRes;
+}
+
+//--------------------------------------------------------------
+Vertex Vertex::operator*( const double &val ){
+    Vertex vRes;
+    for(int i = 0; i < 3; i++){
+        vRes.set(i, coordinates[i] * val );
     }
     return vRes;
 }

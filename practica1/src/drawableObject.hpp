@@ -26,6 +26,7 @@ class DrawableObject {
         void multiplyMatrix( double matrix0[4][4], double matrix1[4][4], int firstSave = 1 );
         ofColor color;
         bool drawTriangles_;
+        bool drawNormals_;
 
 
     public:
@@ -41,6 +42,8 @@ class DrawableObject {
         virtual Subtype getSubtype() { return subtype; };
         virtual void changeDrawTriangles(){ drawTriangles_ = !drawTriangles_; };
         bool getDrawTriangles(){ return drawTriangles_; };
+        bool getNormals(){ return drawNormals_; };
+        bool setNormals( bool activate );
 
     protected:
         void calculateNormals();

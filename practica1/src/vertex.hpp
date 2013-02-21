@@ -3,6 +3,8 @@
 #ifndef VERTEX_H
 #define VERTEX_H
 
+#include <cmath>
+
 class Vertex {
 
     private:
@@ -23,6 +25,8 @@ class Vertex {
         void setH( double h ) { coordinates[3] = h; };
         void set( int pos, double val );
         void set (double x, double y, double z){ coordinates[0] = x; coordinates[1] = y; coordinates[2] = z;};
+        double module();
+        void normalize();
         bool operator==( const Vertex &otherVertex );
         Vertex operator*( const double matrix[4][4] );
         Vertex operator*( const Vertex &otherVertex );
@@ -30,6 +34,7 @@ class Vertex {
         Vertex operator-( const Vertex &otherVertex );
         Vertex operator+( const Vertex &otherVertex );
         Vertex operator/( const double &val );
+        Vertex operator*( const double &val );
 
 };
 

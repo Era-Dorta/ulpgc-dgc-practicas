@@ -110,6 +110,7 @@ void Cube::draw(Renderer* renderer){
             for(int j = 0; j < 3; j++){
                 renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
             }
+            renderer->rLine(triangleCentroids[i], triangleCentroids[i] + normals[i]*10);
         }
     }
 }

@@ -113,6 +113,11 @@ void DrawableObject::rotate( Axis axis, double amount, int permanent){
         for( int i = 0; i < totalVertices; i++){
             transVertices[i] = vertices[i]*transMatrix;
         }
+        for( int i = 0; i < totalTriangles; i++){
+            normals[i] = normals[i]*transMatrix;
+            normals[i].normalize();
+            triangleCentroids[i] = triangleCentroids[i]*transMatrix;
+        }
     }else{
         //Multiply transMatrix by auxMatrix and save the
         //result in auxMatrix, recalculate the transformed
@@ -136,6 +141,10 @@ void DrawableObject::translate( double tX, double tY, int permanent){
         multiplyMatrix(transMatrix, auxMatrix);
         for( int i = 0; i < totalVertices; i++){
             transVertices[i] = vertices[i]*transMatrix;
+        }
+        for( int i = 0; i < totalTriangles; i++){
+            normals[i] = normals[i]*transMatrix;
+            triangleCentroids[i] = triangleCentroids[i]*transMatrix;
         }
     }else{
         //Multiply transMatrix by auxMatrix and save the
@@ -207,6 +216,13 @@ void DrawableObject::multiplyMatrix( double matrix0[4][4], double matrix1[4][4],
     }
 }
 
+bool DrawableObject::setNormals( bool activate ){
+    if(activate){
+        drawTriangles_ = true;
+    }
+    drawNormals_ = activate;
+}
+
 //--------------------------------------------------------------
 void DrawableObject::calculateNormals(){
     Vertex d1, d2;
@@ -219,6 +235,7 @@ void DrawableObject::calculateNormals(){
         d1 = vertices[triangles[i][1]] - vertices[triangles[i][0]];
         d2 = vertices[triangles[i][2]] - vertices[triangles[i][1]];
         normals[i] = d1*d2;
+        normals[i].normalize();
     }
 }
 
