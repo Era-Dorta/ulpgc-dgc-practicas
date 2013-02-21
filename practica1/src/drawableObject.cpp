@@ -210,9 +210,31 @@ void DrawableObject::multiplyMatrix( double matrix0[4][4], double matrix1[4][4],
 //--------------------------------------------------------------
 void DrawableObject::calculateNormals(){
     Vertex d1, d2;
+
+    if(normals == NULL){
+        normals = new Vertex[totalTriangles];
+    }
+
     for(int i = 0; i < totalTriangles; i++){
         d1 = vertices[triangles[i][1]] - vertices[triangles[i][0]];
         d2 = vertices[triangles[i][2]] - vertices[triangles[i][1]];
         normals[i] = d1*d2;
+    }
+}
+
+//--------------------------------------------------------------
+void DrawableObject::calculateCentroids(){
+    Vertex aux;
+
+    if(triangleCentroids == NULL){
+        triangleCentroids = new Vertex[totalTriangles];
+    }
+
+    for(int i = 0; i < totalTriangles; i++){
+        aux.set(0,0,0);
+        for(int j = 0; j < 3; j++){
+            aux = aux + vertices[triangles[i][j]];
+        }
+        triangleCentroids[i] = aux/3.0;
     }
 }

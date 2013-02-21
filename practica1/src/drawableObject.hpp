@@ -44,6 +44,7 @@ class DrawableObject {
 
     protected:
         void calculateNormals();
+        void calculateCentroids();
 };
 
 #endif

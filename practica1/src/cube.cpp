@@ -52,7 +52,6 @@ Cube::Cube( Vertex &vertex0, Vertex &vertex1 )
     triangles[9] = new int[3] {7,2,3};
     triangles[10] = new int[3] {4,0,3};
     triangles[11] = new int[3] {4,3,7};
-
 }
 
 //--------------------------------------------------------------
@@ -89,6 +88,9 @@ void Cube::setVertices( Vertex &vertex0, Vertex &vertex1 ){
     for( int i = 0; i < totalVertices; i++){
         transVertices[i] = vertices[i]*transMatrix;
     }
+
+    calculateNormals();
+    calculateCentroids();
 }
 
 //--------------------------------------------------------------

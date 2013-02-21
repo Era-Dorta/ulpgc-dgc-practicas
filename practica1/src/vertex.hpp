@@ -28,6 +28,9 @@ class Vertex {
         Vertex operator*( const Vertex &otherVertex );
         void operator=( const Vertex &otherVertex );
         Vertex operator-( const Vertex &otherVertex );
+        Vertex operator+( const Vertex &otherVertex );
+        Vertex operator/( const double &val );
+
 };
 
 typedef struct Vertex Vertex;

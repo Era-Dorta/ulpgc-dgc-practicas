@@ -91,3 +91,21 @@ Vertex Vertex::operator-( const Vertex &otherVertex ){
     }
     return vRes;
 }
+
+//--------------------------------------------------------------
+Vertex Vertex::operator+( const Vertex &otherVertex ){
+    Vertex vRes;
+    for(int i = 0; i < 3; i++){
+        vRes.set(i, coordinates[i] + otherVertex.coordinates[i] );
+    }
+    return vRes;
+}
+
+//--------------------------------------------------------------
+Vertex Vertex::operator/( const double &val ){
+    Vertex vRes;
+    for(int i = 0; i < 3; i++){
+        vRes.set(i, coordinates[i] / val );
+    }
+    return vRes;
+}
