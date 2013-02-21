@@ -10,6 +10,8 @@ DrawableObject::DrawableObject( int totalVertices_, ofColor color_  ){
         triangles = NULL;
         normals = NULL;
         triangleCentroids = NULL;
+        transNormals = NULL;
+        transTriangleCentroids = NULL;
         totalTriangles = 0;
     }else{
         vertices =  NULL;
@@ -17,9 +19,12 @@ DrawableObject::DrawableObject( int totalVertices_, ofColor color_  ){
         triangles = NULL;
         normals = NULL;
         triangleCentroids = NULL;
+        transNormals = NULL;
+        transTriangleCentroids = NULL;
         totalTriangles = 0;
     }
     drawTriangles_ = false;
+    drawNormals_ = false;
     color = color_;
 }
 
@@ -30,6 +35,7 @@ DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
     subtype = otherDrawableObject.subtype;
     totalTriangles = otherDrawableObject.totalTriangles;
     drawTriangles_ = otherDrawableObject.drawTriangles_;
+    drawNormals_ = otherDrawableObject.drawNormals_;
     //Get memory for the vertices
     vertices = new Vertex[totalVertices];
     transVertices = new Vertex[totalVertices];
@@ -49,11 +55,15 @@ DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
         triangles = new int*[otherDrawableObject.totalTriangles];
         normals = new Vertex[otherDrawableObject.totalTriangles];
         triangleCentroids = new Vertex[otherDrawableObject.totalTriangles];
+        transNormals = new Vertex[otherDrawableObject.totalTriangles];
+        transTriangleCentroids = new Vertex[otherDrawableObject.totalTriangles];
         //Copy triangles indices
         for( int i = 0; i < totalTriangles; i++ ){
             triangles[i] = new int[3];
             normals[i] = otherDrawableObject.normals[i];
+            transNormals[i] = otherDrawableObject.transNormals[i];
             triangleCentroids[i] = otherDrawableObject.triangleCentroids[i];
+            transTriangleCentroids[i] = otherDrawableObject.transTriangleCentroids[i];
             for( int j = 0; j < 3; j++ ){
                 triangles[i][j] = otherDrawableObject.triangles[i][j];
             }
@@ -62,6 +72,8 @@ DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
         triangles = NULL;
         normals = NULL;
         triangleCentroids = NULL;
+        transNormals = NULL;
+        transTriangleCentroids = NULL;
     }
     color = otherDrawableObject.color;
 }
@@ -75,7 +87,9 @@ DrawableObject::~DrawableObject(){
     }
     delete[] triangles;
     delete[] normals;
+    delete[] transNormals;
     delete[] triangleCentroids;
+    delete[] transTriangleCentroids;
 }
 
 //--------------------------------------------------------------
@@ -114,9 +128,8 @@ void DrawableObject::rotate( Axis axis, double amount, int permanent){
             transVertices[i] = vertices[i]*transMatrix;
         }
         for( int i = 0; i < totalTriangles; i++){
-            normals[i] = normals[i]*transMatrix;
-            normals[i].normalize();
-            triangleCentroids[i] = triangleCentroids[i]*transMatrix;
+            transNormals[i] = normals[i]*transMatrix;
+            transTriangleCentroids[i] = triangleCentroids[i]*transMatrix;
         }
     }else{
         //Multiply transMatrix by auxMatrix and save the
@@ -125,6 +138,10 @@ void DrawableObject::rotate( Axis axis, double amount, int permanent){
         DrawableObject::multiplyMatrix(transMatrix, auxMatrix, 0);
         for( int i = 0; i < totalVertices; i++){
             transVertices[i] = vertices[i]*auxMatrix;
+        }
+        for( int i = 0; i < totalTriangles; i++){
+            transNormals[i] = normals[i]*auxMatrix;
+            transTriangleCentroids[i] = triangleCentroids[i]*auxMatrix;
         }
     }
 }
@@ -143,8 +160,8 @@ void DrawableObject::translate( double tX, double tY, int permanent){
             transVertices[i] = vertices[i]*transMatrix;
         }
         for( int i = 0; i < totalTriangles; i++){
-            normals[i] = normals[i]*transMatrix;
-            triangleCentroids[i] = triangleCentroids[i]*transMatrix;
+            transNormals[i] = normals[i]*transMatrix;
+            transTriangleCentroids[i] = triangleCentroids[i]*transMatrix;
         }
     }else{
         //Multiply transMatrix by auxMatrix and save the
@@ -153,6 +170,10 @@ void DrawableObject::translate( double tX, double tY, int permanent){
         multiplyMatrix(transMatrix, auxMatrix, 0);
         for( int i = 0; i < totalVertices; i++){
             transVertices[i] = vertices[i]*auxMatrix;
+        }
+        for( int i = 0; i < totalTriangles; i++){
+            transNormals[i] = normals[i]*auxMatrix;
+            transTriangleCentroids[i] = triangleCentroids[i]*auxMatrix;
         }
     }
 }
@@ -216,7 +237,7 @@ void DrawableObject::multiplyMatrix( double matrix0[4][4], double matrix1[4][4],
     }
 }
 
-bool DrawableObject::setNormals( bool activate ){
+void DrawableObject::setNormals( bool activate ){
     if(activate){
         drawTriangles_ = true;
     }
@@ -229,6 +250,7 @@ void DrawableObject::calculateNormals(){
 
     if(normals == NULL){
         normals = new Vertex[totalTriangles];
+        transNormals = new Vertex[totalTriangles];
     }
 
     for(int i = 0; i < totalTriangles; i++){
@@ -236,6 +258,7 @@ void DrawableObject::calculateNormals(){
         d2 = vertices[triangles[i][2]] - vertices[triangles[i][1]];
         normals[i] = d1*d2;
         normals[i].normalize();
+        transNormals[i] = normals[i];
     }
 }
 
@@ -245,6 +268,7 @@ void DrawableObject::calculateCentroids(){
 
     if(triangleCentroids == NULL){
         triangleCentroids = new Vertex[totalTriangles];
+        transTriangleCentroids = new Vertex[totalTriangles];
     }
 
     for(int i = 0; i < totalTriangles; i++){
@@ -253,5 +277,7 @@ void DrawableObject::calculateCentroids(){
             aux = aux + vertices[triangles[i][j]];
         }
         triangleCentroids[i] = aux/3.0;
+        transTriangleCentroids[i] = triangleCentroids[i];
     }
+
 }

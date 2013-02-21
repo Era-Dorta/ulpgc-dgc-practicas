@@ -119,10 +119,19 @@ void RevolutionSurface::draw(Renderer* renderer){
                 //Bottom horizontal lines
                 renderer->rLine(transVertices[(j - 1+i*lineVerticesAmount)%totalVertices], transVertices[(j - 1+(i+1)*lineVerticesAmount)%totalVertices]);
                }
-            if(drawTriangles_){
+            if(drawNormals_){
                 for( int i = 0; i < totalTriangles; i++ ){
                     for(int j = 0; j < 3; j++){
                         renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
+                    }
+                    renderer->rLine(transTriangleCentroids[i], transTriangleCentroids[i] + transNormals[i]*10);
+                }
+            }else{
+                if(drawTriangles_){
+                    for( int i = 0; i < totalTriangles; i++ ){
+                        for(int j = 0; j < 3; j++){
+                            renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
+                        }
                     }
                 }
             }

@@ -18,6 +18,8 @@ class DrawableObject {
         int** triangles;
         Vertex* normals;
         Vertex* triangleCentroids;
+        Vertex* transNormals;
+        Vertex* transTriangleCentroids;
         int totalTriangles;
         int totalVertices;
         Subtype subtype;
@@ -37,13 +39,13 @@ class DrawableObject {
         virtual int getTotalVertices() { return totalVertices; };
         virtual void rotate( Axis axis, double amount, int permanent);
         virtual void translate( double tX, double tY, int permanent);
-        virtual void resetTransMatrix();
-        virtual void resetAuxMatrix();
-        virtual Subtype getSubtype() { return subtype; };
-        virtual void changeDrawTriangles(){ drawTriangles_ = !drawTriangles_; };
+        void resetTransMatrix();
+        void resetAuxMatrix();
+        Subtype getSubtype() { return subtype; };
+        void setDrawTriangles( bool activate ){ drawTriangles_ = activate; };
         bool getDrawTriangles(){ return drawTriangles_; };
         bool getNormals(){ return drawNormals_; };
-        bool setNormals( bool activate );
+        void setNormals( bool activate );
 
     protected:
         void calculateNormals();
