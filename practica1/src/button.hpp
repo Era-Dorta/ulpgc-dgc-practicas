@@ -11,7 +11,7 @@
 using namespace std;
 class testApp;
 enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, TRANSLATING,
-    DRAW_CUBE, DRAW_REVOLUTION, DELETE, PERSPECTIVE, DRAW_TRIANGLES, DRAW_NORMALS, OBJECT_BUTTON };
+    DRAW_CUBE, DRAW_REVOLUTION, DELETE, PERSPECTIVE, DRAW_TRIANGLES, DRAW_NORMALS, FILL_TRIANGLES, OBJECT_BUTTON };
 //Class button is declared here to avoid some nasty
 //circular problems
 class Button{

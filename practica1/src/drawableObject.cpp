@@ -123,17 +123,19 @@ DrawableObject::DrawableObject( int totalVertices_, ofColor color_  ){
     }
     drawTriangles_ = false;
     drawNormals_ = false;
+    drawFillTriangles_ = false;
     color = color_;
 }
 
 //--------------------------------------------------------------
 DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
-    //Copy how much vertices the object has
+    //Copy simple attributes
     totalVertices = otherDrawableObject.totalVertices;
     subtype = otherDrawableObject.subtype;
     totalTriangles = otherDrawableObject.totalTriangles;
     drawTriangles_ = otherDrawableObject.drawTriangles_;
     drawNormals_ = otherDrawableObject.drawNormals_;
+    drawFillTriangles_ = otherDrawableObject.drawFillTriangles_;
     //Get memory for the vertices
     vertices = new Vertex[totalVertices];
     transVertices = new Vertex[totalVertices];

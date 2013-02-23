@@ -4,7 +4,7 @@
 #include <cmath>
 
 #define N_ACTION_BUTTONS 7
-#define N_STATUS_BUTTONS 3
+#define N_STATUS_BUTTONS 4
 #define N_BUTTONS N_ACTION_BUTTONS + N_STATUS_BUTTONS
 
 //Center of the screen
@@ -30,7 +30,7 @@ void testApp::setup(){
     }
 ;
 
-    string sButtonNames[N_STATUS_BUTTONS] = { "Perspective","Triangles", "Normals" };
+    string sButtonNames[N_STATUS_BUTTONS] = { "Perspective","Triangles", "Normals", "Fill trian" };
     for(i = N_ACTION_BUTTONS; i < N_BUTTONS; i++){
         auxVertex.set( x, y + i*(height + 10), 0 );
         buttonList.push_back( new StatusButton(this, auxVertex, sButtonNames[i - N_ACTION_BUTTONS], (AppStates)i, width, height) );

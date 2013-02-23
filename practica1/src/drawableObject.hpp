@@ -28,6 +28,7 @@ class DrawableObject {
         ofColor color;
         bool drawTriangles_;
         bool drawNormals_;
+        bool drawFillTriangles_;
 
     private:
         void multiplyMatrix( double matrix0[4][4], double matrix1[4][4], int firstSave = 1 );
@@ -52,6 +53,8 @@ class DrawableObject {
         bool getDrawTriangles(){ return drawTriangles_; };
         bool getNormals(){ return drawNormals_; };
         void setNormals( bool activate );
+        void setFillTriangles( bool activate ){ drawFillTriangles_ = activate; };
+        bool getFillTriangles(){ return drawFillTriangles_; };
 };
 
 #endif
