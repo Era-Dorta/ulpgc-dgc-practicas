@@ -10,42 +10,39 @@ class testApp : public ofBaseApp{
 };
 
 //--------------------------------------------------------------
-Button::Button( testApp *app_, Vertex vertex, string buttonTex_, AppStates state_, ofColor color_, int size_ ){
+Button::Button( testApp *app_, Vertex vertex, string buttonTex_, AppStates state_, int w, int h, ofColor color_ ){
     pressed = false;
-    size = size_;
+    width = w;
+    height = h;
     buttonTex = buttonTex_;
     app = app_;
     state = state_;
     color = color_;
     colorInverted = color;
     colorInverted.invert();
-    vertices[0].set(vertex.getX(), vertex.getY(), vertex.getZ());
-    vertices[1].set(vertex.getX() + size*2, vertex.getY(), vertex.getZ());
-    vertices[2].set(vertex.getX() + size*2, vertex.getY() + size, vertex.getZ());
-    vertices[3].set(vertex.getX(), vertex.getY() + size, vertex.getZ());
-    vertices[4].set(vertices[3].getX() + size/3, vertices[3].getY() - size/2, vertex.getZ());
+    position = vertex;
+    texPosition = position;
+    texPosition.setX(position.getX() + 5 );
+    texPosition.setY(position.getY() + height/2 );
 }
 
 //--------------------------------------------------------------
 Button::Button( const Button& otherButton ){
     pressed = otherButton.pressed;
-    size = otherButton.size;
+    width = otherButton.width;
+    height = otherButton.height;
     buttonTex = otherButton.buttonTex;
     app = otherButton.app;
     state = otherButton.state;
     color = otherButton.color;
     colorInverted = otherButton.colorInverted;
-    vertices[0] = otherButton.vertices[0];
-    vertices[1] = otherButton.vertices[1];
-    vertices[2] = otherButton.vertices[2];
-    vertices[3] = otherButton.vertices[3];
-    vertices[4] = otherButton.vertices[4];
+    position = otherButton.position;
 }
 
 //--------------------------------------------------------------
 void Button::checkPress( Vertex mouse ){
-    if( mouse.getX() >= vertices[0].getX() &&  mouse.getX() <= vertices[1].getX() &&
-        mouse.getY() >= vertices[0].getY() && mouse.getY() <= vertices[2].getY() ){
+    if( mouse.getX() >= position.getX() &&  mouse.getX() <= position.getX() + width &&
+            mouse.getY() >= position.getY() && mouse.getY() <= position.getY() + height ){
         if( pressed ){
             pressed = false;
         }else{
@@ -76,8 +73,8 @@ void Button::draw(Renderer* renderer){
     }else{
         ofNoFill();
     }
-    renderer->rRect(vertices[0], size*2, size);
+    renderer->rRect(position, width, height);
     ofSetColor ( colorInverted );
-    renderer->rDrawBitmapString(buttonTex, vertices[4]);
+    renderer->rDrawBitmapString(buttonTex, texPosition);
 }
 

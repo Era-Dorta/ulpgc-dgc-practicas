@@ -9,16 +9,16 @@ class testApp : public ofBaseApp{
 };
 
 //--------------------------------------------------------------
-StatusButton::StatusButton( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_, ofColor color_, int size_)
-:Button(app_, vertex, buttonTex_, state_, color_, size_)
+StatusButton::StatusButton( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_, int w, int h,ofColor color_ )
+:Button(app_, vertex, buttonTex_, state_, w, h, color_)
 {
 }
 
 //--------------------------------------------------------------
 void StatusButton::checkPress( Vertex mouse )
 {
-    if( mouse.getX() >= vertices[0].getX() &&  mouse.getX() <= vertices[1].getX() &&
-        mouse.getY() >= vertices[0].getY() && mouse.getY() <= vertices[2].getY() ){
+    if( mouse.getX() >= position.getX() &&  mouse.getX() <= position.getX() + width &&
+        mouse.getY() >= position.getY() && mouse.getY() <= position.getY() + height ){
         pressed = !pressed;
         app->setState( state );
         switch(state){

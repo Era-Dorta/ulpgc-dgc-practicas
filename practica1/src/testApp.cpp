@@ -3,7 +3,7 @@
 #include "cube.hpp"
 #include <cmath>
 
-#define N_ACTION_BUTTONS 8
+#define N_ACTION_BUTTONS 7
 #define N_STATUS_BUTTONS 3
 #define N_BUTTONS N_ACTION_BUTTONS + N_STATUS_BUTTONS
 
@@ -18,27 +18,29 @@ void testApp::setup(){
     currentObject = NULL;
     //Create buttons
     int x = 400, y = -300;
+    const int width = 90;
+    const int height = 30;
     nextObjButPos.set(-500,300,0);
     Vertex auxVertex;
     string buttonNames[N_ACTION_BUTTONS] = { "Rotate X", "Rotate Y", "Rotate Z",
-        "Rotate", "Translate", "New Cube", "Revolution", "Delete" };
+        "Translate", "New Cube", "Revolution", "Delete" };
     for(i = 0; i < N_ACTION_BUTTONS; i++){
-        auxVertex.set(x, y + i*60, 0);
-        buttonList.push_back( new Button(this, auxVertex, buttonNames[i], (AppStates)i) );
+        auxVertex.set(x, y + i*(height + 10), 0);
+        buttonList.push_back( new Button(this, auxVertex, buttonNames[i], (AppStates)i, width, height) );
     }
 ;
 
     string sButtonNames[N_STATUS_BUTTONS] = { "Perspective","Triangles", "Normals" };
     for(i = N_ACTION_BUTTONS; i < N_BUTTONS; i++){
-        auxVertex.set( x, y + i*60, 0 );
-        buttonList.push_back( new StatusButton(this, auxVertex, sButtonNames[i - N_ACTION_BUTTONS], (AppStates)i) );
+        auxVertex.set( x, y + i*(height + 10), 0 );
+        buttonList.push_back( new StatusButton(this, auxVertex, sButtonNames[i - N_ACTION_BUTTONS], (AppStates)i, width, height) );
     }
 
     //By default activate perspective and draw cube
-    auxVertex.set( x + 20, y + PERSPECTIVE*60, 0 );
+    auxVertex.set( x + 1, y + PERSPECTIVE*(height + 10), 0 );
     buttonList[PERSPECTIVE]->checkPress(auxVertex);
 
-    auxVertex.set( x + 20, y + DRAW_REVOLUTION*60, 0 );
+    auxVertex.set( x + 1, y + DRAW_REVOLUTION*(height + 10), 0 );
     buttonList[DRAW_REVOLUTION]->checkPress(auxVertex);
 
     opReady = true;
@@ -103,8 +105,6 @@ void testApp::mouseDragged(int x, int y, int button){
                 break;
             case ROTATING_Z:
                 currentObject->rotate( Z, pRawY - y, 0 );
-                break;
-            case ROTATING:
                 break;
             case TRANSLATING:
                 currentObject->translate( x - pRawX, y - pRawY, 0 );
@@ -184,7 +184,7 @@ void testApp::mousePressed(int x, int y, int button){
             RevolutionSurface* revObject = (RevolutionSurface*)objectList.back();
             revObject->noMoreVertices();
             buttonList.push_back( new ObjectButton(this, nextObjButPos, "Rev", revObject, currentColor) );
-            nextObjButPos.setX(nextObjButPos.getX() + 50);
+            nextObjButPos.setX(nextObjButPos.getX() + 40);
         }
     }
 }
@@ -207,8 +207,6 @@ void testApp::mouseReleased(int x, int y, int button){
             case ROTATING_Z:
                 currentObject->rotate( Z, pRawY - y, 1 );
                 break;
-            case ROTATING:
-                break;
             case TRANSLATING:
                 currentObject->translate( x - pRawX, y - pRawY, 1 );
                 break;
@@ -216,7 +214,7 @@ void testApp::mouseReleased(int x, int y, int button){
                 ((Cube*)objectList.back())->setVertices( pmouse, current );
                 auxButton = new ObjectButton(this, nextObjButPos, "Cube", objectList.back(), currentColor);
                 buttonList.push_back( auxButton );
-                nextObjButPos.setX(nextObjButPos.getX() + 50);
+                nextObjButPos.setX(nextObjButPos.getX() + 40);
                 break;
             default:
                 break;
@@ -234,7 +232,7 @@ void testApp::mouseReleased(int x, int y, int button){
                 //Move all object's button who are on the right to the one eliminate
                 //one place to the left
                 for( ; i < buttonList.size(); i++){
-                    ((ObjectButton*)buttonList[i])->moveX(-50);
+                    ((ObjectButton*)buttonList[i])->moveToLeft();
                 }
                 //Eliminate object from object's list
                 for(i = 0; i < objectList.size(); i++){
@@ -247,7 +245,7 @@ void testApp::mouseReleased(int x, int y, int button){
                     nextObjButPos.setX(-500);
                 }else{
                     currentObject = objectList.back();
-                    nextObjButPos.setX(nextObjButPos.getX() - 50);
+                    nextObjButPos.setX(nextObjButPos.getX() - 40);
                 }
                 break;
             default:

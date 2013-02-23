@@ -10,17 +10,18 @@
 #include <iostream>
 using namespace std;
 class testApp;
-enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, ROTATING, TRANSLATING,
+enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, TRANSLATING,
     DRAW_CUBE, DRAW_REVOLUTION, DELETE, PERSPECTIVE, DRAW_TRIANGLES, DRAW_NORMALS, OBJECT_BUTTON };
 //Class button is declared here to avoid some nasty
 //circular problems
 class Button{
 
     protected:
-        Vertex vertices[5];
-        Vertex center;
+        Vertex position;
+        Vertex texPosition;
         bool pressed;
-        int size;
+        int width;
+        int height;
         string buttonTex;
         testApp *app;
         AppStates state;
@@ -28,12 +29,13 @@ class Button{
         ofColor colorInverted;
 
     public:
-        Button( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_, ofColor color_ = ofColor::white, int size_ = 50 );
+        Button( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_, int w = 90, int h = 30, ofColor color_ = ofColor::white );
         Button( const Button& otherButton );
         virtual void checkPress( Vertex mouse );
         virtual bool isPressed();
         virtual void update();
         virtual void draw(Renderer* renderer);
+        virtual int getWidth(){ return width; };
 };
 
 #endif
