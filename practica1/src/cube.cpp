@@ -96,30 +96,18 @@ void Cube::setVertices( Vertex &vertex0, Vertex &vertex1 ){
 //--------------------------------------------------------------
 void Cube::draw(Renderer* renderer){
     ofSetColor ( color );
-    for(int i = 0; i < 4; i++){
-        //Back face of the cube
-        renderer->rLine(transVertices[i + 4], transVertices[(i+1)%4 + 4]);
-        //Lines between the two faces
-        renderer->rLine(transVertices[i], transVertices[i + 4]);
-        //Front face of the cube
-        renderer->rLine(transVertices[i], transVertices[(i+1)%4]);
-    }
-
-    if(drawNormals_){
-        for( int i = 0; i < totalTriangles; i++ ){
-            for(int j = 0; j < 3; j++){
-                renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
-            }
-            renderer->rLine(transTriangleCentroids[i], transTriangleCentroids[i] + transNormals[i]*10);
-        }
+    if(drawNormals_ || drawTriangles_){
+        //Draw using triangles
+        DrawableObject::draw(renderer);
     }else{
-        if(drawTriangles_){
-            for( int i = 0; i < totalTriangles; i++ ){
-                for(int j = 0; j < 3; j++){
-                    renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
-                }
-            }
+        //Draw using squares
+        for(int i = 0; i < 4; i++){
+            //Back face of the cube
+            renderer->rLine(transVertices[i + 4], transVertices[(i+1)%4 + 4]);
+            //Lines between the two faces
+            renderer->rLine(transVertices[i], transVertices[i + 4]);
+            //Front face of the cube
+            renderer->rLine(transVertices[i], transVertices[(i+1)%4]);
         }
     }
-
 }

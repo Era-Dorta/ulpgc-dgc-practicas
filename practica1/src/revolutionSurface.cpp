@@ -105,35 +105,26 @@ void RevolutionSurface::setDrawHelper( Vertex &mouse ){
 //--------------------------------------------------------------
 void RevolutionSurface::draw(Renderer* renderer){
     int i, j;
+    //If the object is empty draw nothing
     if( totalVertices >= 1 ){
         ofSetColor ( color );
         if(hasAllVertices_){
             //User ended drawing the object
-            for( i = 0; i < ROT; i++ ){
-                for( j = 1; j < lineVerticesAmount; j++ ){
-                //Vertical lines
-                renderer->rLine(transVertices[j - 1+i*lineVerticesAmount],transVertices[j+i*lineVerticesAmount]);
-                //Horizontal lines
-                renderer->rLine(transVertices[(j - 1+i*lineVerticesAmount)%totalVertices], transVertices[(j - 1+(i+1)*lineVerticesAmount)%totalVertices]);
-                }
-                //Bottom horizontal lines
-                renderer->rLine(transVertices[(j - 1+i*lineVerticesAmount)%totalVertices], transVertices[(j - 1+(i+1)*lineVerticesAmount)%totalVertices]);
-               }
-            if(drawNormals_){
-                for( int i = 0; i < totalTriangles; i++ ){
-                    for(int j = 0; j < 3; j++){
-                        renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
-                    }
-                    renderer->rLine(transTriangleCentroids[i], transTriangleCentroids[i] + transNormals[i]*10);
-                }
+            if(drawNormals_ || drawTriangles_){
+                //Draw using triangles
+                DrawableObject::draw(renderer);
             }else{
-                if(drawTriangles_){
-                    for( int i = 0; i < totalTriangles; i++ ){
-                        for(int j = 0; j < 3; j++){
-                            renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
-                        }
+                //Draw using squares
+                for( i = 0; i < ROT; i++ ){
+                    for( j = 1; j < lineVerticesAmount; j++ ){
+                    //Vertical lines
+                    renderer->rLine(transVertices[j - 1+i*lineVerticesAmount],transVertices[j+i*lineVerticesAmount]);
+                    //Horizontal lines
+                    renderer->rLine(transVertices[(j - 1+i*lineVerticesAmount)%totalVertices], transVertices[(j - 1+(i+1)*lineVerticesAmount)%totalVertices]);
                     }
-                }
+                    //Bottom horizontal lines
+                    renderer->rLine(transVertices[(j - 1+i*lineVerticesAmount)%totalVertices], transVertices[(j - 1+(i+1)*lineVerticesAmount)%totalVertices]);
+                   }
             }
         }else{
             //User is still drawing the object

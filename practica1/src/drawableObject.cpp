@@ -93,6 +93,26 @@ DrawableObject::~DrawableObject(){
 }
 
 //--------------------------------------------------------------
+void DrawableObject::draw(Renderer* renderer){
+    if(drawNormals_){
+        for( int i = 0; i < totalTriangles; i++ ){
+            for(int j = 0; j < 3; j++){
+                renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
+            }
+            renderer->rLine(transTriangleCentroids[i], transTriangleCentroids[i] + transNormals[i]*10);
+        }
+    }else{
+        if(drawTriangles_){
+            for( int i = 0; i < totalTriangles; i++ ){
+                for(int j = 0; j < 3; j++){
+                    renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
+                }
+            }
+        }
+    }
+}
+
+//--------------------------------------------------------------
 void DrawableObject::rotate( Axis axis, double amount, int permanent){
     double cosVal, sinVal;
     resetAuxMatrix();
