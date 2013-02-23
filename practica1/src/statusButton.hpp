@@ -8,6 +8,7 @@
 #include "ofMain.h"
 
 class StatusButton : public Button{
+
     private:
         DrawableObject* object;
 

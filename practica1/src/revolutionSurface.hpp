@@ -10,6 +10,7 @@ class RevolutionSurface : public DrawableObject{
         bool hasAllVertices_;
         int lineVerticesAmount;
         Vertex pmouse;
+
     public:
         RevolutionSurface( ofColor color_ = ofColor::white );
         void setVertex( Vertex &vertex );

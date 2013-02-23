@@ -8,6 +8,7 @@
 #include "ofMain.h"
 
 class ObjectButton : public Button{
+
     private:
         DrawableObject* object;
 

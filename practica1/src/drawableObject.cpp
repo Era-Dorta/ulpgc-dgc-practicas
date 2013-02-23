@@ -2,6 +2,104 @@
 #include <cstdlib>
 
 //--------------------------------------------------------------
+void DrawableObject::multiplyMatrix( double matrix0[4][4], double matrix1[4][4], int firstSave ){
+
+    double aux[4][4];
+
+    //Calcula matrix multiplication
+    for( int i = 0; i < 4; i++){
+        for( int j = 0; j < 4; j++){
+            aux[i][j] = 0;
+            for( int k = 0; k < 4; k++){
+                aux[i][j] += matrix0[i][k]*matrix1[k][j];
+            }
+        }
+    }
+
+    //Save result in matrix0 or matrix1
+    if(firstSave){
+        for( int i = 0; i < 4; i++){
+            for( int j = 0; j < 4; j++){
+                matrix0[i][j] = aux[i][j];
+            }
+        }
+    }else{
+        for( int i = 0; i < 4; i++){
+            for( int j = 0; j < 4; j++){
+                matrix1[i][j] = aux[i][j];
+            }
+        }
+    }
+}
+
+//--------------------------------------------------------------
+void DrawableObject:: applyTransform( int permanent ){
+    if(permanent){
+        //Multiply transMatrix by auxMatrix and save the
+        //result in transMAtrix, recalculate the transformed
+        //vertices
+        multiplyMatrix(transMatrix, auxMatrix);
+        for( int i = 0; i < totalVertices; i++){
+            transVertices[i] = vertices[i]*transMatrix;
+        }
+        for( int i = 0; i < totalTriangles; i++){
+            transNormals[i] = normals[i]*transMatrix;
+            transTriangleCentroids[i] = triangleCentroids[i]*transMatrix;
+        }
+    }else{
+        //Multiply transMatrix by auxMatrix and save the
+        //result in auxMatrix, recalculate the transformed
+        //vertices
+        multiplyMatrix(transMatrix, auxMatrix, 0);
+        for( int i = 0; i < totalVertices; i++){
+            transVertices[i] = vertices[i]*auxMatrix;
+        }
+        for( int i = 0; i < totalTriangles; i++){
+            transNormals[i] = normals[i]*auxMatrix;
+            transTriangleCentroids[i] = triangleCentroids[i]*auxMatrix;
+        }
+    }
+}
+
+//--------------------------------------------------------------
+void DrawableObject::calculateNormals(){
+    Vertex d1, d2;
+
+    if(normals == NULL){
+        normals = new Vertex[totalTriangles];
+        transNormals = new Vertex[totalTriangles];
+    }
+
+    for(int i = 0; i < totalTriangles; i++){
+        d1 = vertices[triangles[i][1]] - vertices[triangles[i][0]];
+        d2 = vertices[triangles[i][2]] - vertices[triangles[i][1]];
+        normals[i] = d1*d2;
+        normals[i].normalize();
+        transNormals[i] = normals[i];
+    }
+}
+
+//--------------------------------------------------------------
+void DrawableObject::calculateCentroids(){
+    Vertex aux;
+
+    if(triangleCentroids == NULL){
+        triangleCentroids = new Vertex[totalTriangles];
+        transTriangleCentroids = new Vertex[totalTriangles];
+    }
+
+    for(int i = 0; i < totalTriangles; i++){
+        aux.set(0,0,0);
+        for(int j = 0; j < 3; j++){
+            aux = aux + vertices[triangles[i][j]];
+        }
+        triangleCentroids[i] = aux/3.0;
+        transTriangleCentroids[i] = triangleCentroids[i];
+    }
+
+}
+
+//--------------------------------------------------------------
 DrawableObject::DrawableObject( int totalVertices_, ofColor color_  ){
     totalVertices = totalVertices_;
     if( totalVertices ){
@@ -97,14 +195,17 @@ void DrawableObject::draw(Renderer* renderer){
     if(drawNormals_){
         for( int i = 0; i < totalTriangles; i++ ){
             for(int j = 0; j < 3; j++){
+                //Draw triangle edge
                 renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
             }
+            //Draw triangle's normal
             renderer->rLine(transTriangleCentroids[i], transTriangleCentroids[i] + transNormals[i]*10);
         }
     }else{
         if(drawTriangles_){
             for( int i = 0; i < totalTriangles; i++ ){
                 for(int j = 0; j < 3; j++){
+                    //Draw triangle edge
                     renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
                 }
             }
@@ -139,31 +240,7 @@ void DrawableObject::rotate( Axis axis, double amount, int permanent){
         break;
     }
 
-    if(permanent){
-        //Multiply transMatrix by auxMatrix and save the
-        //result in transMAtrix, recalculate the transformed
-        //vertices
-        multiplyMatrix(transMatrix, auxMatrix);
-        for( int i = 0; i < totalVertices; i++){
-            transVertices[i] = vertices[i]*transMatrix;
-        }
-        for( int i = 0; i < totalTriangles; i++){
-            transNormals[i] = normals[i]*transMatrix;
-            transTriangleCentroids[i] = triangleCentroids[i]*transMatrix;
-        }
-    }else{
-        //Multiply transMatrix by auxMatrix and save the
-        //result in auxMatrix, recalculate the transformed
-        //vertices
-        DrawableObject::multiplyMatrix(transMatrix, auxMatrix, 0);
-        for( int i = 0; i < totalVertices; i++){
-            transVertices[i] = vertices[i]*auxMatrix;
-        }
-        for( int i = 0; i < totalTriangles; i++){
-            transNormals[i] = normals[i]*auxMatrix;
-            transTriangleCentroids[i] = triangleCentroids[i]*auxMatrix;
-        }
-    }
+    applyTransform(permanent);
 }
 
 //--------------------------------------------------------------
@@ -171,31 +248,8 @@ void DrawableObject::translate( double tX, double tY, int permanent){
     resetAuxMatrix();
     auxMatrix[3][0] = tX;
     auxMatrix[3][1] = tY;
-    if(permanent){
-        //Multiply transMatrix by auxMatrix and save the
-        //result in transMAtrix, recalculate the transformed
-        //vertices
-        multiplyMatrix(transMatrix, auxMatrix);
-        for( int i = 0; i < totalVertices; i++){
-            transVertices[i] = vertices[i]*transMatrix;
-        }
-        for( int i = 0; i < totalTriangles; i++){
-            transNormals[i] = normals[i]*transMatrix;
-            transTriangleCentroids[i] = triangleCentroids[i]*transMatrix;
-        }
-    }else{
-        //Multiply transMatrix by auxMatrix and save the
-        //result in auxMatrix, recalculate the transformed
-        //vertices
-        multiplyMatrix(transMatrix, auxMatrix, 0);
-        for( int i = 0; i < totalVertices; i++){
-            transVertices[i] = vertices[i]*auxMatrix;
-        }
-        for( int i = 0; i < totalTriangles; i++){
-            transNormals[i] = normals[i]*auxMatrix;
-            transTriangleCentroids[i] = triangleCentroids[i]*auxMatrix;
-        }
-    }
+
+    applyTransform(permanent);
 }
 
 //--------------------------------------------------------------
@@ -227,77 +281,9 @@ void DrawableObject::resetAuxMatrix(){
 }
 
 //--------------------------------------------------------------
-void DrawableObject::multiplyMatrix( double matrix0[4][4], double matrix1[4][4], int firstSave ){
-
-    double aux[4][4];
-
-    //Calcula matrix multiplication
-    for( int i = 0; i < 4; i++){
-        for( int j = 0; j < 4; j++){
-            aux[i][j] = 0;
-            for( int k = 0; k < 4; k++){
-                aux[i][j] += matrix0[i][k]*matrix1[k][j];
-            }
-        }
-    }
-
-    //Save result in matrix0 or matrix1
-    if(firstSave){
-        for( int i = 0; i < 4; i++){
-            for( int j = 0; j < 4; j++){
-                matrix0[i][j] = aux[i][j];
-            }
-        }
-    }else{
-        for( int i = 0; i < 4; i++){
-            for( int j = 0; j < 4; j++){
-                matrix1[i][j] = aux[i][j];
-            }
-        }
-    }
-}
-
 void DrawableObject::setNormals( bool activate ){
     if(activate){
         drawTriangles_ = true;
     }
     drawNormals_ = activate;
-}
-
-//--------------------------------------------------------------
-void DrawableObject::calculateNormals(){
-    Vertex d1, d2;
-
-    if(normals == NULL){
-        normals = new Vertex[totalTriangles];
-        transNormals = new Vertex[totalTriangles];
-    }
-
-    for(int i = 0; i < totalTriangles; i++){
-        d1 = vertices[triangles[i][1]] - vertices[triangles[i][0]];
-        d2 = vertices[triangles[i][2]] - vertices[triangles[i][1]];
-        normals[i] = d1*d2;
-        normals[i].normalize();
-        transNormals[i] = normals[i];
-    }
-}
-
-//--------------------------------------------------------------
-void DrawableObject::calculateCentroids(){
-    Vertex aux;
-
-    if(triangleCentroids == NULL){
-        triangleCentroids = new Vertex[totalTriangles];
-        transTriangleCentroids = new Vertex[totalTriangles];
-    }
-
-    for(int i = 0; i < totalTriangles; i++){
-        aux.set(0,0,0);
-        for(int j = 0; j < 3; j++){
-            aux = aux + vertices[triangles[i][j]];
-        }
-        triangleCentroids[i] = aux/3.0;
-        transTriangleCentroids[i] = triangleCentroids[i];
-    }
-
 }

@@ -25,11 +25,17 @@ class DrawableObject {
         Subtype subtype;
         double transMatrix[4][4];
         double auxMatrix[4][4];
-        void multiplyMatrix( double matrix0[4][4], double matrix1[4][4], int firstSave = 1 );
         ofColor color;
         bool drawTriangles_;
         bool drawNormals_;
 
+    private:
+        void multiplyMatrix( double matrix0[4][4], double matrix1[4][4], int firstSave = 1 );
+        void applyTransform( int permanent );
+
+    protected:
+        void calculateNormals();
+        void calculateCentroids();
 
     public:
         DrawableObject( int totalVertices_, ofColor color_ = ofColor::white );
@@ -46,10 +52,6 @@ class DrawableObject {
         bool getDrawTriangles(){ return drawTriangles_; };
         bool getNormals(){ return drawNormals_; };
         void setNormals( bool activate );
-
-    protected:
-        void calculateNormals();
-        void calculateCentroids();
 };
 
 #endif
