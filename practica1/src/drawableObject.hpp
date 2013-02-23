@@ -23,15 +23,15 @@ class DrawableObject {
         int totalTriangles;
         int totalVertices;
         Subtype subtype;
-        double transMatrix[4][4];
-        double auxMatrix[4][4];
+        float transMatrix[4][4];
+        float auxMatrix[4][4];
         ofColor color;
         bool drawTriangles_;
         bool drawNormals_;
         bool drawFillTriangles_;
 
     private:
-        void multiplyMatrix( double matrix0[4][4], double matrix1[4][4], int firstSave = 1 );
+        void multiplyMatrix( float matrix0[4][4], float matrix1[4][4], int firstSave = 1 );
         void applyTransform( int permanent );
 
     protected:
@@ -44,8 +44,8 @@ class DrawableObject {
         virtual ~DrawableObject();
         virtual void draw(Renderer* renderer);
         virtual int getTotalVertices() { return totalVertices; };
-        virtual void rotate( Axis axis, double amount, int permanent);
-        virtual void translate( double tX, double tY, int permanent);
+        virtual void rotate( Axis axis, float amount, int permanent);
+        virtual void translate( float tX, float tY, int permanent);
         void resetTransMatrix();
         void resetAuxMatrix();
         Subtype getSubtype() { return subtype; };

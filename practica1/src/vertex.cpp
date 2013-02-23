@@ -2,7 +2,7 @@
 #include <iostream>
 
 //--------------------------------------------------------------
-Vertex::Vertex( const double x, const double y, const double z ) {
+Vertex::Vertex( const float x, const float y, const float z ) {
     coordinates[0] = x;
     coordinates[1] = y;
     coordinates[2] = z;
@@ -17,22 +17,22 @@ Vertex::Vertex( const Vertex& otherVertex ){
 }
 
 //--------------------------------------------------------------
-double Vertex::getX() const {
+float Vertex::getX() const {
     return coordinates[0];
 }
 
 //--------------------------------------------------------------
-double Vertex::getY() const {
+float Vertex::getY() const {
     return coordinates[1];
 }
 
 //--------------------------------------------------------------
-double Vertex::getZ() const {
+float Vertex::getZ() const {
     return coordinates[2];
 }
 
 //--------------------------------------------------------------
-void Vertex::set( int pos, double val ){
+void Vertex::set( int pos, float val ){
     switch(pos){
     case 0:
         setX(val);
@@ -50,8 +50,8 @@ void Vertex::set( int pos, double val ){
 }
 
 //--------------------------------------------------------------
-double Vertex::module(){
-    double res = 0;
+float Vertex::module(){
+    float res = 0;
     for(int i = 0; i < 3; i++){
         res += coordinates[i]*coordinates[i];
     }
@@ -60,7 +60,7 @@ double Vertex::module(){
 
 //--------------------------------------------------------------
 void Vertex::normalize(){
-    double mod = module();
+    float mod = module();
     for(int i = 0; i < 3; i++){
         coordinates[i] = coordinates[i]/mod;
     }
@@ -79,10 +79,10 @@ void Vertex::operator=( const Vertex  &otherVertex ){
 }
 
 //--------------------------------------------------------------
-Vertex Vertex::operator*( const double matrix[4][4] ){
+Vertex Vertex::operator*( const float matrix[4][4] ){
     Vertex vRes;
     for(int i = 0; i < 4; i++){
-        double res = 0;
+        float res = 0;
         for( int j = 0; j < 4; j++){
             res += coordinates[j]*matrix[j][i];
         }
@@ -119,7 +119,7 @@ Vertex Vertex::operator+( const Vertex &otherVertex ){
 }
 
 //--------------------------------------------------------------
-Vertex Vertex::operator/( const double &val ){
+Vertex Vertex::operator/( const float &val ){
     Vertex vRes;
     for(int i = 0; i < 3; i++){
         vRes.set(i, coordinates[i] / val );
@@ -128,7 +128,7 @@ Vertex Vertex::operator/( const double &val ){
 }
 
 //--------------------------------------------------------------
-Vertex Vertex::operator*( const double &val ){
+Vertex Vertex::operator*( const float &val ){
     Vertex vRes;
     for(int i = 0; i < 3; i++){
         vRes.set(i, coordinates[i] * val );

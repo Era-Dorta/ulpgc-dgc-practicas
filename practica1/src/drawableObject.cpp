@@ -2,9 +2,9 @@
 #include <cstdlib>
 
 //--------------------------------------------------------------
-void DrawableObject::multiplyMatrix( double matrix0[4][4], double matrix1[4][4], int firstSave ){
+void DrawableObject::multiplyMatrix( float matrix0[4][4], float matrix1[4][4], int firstSave ){
 
-    double aux[4][4];
+    float aux[4][4];
 
     //Calcula matrix multiplication
     for( int i = 0; i < 4; i++){
@@ -216,8 +216,8 @@ void DrawableObject::draw(Renderer* renderer){
 }
 
 //--------------------------------------------------------------
-void DrawableObject::rotate( Axis axis, double amount, int permanent){
-    double cosVal, sinVal;
+void DrawableObject::rotate( Axis axis, float amount, int permanent){
+    float cosVal, sinVal;
     resetAuxMatrix();
     cosVal = cos(0.02*amount);
     sinVal = sin(0.02*amount);
@@ -246,7 +246,7 @@ void DrawableObject::rotate( Axis axis, double amount, int permanent){
 }
 
 //--------------------------------------------------------------
-void DrawableObject::translate( double tX, double tY, int permanent){
+void DrawableObject::translate( float tX, float tY, int permanent){
     resetAuxMatrix();
     auxMatrix[3][0] = tX;
     auxMatrix[3][1] = tY;

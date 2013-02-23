@@ -61,7 +61,7 @@ Cube::Cube( Vertex &vertex0, Vertex &vertex1 )
 //  |   |
 // 3|___|2
 void Cube::setVertices( Vertex &vertex0, Vertex &vertex1 ){
-    double sideX, sideY, sideZ;
+    float sideX, sideY, sideZ;
     int z;
     sideX = vertex1.getX() - vertex0.getX();
     sideY = vertex1.getY() - vertex0.getY();

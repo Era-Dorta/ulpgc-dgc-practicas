@@ -23,7 +23,7 @@ void testApp::setup(){
     nextObjButPos.set(-500,300,0);
     Vertex auxVertex;
     string buttonNames[N_ACTION_BUTTONS] = { "Rotate X", "Rotate Y", "Rotate Z",
-        "Translate", "New Cube", "Revolution", "Delete" };
+        "Translate", "New Cube", "New Rev", "Delete" };
     for(i = 0; i < N_ACTION_BUTTONS; i++){
         auxVertex.set(x, y + i*(height + 10), 0);
         buttonList.push_back( new Button(this, auxVertex, buttonNames[i], (AppStates)i, width, height) );

@@ -45,7 +45,7 @@ void RevolutionSurface::setVertex( Vertex &vertex ){
 void RevolutionSurface::noMoreVertices(){
     hasAllVertices_ = true;
     lineVerticesAmount = totalVertices;
-    double rotation = (2*PI/ROT)/0.02;
+    float rotation = (2*PI/ROT)/0.02;
     Vertex* auxVertices,* auxTransVertices;
 
     //Rotate the vertices ROT times and save them

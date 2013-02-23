@@ -9,12 +9,12 @@ void Renderer::perspective( const bool activate ){
 
 //--------------------------------------------------------------
 void Renderer::rLine(const Vertex& vertex0, const Vertex& vertex1){
-    double x0 = vertex0.getX();
-    double y0 = vertex0.getY();
-    double z0 = vertex0.getZ();
-    double x1 = vertex1.getX();
-    double y1 = vertex1.getY();
-    double z1 = vertex1.getZ();
+    float x0 = vertex0.getX();
+    float y0 = vertex0.getY();
+    float z0 = vertex0.getZ();
+    float x1 = vertex1.getX();
+    float y1 = vertex1.getY();
+    float z1 = vertex1.getZ();
 
     if(perspective_){
         x0 = x0 /( 1 - z0 / k);
