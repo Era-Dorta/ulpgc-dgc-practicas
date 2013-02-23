@@ -1,5 +1,6 @@
 #include "drawableObject.hpp"
 #include <cstdlib>
+#include <algorithm>    // std::swap
 
 //--------------------------------------------------------------
 void DrawableObject::multiplyMatrix( float matrix0[4][4], float matrix1[4][4], int firstSave ){
@@ -194,25 +195,64 @@ DrawableObject::~DrawableObject(){
 
 //--------------------------------------------------------------
 void DrawableObject::draw(Renderer* renderer){
-    if(drawNormals_){
+
+    if(drawFillTriangles_){
+        Vertex v1, v2, v3;
+        int pIndices[3];
         for( int i = 0; i < totalTriangles; i++ ){
+            pIndices[0] = triangles[i][0];
+            pIndices[1] = triangles[i][1];
+            pIndices[2] = triangles[i][2];
+            //Take first vertex as top one
+            v1 = transVertices[triangles[i][0]];
+            if(v1.getY() < transVertices[triangles[i][1]].getY() ){
+                //Second vertex'y is higher
+                if(transVertices[triangles[i][1]].getY() < transVertices[triangles[i][2]].getY()){
+                    //Third vertex has the highest y
+                    v1 = transVertices[triangles[i][2]];
+                    swap(pIndices[0],pIndices[2]);
+                }else{
+                    //Second vertex has the highest y
+                    v1 = transVertices[triangles[i][1]];
+                    swap(pIndices[0],pIndices[1]);
+                }
+            }
+            //Take second vertex as left one
+            v2 = transVertices[triangles[i][pIndices[1]]];
+            if(v2.getX() > transVertices[triangles[i][pIndices[2]]].getX()){
+                    //Third vertex has the lowest x
+                    v2 = transVertices[triangles[i][pIndices[2]]];
+                    swap(pIndices[1],pIndices[2]);
+            }
+            v3 = transVertices[triangles[i][pIndices[2]]];
+
             for(int j = 0; j < 3; j++){
                 //Draw triangle edge
                 renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
             }
-            //Draw triangle's normal
-            renderer->rLine(transTriangleCentroids[i], transTriangleCentroids[i] + transNormals[i]*10);
         }
     }else{
-        if(drawTriangles_){
+        if(drawNormals_){
             for( int i = 0; i < totalTriangles; i++ ){
                 for(int j = 0; j < 3; j++){
                     //Draw triangle edge
                     renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
                 }
+                //Draw triangle's normal
+                renderer->rLine(transTriangleCentroids[i], transTriangleCentroids[i] + transNormals[i]*10);
+            }
+        }else{
+            if(drawTriangles_){
+                for( int i = 0; i < totalTriangles; i++ ){
+                    for(int j = 0; j < 3; j++){
+                        //Draw triangle edge
+                        renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
+                    }
+                }
             }
         }
     }
+
 }
 
 //--------------------------------------------------------------
@@ -288,4 +328,12 @@ void DrawableObject::setNormals( bool activate ){
         drawTriangles_ = true;
     }
     drawNormals_ = activate;
+}
+
+//--------------------------------------------------------------
+void DrawableObject::setFillTriangles( bool activate ){
+    if(activate){
+        drawTriangles_ = true;
+    }
+    drawFillTriangles_ = activate;
 }

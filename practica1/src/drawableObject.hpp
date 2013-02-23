@@ -53,7 +53,7 @@ class DrawableObject {
         bool getDrawTriangles(){ return drawTriangles_; };
         bool getNormals(){ return drawNormals_; };
         void setNormals( bool activate );
-        void setFillTriangles( bool activate ){ drawFillTriangles_ = activate; };
+        void setFillTriangles( bool activate );
         bool getFillTriangles(){ return drawFillTriangles_; };
 };
 
