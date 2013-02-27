@@ -17,6 +17,12 @@ Vertex::Vertex( const Vertex& otherVertex ){
 }
 
 //--------------------------------------------------------------
+bool Vertex::compareY (const Vertex& a, const Vertex& b)
+{
+  return a.getY() < b.getY();
+}
+
+//--------------------------------------------------------------
 float Vertex::getX() const {
     return coordinates[0];
 }

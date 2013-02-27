@@ -33,6 +33,12 @@ void StatusButton::checkPress( Vertex mouse )
                 app->getCurrentObject()->setNormals(pressed);
             }
             break;
+        case FILL_TRIANGLES:
+            if(app->getCurrentObject()){
+                app->getCurrentObject()->setDrawTriangles(pressed);
+                app->getCurrentObject()->setFillTriangles(pressed);
+            }
+            break;
         case PERSPECTIVE:
             app->setPerspective(pressed);
             break;
@@ -48,6 +54,13 @@ void StatusButton::update(){
     switch(state){
     case DRAW_TRIANGLES:
         if(app->getCurrentObject() && app->getCurrentObject()->getDrawTriangles()){
+            pressed = true;
+        }else{
+            pressed = false;
+        }
+        break;
+    case FILL_TRIANGLES:
+        if(app->getCurrentObject() && app->getCurrentObject()->getFillTriangles()){
             pressed = true;
         }else{
             pressed = false;

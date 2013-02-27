@@ -197,46 +197,8 @@ DrawableObject::~DrawableObject(){
 void DrawableObject::draw(Renderer* renderer){
 
     if(drawFillTriangles_){
-        Vertex v1, v2, v3, v4;
-        int pIndices[3];
         for( int i = 0; i < totalTriangles; i++ ){
-            pIndices[0] = triangles[i][0];
-            pIndices[1] = triangles[i][1];
-            pIndices[2] = triangles[i][2];
-            //Take first vertex as top one
-            v1 = transVertices[triangles[i][0]];
-            if(v1.getY() < transVertices[triangles[i][1]].getY() ){
-                //Second vertex'y is higher
-                if(transVertices[triangles[i][1]].getY() < transVertices[triangles[i][2]].getY()){
-                    //Third vertex has the highest y
-                    v1 = transVertices[triangles[i][2]];
-                    swap(pIndices[0],pIndices[2]);
-                }else{
-                    //Second vertex has the highest y
-                    v1 = transVertices[triangles[i][1]];
-                    swap(pIndices[0],pIndices[1]);
-                }
-            }
-            //Take second vertex medium Y
-            v2 = transVertices[triangles[i][pIndices[1]]];
-            if(v2.getY() > transVertices[triangles[i][pIndices[2]]].getY()){
-                    //Third vertex has the medium Y
-                    v2 = transVertices[triangles[i][pIndices[2]]];
-                    swap(pIndices[1],pIndices[2]);
-            }
-            v3 = transVertices[triangles[i][pIndices[2]]];
-
-            // El corte de v2 con la linea v1,v3
-            v4 = v2;
-
-            //Relleno tipo a
-            if(v4.getX() > v2.getX()){
-                //rellenoA(v1,v2,v4)
-                //rellenoB(v2, v4, v3)
-            }else{
-                //rellenoA(v1,v4,v2)
-                //rellenoB(v4, v2, v3)
-            }
+            renderer->rTriangleFill(transVertices[triangles[i][0]], transVertices[triangles[i][1]], transVertices[triangles[i][2]]);
         }
     }else{
         if(drawNormals_){

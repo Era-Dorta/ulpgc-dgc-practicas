@@ -1,5 +1,8 @@
 #include "renderer.hpp"
 #include "ofMain.h"
+#include <algorithm>    // std::sort
+#include <vector>       // std::vector
+using namespace std;
 
 int k = 400;
 //--------------------------------------------------------------
@@ -35,6 +38,28 @@ void Renderer::rTriangle(const Vertex& vertex0, const Vertex& vertex1, const Ver
     rLine(vertex0, vertex1);
     rLine(vertex0, vertex2);
     rLine(vertex1, vertex2);
+}
+
+//--------------------------------------------------------------
+void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2){
+    vector<Vertex> vertices;
+    vertices.push_back(vertex0);
+    vertices.push_back(vertex1);
+    vertices.push_back(vertex2);
+    Vertex v4 = vertex0;
+
+    sort (vertices.begin(), vertices.end(), Vertex::compareY);
+    // El corte de v2 con la linea v1,v3
+    v4 = vertices[1];
+
+    //Relleno tipo a
+    if(v4.getX() > vertices[1].getX()){
+        //rellenoA(v1,v2,v4)
+        //rellenoB(v2, v4, v3)
+    }else{
+        //rellenoA(v1,v4,v2)
+        //rellenoB(v4, v2, v3)
+    }
 }
 
 //--------------------------------------------------------------
