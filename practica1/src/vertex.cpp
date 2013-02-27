@@ -23,6 +23,16 @@ bool Vertex::compareY (const Vertex& a, const Vertex& b)
 }
 
 //--------------------------------------------------------------
+bool Vertex::compareYX (const Vertex& a, const Vertex& b)
+{
+  if(a.getY() == b.getY()){
+    return a.getX() < b.getX();
+  } else{
+    return a.getY() > b.getY();
+  }
+}
+
+//--------------------------------------------------------------
 float Vertex::getX() const {
     return coordinates[0];
 }

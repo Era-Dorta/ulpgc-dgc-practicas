@@ -15,6 +15,7 @@ class Vertex {
         Vertex( const float x, const float y, const float z );
         Vertex( const Vertex& otherVertex );
         static bool compareY (const Vertex& a, const Vertex& b);
+        static bool compareYX (const Vertex& a, const Vertex& b);
         float getX() const;
         float getY() const;
         float getZ() const;

@@ -66,7 +66,7 @@ v1    v2
 */
 //--------------------------------------------------------------
 void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2){
-    if( vertex0.getY() == vertex1.getY() ){
+    if( vertex0.getY() == vertex1.getY() || vertex1.getX() == vertex2.getX() ){
         return;
     }
     float inv_m01, inv_m02, x_i, x_f;
@@ -74,7 +74,9 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     inv_m02 = 1/((vertex2.getY() - vertex0.getY())/(vertex2.getX() - vertex0.getX()));
     x_i = vertex0.getX();
     x_f = vertex0.getX();
-    for(int j = vertex0.getY(); j <= vertex1.getY(); j++){
+    for(int j = vertex0.getY(); j >= vertex1.getY(); j--){
+        //FIXME FALLA CUANDO LAS COORDENADAS DE LAS X SON NEGATIVAS
+        //PROBABLEMENTE EL OTRO BUCLE FALLE PARECIDO, x_i, x_f
         for(int i = x_i; i <= x_f; i++){
             //cout << "En el bucle i " << i << " j " << j << endl;
             rLine(i, j, 0, i, j, 0);
@@ -90,8 +92,21 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
 //     v2
 //--------------------------------------------------------------
 void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2){
-    if( vertex0.getY() == vertex2.getY() ){
+    if( vertex0.getY() == vertex2.getY() || vertex0.getX() == vertex1.getX() ){
         return;
+    }
+    float inv_m20, inv_m21, x_i, x_f;
+    inv_m20 = 1/((vertex0.getY() - vertex2.getY())/(vertex0.getX() - vertex2.getX()));
+    inv_m21 = 1/((vertex1.getY() - vertex2.getY())/(vertex1.getX() - vertex2.getX()));
+    x_i = vertex2.getX();
+    x_f = vertex2.getX();
+    for(int j = vertex2.getY(); j >= vertex0.getY(); j++){
+        for(int i = x_i; i <= x_f; i++){
+            //cout << "En el bucle i " << i << " j " << j << endl;
+            rLine(i, j, 0, i, j, 0);
+        }
+        x_i += inv_m20;
+        x_f += inv_m21;
     }
 }
 
@@ -103,7 +118,7 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
     vertices.push_back(vertex1);
     vertices.push_back(vertex2);
     Vertex v3 = vertex0;
-    sort (vertices.begin(), vertices.end(), Vertex::compareY);
+    sort (vertices.begin(), vertices.end(), Vertex::compareYX);
     // El corte de v2 con la linea v1,v3
     v3 = vertices[1];
     float x0 =  vertices[0].getY();
@@ -116,18 +131,28 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
     Vertex v0 = vertices[0];
     Vertex v1 = vertices[1];
     Vertex v2 = vertices[2];
-    if(v3.getX() > vertices[1].getX()){
-        if(v3 == vertices[1] || v3 == vertices[0] || v3 == vertices[2]){
-            cout << "Pillado\n";
-        }
-        triangleFillBotFlat(vertices[0], vertices[1], v3);
-        triangleFillTopFlat(vertices[1], v3, vertices[2]);
+    if(v3 == vertices[1]){
+        triangleFillBotFlat(vertices[0], vertices[1], vertices[2]);
+        triangleFillTopFlat(vertices[0], vertices[1], vertices[2]);
     }else{
-        if(v3 == vertices[1] || v3 == vertices[0] || v3 == vertices[2]){
-            cout << "Pillado\n";
+        cout << "Entrando con iguales";
+        if(v3.getX() > vertices[1].getX()){
+            if(v3 == vertices[1] || v3 == vertices[0] || v3 == vertices[2]){
+                cout << "Pillado\n";
+            }
+            cout << 4 << endl;
+            triangleFillBotFlat(vertices[0], vertices[1], v3);
+            triangleFillTopFlat(vertices[1], v3, vertices[2]);
+            cout << 4-4 << endl;
+        }else{
+            if(v3 == vertices[1] || v3 == vertices[0] || v3 == vertices[2]){
+                cout << "Pillado\n";
+            }
+            cout << 5 << endl;
+            triangleFillBotFlat(vertices[0], v3, vertices[1]);
+            triangleFillTopFlat(v3, vertices[1], vertices[2]);
+            cout << 5-5 << endl;
         }
-        triangleFillBotFlat(vertices[0], v3, vertices[1]);
-        triangleFillTopFlat(v3, vertices[1], vertices[2]);
     }
 }
 
