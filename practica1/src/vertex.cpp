@@ -19,7 +19,7 @@ Vertex::Vertex( const Vertex& otherVertex ){
 //--------------------------------------------------------------
 bool Vertex::compareY (const Vertex& a, const Vertex& b)
 {
-  return a.getY() < b.getY();
+  return a.getY() > b.getY();
 }
 
 //--------------------------------------------------------------
@@ -74,7 +74,7 @@ void Vertex::normalize(){
 
 //--------------------------------------------------------------
 bool Vertex::operator==( const Vertex &otherVertex ){
-    return ( getX() ==  otherVertex.getX() && getY() == otherVertex.getY() );
+    return ( getX() ==  otherVertex.getX() && getY() == otherVertex.getY() && getZ() == otherVertex.getZ());
 }
 
 //--------------------------------------------------------------
