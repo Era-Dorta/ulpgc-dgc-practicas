@@ -48,7 +48,11 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
     vertices.push_back(vertex2);
     Vertex v4 = vertex0;
 
+    cout << "Antes" <<  vertex0.getY() << " " << vertex1.getY() << " " << vertex2.getY() << endl;
+
     sort (vertices.begin(), vertices.end(), Vertex::compareY);
+
+    cout << "Despues" <<  vertices[0].getY() << " " << vertices[1].getY() << " " << vertices[2].getY() << endl;
     // El corte de v2 con la linea v1,v3
     v4 = vertices[1];
 
