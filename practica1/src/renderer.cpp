@@ -31,6 +31,13 @@ void Renderer::rLine(const Vertex& vertex0, const Vertex& vertex1){
 }
 
 //--------------------------------------------------------------
+void Renderer::rTriangle(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2){
+    rLine(vertex0, vertex1);
+    rLine(vertex0, vertex2);
+    rLine(vertex1, vertex2);
+}
+
+//--------------------------------------------------------------
 void Renderer::rDrawBitmapString( string tex, const Vertex& vertex){
     ofDrawBitmapString(tex, vertex.getX() + center.getX(), vertex.getY() + center.getY());
 }

@@ -197,7 +197,7 @@ DrawableObject::~DrawableObject(){
 void DrawableObject::draw(Renderer* renderer){
 
     if(drawFillTriangles_){
-        Vertex v1, v2, v3;
+        Vertex v1, v2, v3, v4;
         int pIndices[3];
         for( int i = 0; i < totalTriangles; i++ ){
             pIndices[0] = triangles[i][0];
@@ -217,37 +217,40 @@ void DrawableObject::draw(Renderer* renderer){
                     swap(pIndices[0],pIndices[1]);
                 }
             }
-            //Take second vertex as left one
+            //Take second vertex medium Y
             v2 = transVertices[triangles[i][pIndices[1]]];
-            if(v2.getX() > transVertices[triangles[i][pIndices[2]]].getX()){
-                    //Third vertex has the lowest x
+            if(v2.getY() > transVertices[triangles[i][pIndices[2]]].getY()){
+                    //Third vertex has the medium Y
                     v2 = transVertices[triangles[i][pIndices[2]]];
                     swap(pIndices[1],pIndices[2]);
             }
             v3 = transVertices[triangles[i][pIndices[2]]];
 
-            for(int j = 0; j < 3; j++){
-                //Draw triangle edge
-                renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
+            // El corte de v2 con la linea v1,v3
+            v4 = v2;
+
+            //Relleno tipo a
+            if(v4.getX() > v2.getX()){
+                //rellenoA(v1,v2,v4)
+                //rellenoB(v2, v4, v3)
+            }else{
+                //rellenoA(v1,v4,v2)
+                //rellenoB(v4, v2, v3)
             }
         }
     }else{
         if(drawNormals_){
             for( int i = 0; i < totalTriangles; i++ ){
-                for(int j = 0; j < 3; j++){
-                    //Draw triangle edge
-                    renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
-                }
+                //Draw triangle
+                renderer->rTriangle(transVertices[triangles[i][0]], transVertices[triangles[i][1]], transVertices[triangles[i][2]]);
                 //Draw triangle's normal
                 renderer->rLine(transTriangleCentroids[i], transTriangleCentroids[i] + transNormals[i]*10);
             }
         }else{
             if(drawTriangles_){
                 for( int i = 0; i < totalTriangles; i++ ){
-                    for(int j = 0; j < 3; j++){
-                        //Draw triangle edge
-                        renderer->rLine(transVertices[triangles[i][j]], transVertices[triangles[i][(j + 1)%3]]);
-                    }
+                    //Draw triangle
+                    renderer->rTriangle(transVertices[triangles[i][0]], transVertices[triangles[i][1]], transVertices[triangles[i][2]]);
                 }
             }
         }
