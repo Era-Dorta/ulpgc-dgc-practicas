@@ -151,8 +151,11 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
     //Interpolate where vertex1.x cuts the line vertex0-vertex2
     v3.setY( y2*((x0-x1)/(x0-x2)) + y0*(1-(x0-x1)/(x0-x2)) );
     if(v3 == vertices[1]){
-        triangleFillBotFlat(vertices[0], vertices[1], vertices[2]);
-        triangleFillTopFlat(vertices[0], vertices[1], vertices[2]);
+        if(vertices[1].getY() ==  vertices[2].getY()){
+            triangleFillBotFlat(vertices[0], vertices[1], vertices[2]);
+        }else{
+            triangleFillTopFlat(vertices[0], vertices[1], vertices[2]);
+        }
     }else{
         if(v3.getX() > vertices[1].getX()){
             triangleFillBotFlat(vertices[0], vertices[1], v3);
