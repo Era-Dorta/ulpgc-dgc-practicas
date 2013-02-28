@@ -4,7 +4,8 @@
 #include <vector>       // std::vector
 using namespace std;
 
-int k = 400;
+const int k = 400;
+const float invK = 1.0/k;
 //--------------------------------------------------------------
 void Renderer::perspective( const bool activate ){
     perspective_ = activate;
@@ -14,8 +15,8 @@ void Renderer::perspective( const bool activate ){
 Vertex Renderer::applyPerspective(const Vertex& vertex){
         Vertex res = vertex;
         if(perspective_){
-            res.setX(vertex.getX() /( 1 - vertex.getZ() / k));
-            res.setY(vertex.getY() /( 1 - vertex.getZ() / k));
+            res.setX(vertex.getX() /( 1 - vertex.getZ() * invK));
+            res.setY(vertex.getY() /( 1 - vertex.getZ() * invK));
         }
         return res;
 }
@@ -30,10 +31,10 @@ void Renderer::rLine(const Vertex& vertex0, const Vertex& vertex1){
     float z1 = vertex1.getZ();
 
     if(perspective_){
-        x0 = x0 /( 1 - z0 / k);
-        y0 = y0 /( 1 - z0 / k);
-        x1 = x1 /( 1 - z1 / k);
-        y1 = y1 /( 1 - z1 / k);
+        x0 = x0 /( 1 - z0 * invK);
+        y0 = y0 /( 1 - z0 * invK);
+        x1 = x1 /( 1 - z1 * invK);
+        y1 = y1 /( 1 - z1 * invK);
     }
     x0 = x0 + center.getX();
     y0 = y0 + center.getY();
@@ -46,10 +47,10 @@ void Renderer::rLine(const Vertex& vertex0, const Vertex& vertex1){
 //--------------------------------------------------------------
 void Renderer::rLine(float x0, float y0, float z0, float x1, float y1, float z1){
     if(perspective_){
-        x0 = x0 /( 1 - z0 / k);
-        y0 = y0 /( 1 - z0 / k);
-        x1 = x1 /( 1 - z1 / k);
-        y1 = y1 /( 1 - z1 / k);
+        x0 = x0 /( 1 - z0 * invK);
+        y0 = y0 /( 1 - z0 * invK);
+        x1 = x1 /( 1 - z1 * invK);
+        y1 = y1 /( 1 - z1 * invK);
     }
     x0 = x0 + center.getX();
     y0 = y0 + center.getY();
@@ -77,7 +78,7 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     if( vertex0.getY() == vertex1.getY() || vertex1.getX() == vertex2.getX() ){
         return;
     }
-    float inv_m01, inv_m02, x_i, x_f;
+    float inv_m01, inv_m02, x_i, x_f, inv_z01, inv_z02, z_i, z_f, z_p, inv_mzp;
 
     inv_m01 = vertex1.getY() - vertex0.getY();
     if(inv_m01){
@@ -89,14 +90,33 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
         inv_m02 = (vertex2.getX() - vertex0.getX())/inv_m02;
     }
 
+    inv_z01 = vertex1.getZ() - vertex0.getZ();
+    if(inv_z01){
+        inv_z01 = (vertex1.getY() - vertex0.getY())/inv_z01;
+    }
+
+    inv_z02 = vertex2.getZ() - vertex0.getZ();
+    if(inv_z02){
+        inv_z02 = (vertex2.getY() - vertex0.getY())/inv_z02;
+    }
+
     x_i = vertex0.getX();
     x_f = vertex0.getX();
+    z_i = vertex0.getZ();
+    z_f = vertex0.getZ();
+    inv_mzp = 0;
+    z_p = z_i;
     for(int j = vertex0.getY(); j <= vertex1.getY(); j++){
         for(int i = x_i; i <= x_f; i++){
             rLine(i, j, 0, i, j, 0);
+            z_p += inv_mzp;
         }
         x_i += inv_m01;
         x_f += inv_m02;
+        z_i += inv_z01;
+        z_f += inv_z02;
+        inv_mzp = (z_f - z_i)/(x_f - x_i);
+        z_p = z_i;
     }
 }
 
@@ -109,7 +129,7 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
     if( vertex0.getY() == vertex2.getY() || vertex0.getX() == vertex1.getX() ){
         return;
     }
-    float inv_m20, inv_m21, x_i, x_f;
+    float inv_m20, inv_m21, x_i, x_f, inv_z20, inv_z21, z_i, z_f, z_p, inv_mzp;
 
     inv_m20 = vertex0.getY() - vertex2.getY();
     if(inv_m20){
@@ -121,14 +141,33 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
         inv_m21 = (vertex1.getX() - vertex2.getX())/inv_m21;
     }
 
+    inv_z20 = vertex0.getZ() - vertex2.getZ();
+    if(inv_z20){
+        inv_z20 = (vertex0.getY() - vertex2.getY())/inv_z20;
+    }
+
+    inv_z21 = vertex1.getZ() - vertex2.getZ();
+    if(inv_z21){
+        inv_z21 = (vertex1.getY() - vertex2.getY())/inv_z21;
+    }
+
     x_i = vertex2.getX();
     x_f = vertex2.getX();
+    z_i = vertex2.getZ();
+    z_f = vertex2.getZ();
+    inv_mzp = 0;
+    z_p = z_i;
     for(int j = vertex2.getY(); j >= vertex0.getY(); j--){
         for(int i = x_i; i <= x_f; i++){
             rLine(i, j, 0, i, j, 0);
+            z_p += inv_mzp;
         }
         x_i -= inv_m20;
         x_f -= inv_m21;
+        z_i -= inv_z20;
+        z_f -= inv_z21;
+        inv_mzp = (z_f - z_i)/(x_f - x_i);
+        z_p = z_i;
     }
 }
 
@@ -139,6 +178,7 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
     vertices.push_back(applyPerspective(vertex0));
     vertices.push_back(applyPerspective(vertex1));
     vertices.push_back(applyPerspective(vertex2));
+
     Vertex v3 = vertices[0];
     sort (vertices.begin(), vertices.end(), Vertex::compareYX);
     // El corte de v2 con la linea v1,v3
