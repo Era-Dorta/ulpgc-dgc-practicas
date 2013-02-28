@@ -243,7 +243,6 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
     float y0 =  vertices[0].getY();
     float y1 =  vertices[1].getY();
     float y2 =  vertices[2].getY();
-    Vertex v0 = vertices[0], v1 = vertices[1], v2 = vertices[2];
     //Interpolate where vertex1.x cuts the line vertex0-vertex2
     v3.setX( x2*((y0-y1)/(y0-y2)) + x0*(1-(y0-y1)/(y0-y2)) );
     if(v3 == vertices[0]){
@@ -261,8 +260,6 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
             }
         }
     }
-
-    v0 = v1 + v2;
 }
 
 //--------------------------------------------------------------
@@ -273,4 +270,16 @@ void Renderer::rDrawBitmapString( const string tex, const Vertex& vertex){
 //--------------------------------------------------------------
 void Renderer::rRect( const Vertex& vertex, const float w, const float h){
     ofRect(vertex.getX() + center.getX(), vertex.getY() + center.getY(), w, h);
+}
+
+//--------------------------------------------------------------
+void Renderer::resetZBuffer(){
+
+    if(useZBuffer && zBuffer){
+        for(int i = 0; i < w; i++){
+            for(int j = 0; j < h; j++){
+                zBuffer[i][j] = INT_MIN;
+            }
+        }
+    }
 }

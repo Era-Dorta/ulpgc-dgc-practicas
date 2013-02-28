@@ -36,6 +36,7 @@ class Renderer{
         void rDrawBitmapString( const string tex, const Vertex& vertex);
         void rRect( const Vertex& vertex, const float w, const float h);
         void setZBuffer( const bool activate ){ useZBuffer = activate; };
+        void resetZBuffer();
 };
 
 #endif

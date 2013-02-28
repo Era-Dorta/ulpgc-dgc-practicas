@@ -55,6 +55,7 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 
+    renderer.resetZBuffer();
     renderer.perspective(withPerspective);
     for( unsigned int i = 0; i < objectList.size(); i++){
         objectList[i]->draw(&renderer);
@@ -63,17 +64,6 @@ void testApp::draw(){
     for( unsigned int i = 0; i < buttonList.size(); i++){
         buttonList[i]->draw(&renderer);
     }
-    /*
-    Vertex v1,v2,v3;
-    v1.set(0,0,0);
-    v2.set(50,0,0);
-    v3.set(0,50,0);
-    renderer.rTriangleFill(v1,v2,v3);
-
-    v1.set(50,50,0);
-    v2.set(50,100,0);
-    v3.set(100,100,0);
-    renderer.rTriangleFill(v1,v2,v3);*/
 }
 
 //--------------------------------------------------------------
@@ -312,6 +302,10 @@ bool testApp::getPerspective(){
 void testApp::setZBuffer( bool active ){
     zbuffer = active;
     renderer.setZBuffer(zbuffer);
+    //Activate/Deactivate fillTriangles in all objects
+    for(unsigned int i = 0; i < objectList.size(); i++){
+        objectList[i]->setFillTriangles(zbuffer);
+    }
 }
 
 //--------------------------------------------------------------
