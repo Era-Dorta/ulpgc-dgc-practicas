@@ -173,32 +173,35 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
     vertices.push_back(applyPerspective(vertex1));
     vertices.push_back(applyPerspective(vertex2));
 
-    Vertex v3 = vertices[0];
+    Vertex v3;
     sort (vertices.begin(), vertices.end(), Vertex::compareYX);
     // El corte de v2 con la linea v1,v3
     v3 = vertices[1];
-    float x0 =  vertices[0].getY();
-    float x1 =  vertices[1].getY();
-    float x2 =  vertices[2].getY();
+    float x0 =  vertices[0].getX();
+    float x2 =  vertices[2].getX();
     float y0 =  vertices[0].getY();
+    float y1 =  vertices[1].getY();
     float y2 =  vertices[2].getY();
+    Vertex v0 = vertices[0], v1 = vertices[1], v2 = vertices[2];
     //Interpolate where vertex1.x cuts the line vertex0-vertex2
-    v3.setY( y2*((x0-x1)/(x0-x2)) + y0*(1-(x0-x1)/(x0-x2)) );
-    if(v3 == vertices[1]){
-        if(vertices[1].getY() ==  vertices[2].getY()){
+    v3.setX( x2*((y0-y1)/(y0-y2)) + x0*(1-(y0-y1)/(y0-y2)) );
+    if(v3 == vertices[0]){
+        triangleFillTopFlat(vertices[0], vertices[1], vertices[2]);
+    }else{
+        if(v3 == vertices[2]){
             triangleFillBotFlat(vertices[0], vertices[1], vertices[2]);
         }else{
-            triangleFillTopFlat(vertices[0], vertices[1], vertices[2]);
-        }
-    }else{
-        if(v3.getX() > vertices[1].getX()){
-            triangleFillBotFlat(vertices[0], vertices[1], v3);
-            triangleFillTopFlat(vertices[1], v3, vertices[2]);
-        }else{
-            triangleFillBotFlat(vertices[0], v3, vertices[1]);
-            triangleFillTopFlat(v3, vertices[1], vertices[2]);
+            if(v3.getX() > vertices[1].getX()){
+                triangleFillBotFlat(vertices[0], vertices[1], v3);
+                triangleFillTopFlat(vertices[1], v3, vertices[2]);
+            }else{
+                triangleFillBotFlat(vertices[0], v3, vertices[1]);
+                triangleFillTopFlat(v3, vertices[1], vertices[2]);
+            }
         }
     }
+
+    v0 = v1 + v2;
 }
 
 //--------------------------------------------------------------

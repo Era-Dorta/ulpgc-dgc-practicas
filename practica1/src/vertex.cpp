@@ -11,9 +11,10 @@ Vertex::Vertex( const float x, const float y, const float z ) {
 
 //--------------------------------------------------------------
 Vertex::Vertex( const Vertex& otherVertex ){
-    for(int i = 0; i < 4; i++){
-        coordinates[i] = otherVertex.coordinates[i];
-    }
+    coordinates[0] = otherVertex.coordinates[0];
+    coordinates[1] = otherVertex.coordinates[1];
+    coordinates[2] = otherVertex.coordinates[2];
+    coordinates[3] = otherVertex.coordinates[3];
 }
 
 //--------------------------------------------------------------
