@@ -63,9 +63,14 @@ void testApp::draw(){
     }
     */
     Vertex v1,v2,v3;
-    v1.set(0,50,0);
-    v2.set(0,0,0);
-    v3.set(50,0,0);
+    v1.set(0,0,0);
+    v2.set(50,0,0);
+    v3.set(0,50,0);
+    renderer.rTriangleFill(v1,v2,v3);
+
+    v1.set(50,50,0);
+    v2.set(50,100,0);
+    v3.set(100,100,0);
     renderer.rTriangleFill(v1,v2,v3);
 }
 

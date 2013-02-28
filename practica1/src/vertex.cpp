@@ -28,7 +28,7 @@ bool Vertex::compareYX (const Vertex& a, const Vertex& b)
   if(a.getY() == b.getY()){
     return a.getX() < b.getX();
   } else{
-    return a.getY() > b.getY();
+    return a.getY() < b.getY();
   }
 }
 

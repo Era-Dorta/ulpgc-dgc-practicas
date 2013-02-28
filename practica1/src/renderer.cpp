@@ -74,14 +74,14 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     inv_m02 = 1/((vertex2.getY() - vertex0.getY())/(vertex2.getX() - vertex0.getX()));
     x_i = vertex0.getX();
     x_f = vertex0.getX();
-    for(int j = vertex0.getY(); j >= vertex1.getY(); j--){
+    for(int j = vertex0.getY(); j <= vertex1.getY(); j++){
         for(int i = x_i; i <= x_f; i++){
             //cout << "En el bucle i " << i << " j " << j << endl;
             rLine(i, j, 0, i, j, 0);
         }
         //Cambiado m02 por m01, sentido? no lo se
-        x_i += inv_m02;
-        x_f += inv_m01;
+        x_i += inv_m01;
+        x_f += inv_m02;
     }
 }
 
@@ -99,13 +99,13 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
     inv_m21 = 1/((vertex1.getY() - vertex2.getY())/(vertex1.getX() - vertex2.getX()));
     x_i = vertex2.getX();
     x_f = vertex2.getX();
-    for(int j = vertex2.getY(); j >= vertex0.getY(); j++){
+    for(int j = vertex2.getY(); j >= vertex0.getY(); j--){
         for(int i = x_i; i <= x_f; i++){
             //cout << "En el bucle i " << i << " j " << j << endl;
             rLine(i, j, 0, i, j, 0);
         }
-        x_i += inv_m20;
-        x_f += inv_m21;
+        x_i += inv_m21;
+        x_f += inv_m20;
     }
 }
 
