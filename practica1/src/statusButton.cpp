@@ -6,6 +6,7 @@ class testApp : public ofBaseApp{
 		void setState( AppStates state_ );
 		DrawableObject* getCurrentObject();
 		void setPerspective( bool active );
+		void setZBuffer( bool active );
 };
 
 //--------------------------------------------------------------
@@ -38,6 +39,9 @@ void StatusButton::checkPress( Vertex mouse )
                 app->getCurrentObject()->setDrawTriangles(pressed);
                 app->getCurrentObject()->setFillTriangles(pressed);
             }
+            break;
+        case Z_BUFFER:
+            app->setZBuffer(pressed);
             break;
         case PERSPECTIVE:
             app->setPerspective(pressed);

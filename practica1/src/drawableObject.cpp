@@ -197,7 +197,6 @@ DrawableObject::~DrawableObject(){
 void DrawableObject::draw(Renderer* renderer){
 
     if(drawFillTriangles_){
-        string var;
         for( int i = 0; i < totalTriangles; i++ ){
             renderer->rTriangleFill(transVertices[triangles[i][0]], transVertices[triangles[i][1]], transVertices[triangles[i][2]]);
         }

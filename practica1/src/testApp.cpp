@@ -4,7 +4,7 @@
 #include <cmath>
 
 #define N_ACTION_BUTTONS 7
-#define N_STATUS_BUTTONS 4
+#define N_STATUS_BUTTONS 5
 #define N_BUTTONS N_ACTION_BUTTONS + N_STATUS_BUTTONS
 
 //Center of the screen
@@ -13,7 +13,9 @@ extern Vertex center;
 //--------------------------------------------------------------
 void testApp::setup(){
     int i = 0;
+    renderer.setup(1024, 768);
     withPerspective = true;
+    zbuffer = false;
     state = DRAW_CUBE;
     currentObject = NULL;
     //Create buttons
@@ -30,7 +32,7 @@ void testApp::setup(){
     }
 ;
 
-    string sButtonNames[N_STATUS_BUTTONS] = { "Perspective","Triangles", "Normals", "Fill trian" };
+    string sButtonNames[N_STATUS_BUTTONS] = { "Perspective","Triangles", "Normals", "Fill trian", "Z-Buffer" };
     for(i = N_ACTION_BUTTONS; i < N_BUTTONS; i++){
         auxVertex.set( x, y + i*(height + 10), 0 );
         buttonList.push_back( new StatusButton(this, auxVertex, sButtonNames[i - N_ACTION_BUTTONS], (AppStates)i, width, height) );
@@ -304,6 +306,17 @@ void testApp::setPerspective( bool active ){
 //--------------------------------------------------------------
 bool testApp::getPerspective(){
     return withPerspective;
+}
+
+//--------------------------------------------------------------
+void testApp::setZBuffer( bool active ){
+    zbuffer = active;
+    renderer.setZBuffer(zbuffer);
+}
+
+//--------------------------------------------------------------
+bool testApp::getZBuffer(){
+    return zbuffer;
 }
 
 //--------------------------------------------------------------

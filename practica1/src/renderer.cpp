@@ -2,10 +2,57 @@
 #include "ofMain.h"
 #include <algorithm>    // std::sort
 #include <vector>       // std::vector
+#include <cfloat>       // std::FLT_MAX
 using namespace std;
 
 const int k = 400;
 const float invK = 1.0/k;
+
+//--------------------------------------------------------------
+Renderer::Renderer(const int w_, const int h_ ){
+    perspective_ = false;
+    w = w_;
+    h = h_;
+    zBuffer = new float*[w];
+    for(int i = 0; i < w; i++){
+        zBuffer[i] = new float[h];
+        for(int j = 0; j < h; j++){
+            zBuffer[i][j] = FLT_MAX;
+        }
+    }
+}
+
+//--------------------------------------------------------------
+Renderer::~Renderer(){
+    for(int i = 0; i < w; i++){
+        delete[] zBuffer[i];
+
+    }
+    delete[] zBuffer;
+}
+
+void Renderer::setup( const int w_, const int h_ ){
+    perspective_ = false;
+    useZBuffer = false;
+
+    for(int i = 0; i < w; i++){
+        delete[] zBuffer[i];
+
+    }
+    delete[] zBuffer;
+
+    w = w_;
+    h = h_;
+
+    zBuffer = new float*[w];
+    for(int i = 0; i < w; i++){
+        zBuffer[i] = new float[h];
+        for(int j = 0; j < h; j++){
+            zBuffer[i][j] = FLT_MAX;
+        }
+    }
+}
+
 //--------------------------------------------------------------
 void Renderer::perspective( const bool activate ){
     perspective_ = activate;
@@ -205,7 +252,7 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
 }
 
 //--------------------------------------------------------------
-void Renderer::rDrawBitmapString( string tex, const Vertex& vertex){
+void Renderer::rDrawBitmapString( const string tex, const Vertex& vertex){
     ofDrawBitmapString(tex, vertex.getX() + center.getX(), vertex.getY() + center.getY());
 }
 

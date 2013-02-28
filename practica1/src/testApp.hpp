@@ -26,6 +26,7 @@ class testApp : public ofBaseApp{
         Vertex nextObjButPos;
         bool opReady;
         bool withPerspective;
+        bool zbuffer;
         vector<Button*> buttonList;
         AppStates state;
         DrawableObject* currentObject;
@@ -50,6 +51,8 @@ class testApp : public ofBaseApp{
 		void setCurrentObject( DrawableObject* currentObject_ );
 		void setPerspective( bool active );
 		bool getPerspective();
+		void setZBuffer( bool active );
+		bool getZBuffer();
 		DrawableObject* getCurrentObject();
 		AppStates getState();
 };
