@@ -75,14 +75,13 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     x_i = vertex0.getX();
     x_f = vertex0.getX();
     for(int j = vertex0.getY(); j >= vertex1.getY(); j--){
-        //FIXME FALLA CUANDO LAS COORDENADAS DE LAS X SON NEGATIVAS
-        //PROBABLEMENTE EL OTRO BUCLE FALLE PARECIDO, x_i, x_f
         for(int i = x_i; i <= x_f; i++){
             //cout << "En el bucle i " << i << " j " << j << endl;
             rLine(i, j, 0, i, j, 0);
         }
-        x_i += inv_m01;
-        x_f += inv_m02;
+        //Cambiado m02 por m01, sentido? no lo se
+        x_i += inv_m02;
+        x_f += inv_m01;
     }
 }
 
