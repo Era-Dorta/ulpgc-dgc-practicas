@@ -15,6 +15,7 @@ class Renderer{
     private:
         void triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2);
         void triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2);
+        Vertex applyPerspective(const Vertex& vertex);
 
     public:
         Renderer(){perspective_ = false;};

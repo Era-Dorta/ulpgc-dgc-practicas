@@ -197,31 +197,24 @@ DrawableObject::~DrawableObject(){
 void DrawableObject::draw(Renderer* renderer){
 
     if(drawFillTriangles_){
-        cout << "Estoy aqui00\n";
         for( int i = 0; i < totalTriangles; i++ ){
             renderer->rTriangleFill(transVertices[triangles[i][0]], transVertices[triangles[i][1]], transVertices[triangles[i][2]]);
         }
-        cout << "Estoy aqui01\n";
     }else{
         if(drawNormals_){
-            cout << "Estoy aqui11\n";
             for( int i = 0; i < totalTriangles; i++ ){
                 //Draw triangle
                 renderer->rTriangle(transVertices[triangles[i][0]], transVertices[triangles[i][1]], transVertices[triangles[i][2]]);
                 //Draw triangle's normal
                 renderer->rLine(transTriangleCentroids[i], transTriangleCentroids[i] + transNormals[i]*10);
             }
-            cout << "Estoy aqui12\n";
         }else{
             if(drawTriangles_){
-                cout << "Estoy aqui22\n";
                 for( int i = 0; i < totalTriangles; i++ ){
                     //Draw triangle
                     renderer->rTriangle(transVertices[triangles[i][0]], transVertices[triangles[i][1]], transVertices[triangles[i][2]]);
                 }
-                cout << "Estoy aqui33\n";
             }
-            cout << "Estoy aqui44\n";
         }
     }
 

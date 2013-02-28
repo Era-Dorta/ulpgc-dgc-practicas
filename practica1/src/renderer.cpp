@@ -11,6 +11,16 @@ void Renderer::perspective( const bool activate ){
 }
 
 //--------------------------------------------------------------
+Vertex Renderer::applyPerspective(const Vertex& vertex){
+        Vertex res = vertex;
+        if(perspective_){
+            res.setX(vertex.getX() /( 1 - vertex.getZ() / k));
+            res.setY(vertex.getY() /( 1 - vertex.getZ() / k));
+        }
+        return res;
+}
+
+//--------------------------------------------------------------
 void Renderer::rLine(const Vertex& vertex0, const Vertex& vertex1){
     float x0 = vertex0.getX();
     float y0 = vertex0.getY();
@@ -30,7 +40,6 @@ void Renderer::rLine(const Vertex& vertex0, const Vertex& vertex1){
     x1 = x1 + center.getX();
     y1 = y1 + center.getY();
 
-//cout << "Dibuando en " << x0 << " " << y0 << " "<<x1 << " "<<y1 << endl;
     ofLine(x0,y0,x1,y1);
 }
 
@@ -47,7 +56,6 @@ void Renderer::rLine(float x0, float y0, float z0, float x1, float y1, float z1)
     x1 = x1 + center.getX();
     y1 = y1 + center.getY();
 
-    //cout << "Dibuando en " << x0 << " " << y0 << " "<<x1 << " "<<y1 << endl;
     ofLine(x0,y0,x1+1,y1);
 }
 
@@ -71,24 +79,22 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     }
     float inv_m01, inv_m02, x_i, x_f;
 
-    inv_m01 = (vertex1.getY() - vertex0.getY())/(vertex1.getX() - vertex0.getX());
+    inv_m01 = vertex1.getY() - vertex0.getY();
     if(inv_m01){
-        inv_m01 = 1/inv_m01;
+        inv_m01 = (vertex1.getX() - vertex0.getX())/inv_m01;
     }
 
-    inv_m02 = (vertex2.getY() - vertex0.getY())/(vertex2.getX() - vertex0.getX());
+    inv_m02 = vertex2.getY() - vertex0.getY();
     if(inv_m02){
-        inv_m02 = 1/inv_m02;
+        inv_m02 = (vertex2.getX() - vertex0.getX())/inv_m02;
     }
 
     x_i = vertex0.getX();
     x_f = vertex0.getX();
     for(int j = vertex0.getY(); j <= vertex1.getY(); j++){
         for(int i = x_i; i <= x_f; i++){
-            //cout << "En el bucle i " << i << " j " << j << endl;
             rLine(i, j, 0, i, j, 0);
         }
-        //Cambiado m02 por m01, sentido? no lo se
         x_i += inv_m01;
         x_f += inv_m02;
     }
@@ -105,25 +111,24 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
     }
     float inv_m20, inv_m21, x_i, x_f;
 
-    inv_m20 = (vertex0.getY() - vertex2.getY())/(vertex0.getX() - vertex2.getX());
+    inv_m20 = vertex0.getY() - vertex2.getY();
     if(inv_m20){
-        inv_m20 = 1/inv_m20;
+        inv_m20 = (vertex0.getX() - vertex2.getX())/inv_m20;
     }
 
-    inv_m21 = (vertex1.getY() - vertex2.getY())/(vertex1.getX() - vertex2.getX());
+    inv_m21 = vertex1.getY() - vertex2.getY();
     if(inv_m21){
-        inv_m21 = 1/inv_m21;
+        inv_m21 = (vertex1.getX() - vertex2.getX())/inv_m21;
     }
 
     x_i = vertex2.getX();
     x_f = vertex2.getX();
     for(int j = vertex2.getY(); j >= vertex0.getY(); j--){
         for(int i = x_i; i <= x_f; i++){
-            //cout << "En el bucle i " << i << " j " << j << endl;
             rLine(i, j, 0, i, j, 0);
         }
-        x_i += inv_m21;
-        x_f += inv_m20;
+        x_i -= inv_m20;
+        x_f -= inv_m21;
     }
 }
 
@@ -131,10 +136,10 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
 void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2){
     vector<Vertex> vertices;
     vertices.reserve(3);
-    vertices.push_back(vertex0);
-    vertices.push_back(vertex1);
-    vertices.push_back(vertex2);
-    Vertex v3 = vertex0;
+    vertices.push_back(applyPerspective(vertex0));
+    vertices.push_back(applyPerspective(vertex1));
+    vertices.push_back(applyPerspective(vertex2));
+    Vertex v3 = vertices[0];
     sort (vertices.begin(), vertices.end(), Vertex::compareYX);
     // El corte de v2 con la linea v1,v3
     v3 = vertices[1];
@@ -145,33 +150,16 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
     float y2 =  vertices[2].getY();
     //Interpolate where vertex1.x cuts the line vertex0-vertex2
     v3.setY( y2*((x0-x1)/(x0-x2)) + y0*(1-(x0-x1)/(x0-x2)) );
-    Vertex v0 = vertices[0];
-    Vertex v1 = vertices[1];
-    Vertex v2 = vertices[2];
     if(v3 == vertices[1]){
-        cout << "Entrando con es plano de un lado\n";
         triangleFillBotFlat(vertices[0], vertices[1], vertices[2]);
-        cout << "Entrando con es plano del otro\n";
         triangleFillTopFlat(vertices[0], vertices[1], vertices[2]);
-        cout << "sali\n";
     }else{
-        cout << "Entrando con iguales\n";
         if(v3.getX() > vertices[1].getX()){
-            if(v3 == vertices[1] || v3 == vertices[0] || v3 == vertices[2]){
-                cout << "Pillado\n";
-            }
-            cout << 4 << endl;
             triangleFillBotFlat(vertices[0], vertices[1], v3);
             triangleFillTopFlat(vertices[1], v3, vertices[2]);
-            cout << 4-4 << endl;
         }else{
-            if(v3 == vertices[1] || v3 == vertices[0] || v3 == vertices[2]){
-                cout << "Pillado\n";
-            }
-            cout << 5 << endl;
             triangleFillBotFlat(vertices[0], v3, vertices[1]);
             triangleFillTopFlat(v3, vertices[1], vertices[2]);
-            cout << 5-5 << endl;
         }
     }
 }
