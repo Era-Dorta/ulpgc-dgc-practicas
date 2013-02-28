@@ -20,8 +20,10 @@ class Renderer{
     public:
         Renderer(){perspective_ = false;};
         void perspective( const bool activate );
+        void rPixel(const float x, const float y);
         void rLine(const Vertex& vertex0, const Vertex& vertex1);
-        void rLine(float x0, float y0, float z0, float x1, float y1, float z1);
+        void rLine(const float x0, const float y0, const float x1, const float y1);
+        void rLine(const float x0, const float y0, const float z0, const float x1, const float y1, const float z1);
         void rTriangle(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2);
         void rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2);
         void rDrawBitmapString( string tex, const Vertex& vertex);

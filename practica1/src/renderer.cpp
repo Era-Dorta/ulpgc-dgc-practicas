@@ -22,6 +22,13 @@ Vertex Renderer::applyPerspective(const Vertex& vertex){
 }
 
 //--------------------------------------------------------------
+void Renderer::rPixel(const float x, const float y){
+    //Give some offset, arbitrary x is chosen
+    //Otherwise the line would not be drawn
+    rLine(x, y, x + 1, y);
+}
+
+//--------------------------------------------------------------
 void Renderer::rLine(const Vertex& vertex0, const Vertex& vertex1){
     float x0 = vertex0.getX();
     float y0 = vertex0.getY();
@@ -30,34 +37,21 @@ void Renderer::rLine(const Vertex& vertex0, const Vertex& vertex1){
     float y1 = vertex1.getY();
     float z1 = vertex1.getZ();
 
-    if(perspective_){
-        x0 = x0 /( 1 - z0 * invK);
-        y0 = y0 /( 1 - z0 * invK);
-        x1 = x1 /( 1 - z1 * invK);
-        y1 = y1 /( 1 - z1 * invK);
-    }
-    x0 = x0 + center.getX();
-    y0 = y0 + center.getY();
-    x1 = x1 + center.getX();
-    y1 = y1 + center.getY();
-
-    ofLine(x0,y0,x1,y1);
+    rLine(x0, y0, z0, x1, y1, z1);
 }
 
 //--------------------------------------------------------------
-void Renderer::rLine(float x0, float y0, float z0, float x1, float y1, float z1){
-    if(perspective_){
-        x0 = x0 /( 1 - z0 * invK);
-        y0 = y0 /( 1 - z0 * invK);
-        x1 = x1 /( 1 - z1 * invK);
-        y1 = y1 /( 1 - z1 * invK);
-    }
-    x0 = x0 + center.getX();
-    y0 = y0 + center.getY();
-    x1 = x1 + center.getX();
-    y1 = y1 + center.getY();
+void Renderer::rLine(const float x0, const float y0, const float x1, const float y1){
+    ofLine(x0 + center.getX(),y0 + center.getY(),x1 + center.getX(), y1 + center.getY());
+}
 
-    ofLine(x0,y0,x1+1,y1);
+//--------------------------------------------------------------
+void Renderer::rLine(const float x0, const float y0, const float z0, const float x1, const float y1, const float z1){
+    if(perspective_){
+        rLine(x0 /( 1 - z0 * invK), y0 /( 1 - z0 * invK),x1 /( 1 - z1 * invK),y1 /( 1 - z1 * invK));
+    }else{
+        rLine(x0, y0, x1, y1);
+    }
 }
 
 //--------------------------------------------------------------
@@ -108,7 +102,7 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     z_p = z_i;
     for(int j = vertex0.getY(); j <= vertex1.getY(); j++){
         for(int i = x_i; i <= x_f; i++){
-            rLine(i, j, 0, i, j, 0);
+            rPixel(i, j);
             z_p += inv_mzp;
         }
         x_i += inv_m01;
@@ -159,7 +153,7 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
     z_p = z_i;
     for(int j = vertex2.getY(); j >= vertex0.getY(); j--){
         for(int i = x_i; i <= x_f; i++){
-            rLine(i, j, 0, i, j, 0);
+            rPixel(i, j);
             z_p += inv_mzp;
         }
         x_i -= inv_m20;
