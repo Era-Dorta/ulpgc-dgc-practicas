@@ -27,7 +27,7 @@ class Renderer{
         ~Renderer();
         void setup( const int w, const int h );
         void perspective( const bool activate );
-        void rPixel(const float x, const float y);
+        void rPixel(const float x, const float y, const float z);
         void rLine(const Vertex& vertex0, const Vertex& vertex1);
         void rLine(const float x0, const float y0, const float x1, const float y1);
         void rLine(const float x0, const float y0, const float z0, const float x1, const float y1, const float z1);

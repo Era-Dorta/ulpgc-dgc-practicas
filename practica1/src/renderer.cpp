@@ -3,6 +3,7 @@
 #include <algorithm>    // std::sort
 #include <vector>       // std::vector
 #include <cfloat>       // std::FLT_MAX
+#include <climits>      //std::INT_MIN
 using namespace std;
 
 const int k = 400;
@@ -17,7 +18,7 @@ Renderer::Renderer(const int w_, const int h_ ){
     for(int i = 0; i < w; i++){
         zBuffer[i] = new float[h];
         for(int j = 0; j < h; j++){
-            zBuffer[i][j] = FLT_MAX;
+            zBuffer[i][j] = INT_MIN;
         }
     }
 }
@@ -48,7 +49,7 @@ void Renderer::setup( const int w_, const int h_ ){
     for(int i = 0; i < w; i++){
         zBuffer[i] = new float[h];
         for(int j = 0; j < h; j++){
-            zBuffer[i][j] = FLT_MAX;
+            zBuffer[i][j] = INT_MIN;
         }
     }
 }
@@ -69,10 +70,23 @@ Vertex Renderer::applyPerspective(const Vertex& vertex){
 }
 
 //--------------------------------------------------------------
-void Renderer::rPixel(const float x, const float y){
+void Renderer::rPixel(const float x, const float y, const float z){
     //Give some offset, arbitrary x is chosen
     //Otherwise the line would not be drawn
-    rLine(x, y, x + 1, y);
+    if(useZBuffer){
+        int x_ = (int)x + center.getX();
+        int y_ = (int)y + center.getY();
+        if(x_ > 1023 || x_ < 0 ||  y_ > 767 || y_ < 0 ){
+            //Trying to draw outside the window
+            return;
+        }
+        if(z >= zBuffer[x_][y_]){
+            zBuffer[x_][y_] = z;
+            rLine(x, y, x + 1, y);
+        }
+    }else{
+        rLine(x, y, x + 1, y);
+    }
 }
 
 //--------------------------------------------------------------
@@ -149,7 +163,7 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     z_p = z_i;
     for(int j = vertex0.getY(); j <= vertex1.getY(); j++){
         for(int i = x_i; i <= x_f; i++){
-            rPixel(i, j);
+            rPixel(i, j, z_p);
             z_p += inv_mzp;
         }
         x_i += inv_m01;
@@ -200,7 +214,7 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
     z_p = z_i;
     for(int j = vertex2.getY(); j >= vertex0.getY(); j--){
         for(int i = x_i; i <= x_f; i++){
-            rPixel(i, j);
+            rPixel(i, j, z_p);
             z_p += inv_mzp;
         }
         x_i -= inv_m20;
