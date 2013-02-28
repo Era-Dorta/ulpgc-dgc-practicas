@@ -106,15 +106,20 @@ void RevolutionSurface::setDrawHelper( Vertex &mouse ){
 void RevolutionSurface::draw(Renderer* renderer){
     int i, j;
     //If the object is empty draw nothing
+    cout << "Estoy aqui\n";
     if( totalVertices >= 1 ){
         ofSetColor ( color );
         if(hasAllVertices_){
             //User ended drawing the object
+            cout << "Estoy aqui0\n";
             if(drawNormals_ || drawTriangles_){
                 //Draw using triangles
+                cout << "Estoy aqui1\n";
                 DrawableObject::draw(renderer);
+                cout << "Estoy aqui2\n";
             }else{
                 //Draw using squares
+                cout << "Estoy aqui3\n";
                 for( i = 0; i < ROT; i++ ){
                     for( j = 1; j < lineVerticesAmount; j++ ){
                     //Vertical lines
@@ -125,14 +130,18 @@ void RevolutionSurface::draw(Renderer* renderer){
                     //Bottom horizontal lines
                     renderer->rLine(transVertices[(j - 1+i*lineVerticesAmount)%totalVertices], transVertices[(j - 1+(i+1)*lineVerticesAmount)%totalVertices]);
                    }
+                   cout << "Estoy aqui4\n";
             }
         }else{
+            cout << "Estoy aqui5\n";
             //User is still drawing the object
             ofSetColor ( ofColor::white);
             for( i = 1; i < totalVertices; i++ ){
                 renderer->rLine(transVertices[i - 1], transVertices[i]);
             }
+            cout << "Estoy aqui6\n";
             renderer->rLine(transVertices[i - 1], pmouse);
+            cout << "Estoy aqui7\n";
         }
     }
 }

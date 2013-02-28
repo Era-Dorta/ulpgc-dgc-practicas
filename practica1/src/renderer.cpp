@@ -70,8 +70,17 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
         return;
     }
     float inv_m01, inv_m02, x_i, x_f;
-    inv_m01 = 1/((vertex1.getY() - vertex0.getY())/(vertex1.getX() - vertex0.getX()));
-    inv_m02 = 1/((vertex2.getY() - vertex0.getY())/(vertex2.getX() - vertex0.getX()));
+
+    inv_m01 = (vertex1.getY() - vertex0.getY())/(vertex1.getX() - vertex0.getX());
+    if(inv_m01){
+        inv_m01 = 1/inv_m01;
+    }
+
+    inv_m02 = (vertex2.getY() - vertex0.getY())/(vertex2.getX() - vertex0.getX());
+    if(inv_m02){
+        inv_m02 = 1/inv_m02;
+    }
+
     x_i = vertex0.getX();
     x_f = vertex0.getX();
     for(int j = vertex0.getY(); j <= vertex1.getY(); j++){
@@ -95,8 +104,17 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
         return;
     }
     float inv_m20, inv_m21, x_i, x_f;
-    inv_m20 = 1/((vertex0.getY() - vertex2.getY())/(vertex0.getX() - vertex2.getX()));
-    inv_m21 = 1/((vertex1.getY() - vertex2.getY())/(vertex1.getX() - vertex2.getX()));
+
+    inv_m20 = (vertex0.getY() - vertex2.getY())/(vertex0.getX() - vertex2.getX());
+    if(inv_m20){
+        inv_m20 = 1/inv_m20;
+    }
+
+    inv_m21 = (vertex1.getY() - vertex2.getY())/(vertex1.getX() - vertex2.getX());
+    if(inv_m21){
+        inv_m21 = 1/inv_m21;
+    }
+
     x_i = vertex2.getX();
     x_f = vertex2.getX();
     for(int j = vertex2.getY(); j >= vertex0.getY(); j--){
@@ -131,10 +149,13 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
     Vertex v1 = vertices[1];
     Vertex v2 = vertices[2];
     if(v3 == vertices[1]){
+        cout << "Entrando con es plano de un lado\n";
         triangleFillBotFlat(vertices[0], vertices[1], vertices[2]);
+        cout << "Entrando con es plano del otro\n";
         triangleFillTopFlat(vertices[0], vertices[1], vertices[2]);
+        cout << "sali\n";
     }else{
-        cout << "Entrando con iguales";
+        cout << "Entrando con iguales\n";
         if(v3.getX() > vertices[1].getX()){
             if(v3 == vertices[1] || v3 == vertices[0] || v3 == vertices[2]){
                 cout << "Pillado\n";
