@@ -60,7 +60,7 @@ void Renderer::perspective( const bool activate ){
 }
 
 //--------------------------------------------------------------
-Vertex Renderer::applyPerspective(const Vertex& vertex){
+Vertex Renderer::applyPerspective(const Vertex& vertex) const{
         Vertex res = vertex;
         if(perspective_){
             res.setX(vertex.getX() /( 1 - vertex.getZ() * invK));
@@ -70,7 +70,7 @@ Vertex Renderer::applyPerspective(const Vertex& vertex){
 }
 
 //--------------------------------------------------------------
-void Renderer::rPixel(const float x, const float y, const float z){
+void Renderer::rPixel(const float x, const float y, const float z) const{
     //Give some offset, arbitrary x is chosen
     //Otherwise the line would not be drawn
     if(useZBuffer){
@@ -90,17 +90,17 @@ void Renderer::rPixel(const float x, const float y, const float z){
 }
 
 //--------------------------------------------------------------
-void Renderer::rLine(const Vertex& vertex0, const Vertex& vertex1){
+void Renderer::rLine(const Vertex& vertex0, const Vertex& vertex1) const{
     rLine(vertex0.getX(), vertex0.getY(), vertex0.getZ(), vertex1.getX(), vertex1.getY(), vertex1.getZ());
 }
 
 //--------------------------------------------------------------
-void Renderer::rLine(const float x0, const float y0, const float x1, const float y1){
+void Renderer::rLine(const float x0, const float y0, const float x1, const float y1) const{
     ofLine(x0 + center.getX(),y0 + center.getY(),x1 + center.getX(), y1 + center.getY());
 }
 
 //--------------------------------------------------------------
-void Renderer::rLine(const float x0, const float y0, const float z0, const float x1, const float y1, const float z1){
+void Renderer::rLine(const float x0, const float y0, const float z0, const float x1, const float y1, const float z1) const{
     if(perspective_){
         rLine(x0 /( 1 - z0 * invK), y0 /( 1 - z0 * invK),x1 /( 1 - z1 * invK),y1 /( 1 - z1 * invK));
     }else{
@@ -109,7 +109,7 @@ void Renderer::rLine(const float x0, const float y0, const float z0, const float
 }
 
 //--------------------------------------------------------------
-void Renderer::rTriangle(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2){
+void Renderer::rTriangle(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2) const{
     rLine(vertex0, vertex1);
     rLine(vertex0, vertex2);
     rLine(vertex1, vertex2);
@@ -122,7 +122,7 @@ void Renderer::rTriangle(const Vertex& vertex0, const Vertex& vertex1, const Ver
 v1    v2
 */
 //--------------------------------------------------------------
-void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2){
+void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2) const{
     if( vertex0.getY() == vertex1.getY() || vertex1.getX() == vertex2.getX() ){
         return;
     }
@@ -173,7 +173,7 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
 //    \/
 //     v2
 //--------------------------------------------------------------
-void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2){
+void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2) const{
     if( vertex0.getY() == vertex2.getY() || vertex0.getX() == vertex1.getX() ){
         return;
     }
@@ -220,7 +220,7 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
 }
 
 //--------------------------------------------------------------
-void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2){
+void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2) const{
     vector<Vertex> vertices;
     vertices.reserve(3);
     vertices.push_back(applyPerspective(vertex0));
@@ -255,12 +255,12 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
 }
 
 //--------------------------------------------------------------
-void Renderer::rDrawBitmapString( const string tex, const Vertex& vertex){
+void Renderer::rDrawBitmapString( const string tex, const Vertex& vertex) const{
     ofDrawBitmapString(tex, vertex.getX() + center.getX(), vertex.getY() + center.getY());
 }
 
 //--------------------------------------------------------------
-void Renderer::rRect( const Vertex& vertex, const float w, const float h){
+void Renderer::rRect( const Vertex& vertex, const float w, const float h) const{
     ofRect(vertex.getX() + center.getX(), vertex.getY() + center.getY(), w, h);
 }
 
