@@ -12,12 +12,12 @@ class RevolutionSurface : public DrawableObject{
         Vertex pmouse;
 
     public:
-        RevolutionSurface( ofColor color_ = ofColor::white );
-        void setVertex( Vertex &vertex );
+        RevolutionSurface( const ofColor color_ = ofColor::white );
+        void setVertex( const Vertex &vertex );
         void noMoreVertices();
-        void setDrawHelper( Vertex &mouse );
-        virtual void draw(Renderer* renderer);
-        bool hasAllVertices() { return hasAllVertices_; }
+        void setDrawHelper( const Vertex &mouse );
+        virtual void draw(Renderer* renderer) const;
+        bool hasAllVertices() const { return hasAllVertices_; }
 };
 
 #endif

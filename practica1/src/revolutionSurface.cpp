@@ -6,7 +6,7 @@
 //is rotated
 #define ROT 3
 //--------------------------------------------------------------
-RevolutionSurface::RevolutionSurface(ofColor color_)
+RevolutionSurface::RevolutionSurface(const ofColor color_)
 :DrawableObject(0, color_)
 {
     hasAllVertices_ = false;
@@ -16,7 +16,7 @@ RevolutionSurface::RevolutionSurface(ofColor color_)
 }
 
 //--------------------------------------------------------------
-void RevolutionSurface::setVertex( Vertex &vertex ){
+void RevolutionSurface::setVertex( const Vertex &vertex ){
     Vertex* auxVertices,* auxTransVertices;
     //Get memory for current vertices plus one
     auxVertices = new Vertex[totalVertices + 1];
@@ -98,12 +98,12 @@ void RevolutionSurface::noMoreVertices(){
 }
 
 //--------------------------------------------------------------
-void RevolutionSurface::setDrawHelper( Vertex &mouse ){
+void RevolutionSurface::setDrawHelper( const Vertex &mouse ){
     pmouse = mouse;
 }
 
 //--------------------------------------------------------------
-void RevolutionSurface::draw(Renderer* renderer){
+void RevolutionSurface::draw(Renderer* renderer) const {
     int i, j;
     //If the object is empty draw nothing
     if( totalVertices >= 1 ){
