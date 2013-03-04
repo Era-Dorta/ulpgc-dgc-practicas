@@ -78,6 +78,7 @@ void testApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y ){
+
     if(opReady){
         //Force 0,0 at the center of the screen
         Vertex current(x - center.getX(), y - center.getY(), 0);
@@ -126,12 +127,14 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
+
     pRawX = x;
     pRawY = y;
     //Force 0,0 at the center of the screen
     x = x - center.getX();
     y = y - center.getY();
-    if( button == L_MOUSE){
+    switch(button){
+    case L_MOUSE:
         pmouse.setX( x );
         pmouse.setY( y );
         pmouse.setZ( 0 );
@@ -180,15 +183,23 @@ void testApp::mousePressed(int x, int y, int button){
         default:
             break;
         }
-    }else{
+        break;
+    case R_MOUSE:
         //Right click and drawing a revolution object
-        if( button == R_MOUSE && state == DRAW_REVOLUTION ){
+        if( state == DRAW_REVOLUTION ){
             //User finished adding vertices, construct the object
             RevolutionSurface* revObject = (RevolutionSurface*)objectList.back();
             revObject->noMoreVertices();
             buttonList.push_back( new ObjectButton(this, nextObjButPos, "Rev", revObject, currentColor) );
             nextObjButPos.setX(nextObjButPos.getX() + 40);
         }
+        break;
+    case WHEEL_FW:
+        break;
+    case WHEEL_BK:
+        break;
+    default:
+        break;
     }
 }
 

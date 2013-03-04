@@ -14,6 +14,8 @@
 
 #define L_MOUSE 0
 #define R_MOUSE 2
+#define WHEEL_FW 3
+#define WHEEL_BK 4
 
 using namespace std;
 
