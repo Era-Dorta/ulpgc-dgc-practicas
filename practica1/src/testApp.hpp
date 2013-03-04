@@ -36,6 +36,8 @@ class testApp : public ofBaseApp{
         ofColor currentColor;
 
 	public:
+        ~testApp();
+
         //Default methods
 		void setup();
 		void update();

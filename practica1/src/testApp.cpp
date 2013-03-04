@@ -11,6 +11,16 @@
 extern Vertex center;
 
 //--------------------------------------------------------------
+testApp::~testApp(){
+    for(unsigned int i = 0; i < buttonList.size(); i++){
+        delete buttonList[i];
+    }
+    for(unsigned int i = 0; i < objectList.size(); i++){
+        delete objectList[i];
+    }
+}
+
+//--------------------------------------------------------------
 void testApp::setup(){
     int i = 0;
     renderer.setup(1024, 768);
@@ -262,6 +272,8 @@ void testApp::mouseReleased(int x, int y, int button){
                         objectList.erase (objectList.begin()+i);
                     }
                 }
+                //Call object destructor
+                delete currentObject;
                 if(objectList.size() == 0){
                     currentObject = NULL;
                     nextObjButPos.setX(-500);

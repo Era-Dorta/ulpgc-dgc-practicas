@@ -102,6 +102,7 @@ void DrawableObject::calculateCentroids(){
 
 //--------------------------------------------------------------
 DrawableObject::DrawableObject( const int totalVertices_, const ofColor color_  ){
+
     totalVertices = totalVertices_;
     if( totalVertices ){
         vertices = new Vertex[totalVertices];
