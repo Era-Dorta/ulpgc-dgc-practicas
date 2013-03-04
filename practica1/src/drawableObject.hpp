@@ -32,7 +32,7 @@ class DrawableObject {
 
     private:
         void multiplyMatrix( float matrix0[4][4], float matrix1[4][4], int firstSave = 1 );
-        void applyTransform( int permanent );
+        void applyTransform( bool permanent );
 
     protected:
         void calculateNormals();
@@ -44,8 +44,8 @@ class DrawableObject {
         virtual ~DrawableObject();
         virtual void draw(Renderer* renderer);
         virtual int getTotalVertices() { return totalVertices; };
-        virtual void rotate( Axis axis, float amount, int permanent);
-        virtual void translate( float tX, float tY, int permanent);
+        virtual void rotate( Axis axis, float amount, bool permanent);
+        virtual void translate( float tX, float tY, bool permanent);
         void resetTransMatrix();
         void resetAuxMatrix();
         Subtype getSubtype() { return subtype; };

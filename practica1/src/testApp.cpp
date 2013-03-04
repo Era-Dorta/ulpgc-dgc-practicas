@@ -101,16 +101,16 @@ void testApp::mouseDragged(int x, int y, int button){
             Vertex current(x - center.getX(), y - center.getY(), 0);
             switch(state){
             case ROTATING_X:
-                currentObject->rotate( X, pRawY - y, 0 );
+                currentObject->rotate( X, pRawY - y, false );
                 break;
             case ROTATING_Y:
-                currentObject->rotate( Y, pRawX - x, 0 );
+                currentObject->rotate( Y, pRawX - x, false );
                 break;
             case ROTATING_Z:
-                currentObject->rotate( Z, pRawY - y, 0 );
+                currentObject->rotate( Z, pRawY - y, false );
                 break;
             case TRANSLATING:
-                currentObject->translate( x - pRawX, y - pRawY, 0 );
+                currentObject->translate( x - pRawX, y - pRawY, false );
                 break;
             case DRAW_CUBE:
                 ((Cube*)objectList.back())->setVertices( pmouse, current );
@@ -202,16 +202,16 @@ void testApp::mouseReleased(int x, int y, int button){
             Vertex current(x - center.getX(), y - center.getY(), 0);
             switch(state){
             case ROTATING_X:
-                currentObject->rotate( X, pRawY - y, 1 );
+                currentObject->rotate( X, pRawY - y, true );
                 break;
             case ROTATING_Y:
-                currentObject->rotate( Y, pRawX - x, 1 );
+                currentObject->rotate( Y, pRawX - x, true );
                 break;
             case ROTATING_Z:
-                currentObject->rotate( Z, pRawY - y, 1 );
+                currentObject->rotate( Z, pRawY - y, true );
                 break;
             case TRANSLATING:
-                currentObject->translate( x - pRawX, y - pRawY, 1 );
+                currentObject->translate( x - pRawX, y - pRawY, true );
                 break;
             case DRAW_CUBE:
                 ((Cube*)objectList.back())->setVertices( pmouse, current );
