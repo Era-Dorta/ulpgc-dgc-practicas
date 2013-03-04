@@ -74,8 +74,9 @@ void Renderer::rPixel(const float x, const float y, const float z) const{
     //Give some offset, arbitrary x is chosen
     //Otherwise the line would not be drawn
     if(useZBuffer){
-        int x_ = (int)x + center.getX();
-        int y_ = (int)y + center.getY();
+        //Plus 0.5 to ensure correct conversion
+        int x_ = (int)(x + 0.5) + center.getX();
+        int y_ = (int)(y + 0.5) + center.getY();
         if(x_ > 1023 || x_ < 0 ||  y_ > 767 || y_ < 0 ){
             //Trying to draw outside the window
             return;
