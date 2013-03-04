@@ -42,19 +42,19 @@ class DrawableObject {
         DrawableObject( const int totalVertices_, const ofColor color_ = ofColor::white );
         DrawableObject( const DrawableObject& otherDrawableObject );
         virtual ~DrawableObject();
-        virtual void draw(Renderer* renderer);
-        virtual int getTotalVertices() { return totalVertices; };
+        virtual void draw(Renderer* renderer) const;
+        virtual int getTotalVertices() const{ return totalVertices; };
         virtual void rotate( const Axis axis, const float amount, const bool permanent);
         virtual void translate( const float tX, const float tY, const float tZ, const bool permanent);
         void resetTransMatrix();
         void resetAuxMatrix();
-        Subtype getSubtype() { return subtype; };
-        void setDrawTriangles( const bool activate ){ drawTriangles_ = activate; };
-        bool getDrawTriangles(){ return drawTriangles_; };
+        Subtype getSubtype() const { return subtype; };
+        void setDrawTriangles( const bool activate ) { drawTriangles_ = activate; };
+        bool getDrawTriangles() const { return drawTriangles_; };
         void setNormals( const bool activate );
-        bool getNormals(){ return drawNormals_; };
+        bool getNormals() const { return drawNormals_; };
         void setFillTriangles( const bool activate );
-        bool getFillTriangles(){ return drawFillTriangles_; };
+        bool getFillTriangles() const { return drawFillTriangles_; };
 };
 
 #endif

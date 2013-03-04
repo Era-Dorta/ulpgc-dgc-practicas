@@ -194,7 +194,7 @@ DrawableObject::~DrawableObject(){
 }
 
 //--------------------------------------------------------------
-void DrawableObject::draw(Renderer* renderer){
+void DrawableObject::draw(Renderer* renderer) const{
 
     if(drawFillTriangles_){
         for( int i = 0; i < totalTriangles; i++ ){
