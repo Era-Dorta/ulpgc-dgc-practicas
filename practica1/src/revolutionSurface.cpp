@@ -103,7 +103,7 @@ void RevolutionSurface::setDrawHelper( const Vertex &mouse ){
 }
 
 //--------------------------------------------------------------
-void RevolutionSurface::draw(Renderer* renderer) const {
+void RevolutionSurface::draw(const Renderer* renderer) const {
     int i, j;
     //If the object is empty draw nothing
     if( totalVertices >= 1 ){
