@@ -32,28 +32,28 @@ class DrawableObject {
 
     private:
         void multiplyMatrix( float matrix0[4][4], float matrix1[4][4], int firstSave = 1 );
-        void applyTransform( bool permanent );
+        void applyTransform( const bool permanent );
 
     protected:
         void calculateNormals();
         void calculateCentroids();
 
     public:
-        DrawableObject( int totalVertices_, ofColor color_ = ofColor::white );
+        DrawableObject( const int totalVertices_, const ofColor color_ = ofColor::white );
         DrawableObject( const DrawableObject& otherDrawableObject );
         virtual ~DrawableObject();
         virtual void draw(Renderer* renderer);
         virtual int getTotalVertices() { return totalVertices; };
-        virtual void rotate( Axis axis, float amount, bool permanent);
-        virtual void translate( float tX, float tY, float tZ, bool permanent);
+        virtual void rotate( const Axis axis, const float amount, const bool permanent);
+        virtual void translate( const float tX, const float tY, const float tZ, const bool permanent);
         void resetTransMatrix();
         void resetAuxMatrix();
         Subtype getSubtype() { return subtype; };
-        void setDrawTriangles( bool activate ){ drawTriangles_ = activate; };
+        void setDrawTriangles( const bool activate ){ drawTriangles_ = activate; };
         bool getDrawTriangles(){ return drawTriangles_; };
+        void setNormals( const bool activate );
         bool getNormals(){ return drawNormals_; };
-        void setNormals( bool activate );
-        void setFillTriangles( bool activate );
+        void setFillTriangles( const bool activate );
         bool getFillTriangles(){ return drawFillTriangles_; };
 };
 

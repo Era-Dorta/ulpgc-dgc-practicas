@@ -34,7 +34,7 @@ void DrawableObject::multiplyMatrix( float matrix0[4][4], float matrix1[4][4], i
 }
 
 //--------------------------------------------------------------
-void DrawableObject:: applyTransform( bool permanent ){
+void DrawableObject:: applyTransform( const bool permanent ){
     if(permanent){
         //Multiply transMatrix by auxMatrix and save the
         //result in transMAtrix, recalculate the transformed
@@ -101,7 +101,7 @@ void DrawableObject::calculateCentroids(){
 }
 
 //--------------------------------------------------------------
-DrawableObject::DrawableObject( int totalVertices_, ofColor color_  ){
+DrawableObject::DrawableObject( const int totalVertices_, const ofColor color_  ){
     totalVertices = totalVertices_;
     if( totalVertices ){
         vertices = new Vertex[totalVertices];
@@ -221,7 +221,7 @@ void DrawableObject::draw(Renderer* renderer){
 }
 
 //--------------------------------------------------------------
-void DrawableObject::rotate( Axis axis, float amount, bool permanent){
+void DrawableObject::rotate( const Axis axis, const float amount, const bool permanent){
     float cosVal, sinVal;
     resetAuxMatrix();
     cosVal = cos(0.02*amount);
@@ -251,7 +251,7 @@ void DrawableObject::rotate( Axis axis, float amount, bool permanent){
 }
 
 //--------------------------------------------------------------
-void DrawableObject::translate( float tX, float tY, float tZ, bool permanent){
+void DrawableObject::translate( const float tX, const float tY, const float tZ, const bool permanent){
     resetAuxMatrix();
     auxMatrix[3][0] = tX;
     auxMatrix[3][1] = tY;
@@ -289,7 +289,7 @@ void DrawableObject::resetAuxMatrix(){
 }
 
 //--------------------------------------------------------------
-void DrawableObject::setNormals( bool activate ){
+void DrawableObject::setNormals( const bool activate ){
     if(activate){
         drawTriangles_ = true;
     }
@@ -297,7 +297,7 @@ void DrawableObject::setNormals( bool activate ){
 }
 
 //--------------------------------------------------------------
-void DrawableObject::setFillTriangles( bool activate ){
+void DrawableObject::setFillTriangles( const bool activate ){
     if(activate){
         drawTriangles_ = true;
     }
