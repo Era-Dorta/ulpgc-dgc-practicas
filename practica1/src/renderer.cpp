@@ -242,13 +242,9 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
 
     Vertex v3;
     v3 = vertices[1];
-    float x0 =  vertices[0].getX();
-    float x2 =  vertices[2].getX();
-    float y0 =  vertices[0].getY();
-    float y1 =  vertices[1].getY();
-    float y2 =  vertices[2].getY();
     //Interpolate where vertex1.x cuts the line vertex0-vertex2
-    v3.setX( x2*((y0-y1)/(y0-y2)) + x0*(1-(y0-y1)/(y0-y2)) );
+    v3.setX( vertices[2].getX()*((vertices[0].getY()-vertices[1].getY())/(vertices[0].getY()-vertices[2].getY())) +
+        vertices[0].getX()*(1-(vertices[0].getY()-vertices[1].getY())/(vertices[0].getY()-vertices[2].getY())) );
     if(v3.getX() > vertices[1].getX()){
         triangleFillBotFlat(vertices[0], vertices[1], v3);
         triangleFillTopFlat(vertices[1], v3, vertices[2]);
