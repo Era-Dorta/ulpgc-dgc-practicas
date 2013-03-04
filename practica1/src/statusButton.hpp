@@ -13,8 +13,10 @@ class StatusButton : public Button{
         DrawableObject* object;
 
     public:
-        StatusButton( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_, int w = 90, int h = 30, ofColor color_ = ofColor::white );
-        void checkPress( Vertex mouse );
+        StatusButton( testApp *app_, const Vertex vertex, const string buttonTex_,
+            const AppStates state_, const int w = 90, const int h = 30,
+            const ofColor color_ = ofColor::white );
+        void checkPress( const Vertex mouse );
         void update();
 };
 

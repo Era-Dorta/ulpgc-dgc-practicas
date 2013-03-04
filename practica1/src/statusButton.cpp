@@ -10,13 +10,14 @@ class testApp : public ofBaseApp{
 };
 
 //--------------------------------------------------------------
-StatusButton::StatusButton( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_, int w, int h,ofColor color_ )
+StatusButton::StatusButton( testApp *app_, const Vertex vertex, const string buttonTex_,
+    const AppStates state_, const int w, const int h, const ofColor color_ )
 :Button(app_, vertex, buttonTex_, state_, w, h, color_)
 {
 }
 
 //--------------------------------------------------------------
-void StatusButton::checkPress( Vertex mouse )
+void StatusButton::checkPress( const Vertex mouse )
 {
     if( mouse.getX() >= position.getX() &&  mouse.getX() <= position.getX() + width &&
         mouse.getY() >= position.getY() && mouse.getY() <= position.getY() + height ){

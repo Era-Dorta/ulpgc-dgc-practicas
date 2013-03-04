@@ -10,7 +10,8 @@ class testApp : public ofBaseApp{
 };
 
 //--------------------------------------------------------------
-Button::Button( testApp *app_, Vertex vertex, string buttonTex_, AppStates state_, int w, int h, ofColor color_ ){
+Button::Button( testApp *app_, const Vertex vertex, const string buttonTex_,
+               const AppStates state_, const int w, const int h, const ofColor color_ ){
     pressed = false;
     width = w;
     height = h;
@@ -40,7 +41,7 @@ Button::Button( const Button& otherButton ){
 }
 
 //--------------------------------------------------------------
-void Button::checkPress( Vertex mouse ){
+void Button::checkPress( const Vertex mouse ){
     if( mouse.getX() >= position.getX() &&  mouse.getX() <= position.getX() + width &&
             mouse.getY() >= position.getY() && mouse.getY() <= position.getY() + height ){
         if( pressed ){
@@ -53,7 +54,7 @@ void Button::checkPress( Vertex mouse ){
 }
 
 //--------------------------------------------------------------
-bool Button::isPressed(){
+bool Button::isPressed() const {
     return pressed;
 }
 
@@ -66,7 +67,7 @@ void Button::update(){
 }
 
 //--------------------------------------------------------------
-void Button::draw(Renderer* renderer){
+void Button::draw(const Renderer* renderer) const {
     ofSetColor ( color );
     if( pressed ){
         ofFill();

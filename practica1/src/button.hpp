@@ -30,13 +30,15 @@ class Button{
         ofColor colorInverted;
 
     public:
-        Button( testApp *app_, Vertex vertex, string buttonTex_,AppStates state_, int w = 90, int h = 30, ofColor color_ = ofColor::white );
+        Button( testApp *app_, const Vertex vertex, const string buttonTex_,
+            const AppStates state_, const int w = 90, const int h = 30,
+            const ofColor color_ = ofColor::white );
         Button( const Button& otherButton );
-        virtual void checkPress( Vertex mouse );
-        virtual bool isPressed();
+        virtual void checkPress( const Vertex mouse );
+        virtual bool isPressed() const;
         virtual void update();
-        virtual void draw(Renderer* renderer);
-        virtual int getWidth(){ return width; };
+        virtual void draw(const Renderer* renderer) const;
+        virtual int getWidth() const { return width; };
 };
 
 #endif

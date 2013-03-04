@@ -9,7 +9,8 @@ class testApp : public ofBaseApp{
 
 
 //--------------------------------------------------------------
-ObjectButton::ObjectButton( testApp *app_, Vertex vertex, string buttonTex_, DrawableObject* object_, int w, int h, ofColor color )
+ObjectButton::ObjectButton( testApp *app_, const Vertex vertex, const string buttonTex_,
+    DrawableObject* object_, const int w, const int h, const ofColor color )
 :Button(app_, vertex, buttonTex_, OBJECT_BUTTON, w, h, color)
 {
     object = object_;
@@ -17,7 +18,8 @@ ObjectButton::ObjectButton( testApp *app_, Vertex vertex, string buttonTex_, Dra
 }
 
 //--------------------------------------------------------------
-ObjectButton::ObjectButton( testApp *app_, Vertex vertex, string buttonTex_, DrawableObject* object_, ofColor color)
+ObjectButton::ObjectButton( testApp *app_, const Vertex vertex, const string buttonTex_,
+    DrawableObject* object_, const ofColor color)
 :Button(app_, vertex, buttonTex_, OBJECT_BUTTON, 40, 30, color)
 {
     object = object_;
@@ -25,7 +27,7 @@ ObjectButton::ObjectButton( testApp *app_, Vertex vertex, string buttonTex_, Dra
 }
 
 //--------------------------------------------------------------
-void ObjectButton::checkPress( Vertex mouse )
+void ObjectButton::checkPress( const Vertex mouse )
 {
     if( mouse.getX() >= position.getX() &&  mouse.getX() <= position.getX() + width &&
         mouse.getY() >= position.getY() && mouse.getY() <= position.getY() + height ){
@@ -45,7 +47,7 @@ void ObjectButton::update(){
 }
 
 //--------------------------------------------------------------
-DrawableObject* ObjectButton::getObject(){
+DrawableObject* ObjectButton::getObject() const {
     return object;
 }
 
