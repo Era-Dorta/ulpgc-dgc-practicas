@@ -1,7 +1,7 @@
 #include "cube.hpp"
 #include "ofMain.h"
 //--------------------------------------------------------------
-Cube::Cube( ofColor color_ )
+Cube::Cube( const ofColor color_ )
 :DrawableObject(8, color_)
 {
     subtype = CUBE;
@@ -30,7 +30,7 @@ Cube::Cube( ofColor color_ )
 }
 
 //--------------------------------------------------------------
-Cube::Cube( Vertex &vertex0, Vertex &vertex1 )
+Cube::Cube( const Vertex &vertex0, const Vertex &vertex1 )
 :DrawableObject(8)
 {
     subtype = CUBE;
@@ -60,7 +60,7 @@ Cube::Cube( Vertex &vertex0, Vertex &vertex1 )
 //  |   |
 //  |   |
 // 3|___|2
-void Cube::setVertices( Vertex &vertex0, Vertex &vertex1 ){
+void Cube::setVertices( const Vertex &vertex0, const Vertex &vertex1 ){
     float sideX, sideY, sideZ;
     int z;
     sideX = vertex1.getX() - vertex0.getX();
@@ -94,7 +94,7 @@ void Cube::setVertices( Vertex &vertex0, Vertex &vertex1 ){
 }
 
 //--------------------------------------------------------------
-void Cube::draw(Renderer* renderer){
+void Cube::draw(Renderer* renderer) const {
     ofSetColor ( color );
     if(drawNormals_ || drawTriangles_){
         //Draw using triangles
