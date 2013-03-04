@@ -251,10 +251,11 @@ void DrawableObject::rotate( Axis axis, float amount, bool permanent){
 }
 
 //--------------------------------------------------------------
-void DrawableObject::translate( float tX, float tY, bool permanent){
+void DrawableObject::translate( float tX, float tY, float tZ, bool permanent){
     resetAuxMatrix();
     auxMatrix[3][0] = tX;
     auxMatrix[3][1] = tY;
+    auxMatrix[3][2] = tZ;
 
     applyTransform(permanent);
 }

@@ -111,7 +111,7 @@ void testApp::mouseDragged(int x, int y, int button){
                 currentObject->rotate( Z, pRawY - y, false );
                 break;
             case TRANSLATING:
-                currentObject->translate( x - pRawX, y - pRawY, false );
+                currentObject->translate( x - pRawX, y - pRawY, 0, false );
                 break;
             case DRAW_CUBE:
                 ((Cube*)objectList.back())->setVertices( pmouse, current );
@@ -186,7 +186,7 @@ void testApp::mousePressed(int x, int y, int button){
         break;
     case R_MOUSE:
         //Right click and drawing a revolution object
-        if( state == DRAW_REVOLUTION ){
+        if( objectList.size() > 0 && state == DRAW_REVOLUTION ){
             //User finished adding vertices, construct the object
             RevolutionSurface* revObject = (RevolutionSurface*)objectList.back();
             revObject->noMoreVertices();
@@ -195,8 +195,16 @@ void testApp::mousePressed(int x, int y, int button){
         }
         break;
     case WHEEL_FW:
+        //Translate object in z
+        if( objectList.size() > 0 && state == TRANSLATING ){
+            currentObject->translate( 0, 0, 20, true );
+        }
         break;
     case WHEEL_BK:
+        //Translate object in z
+        if( objectList.size() > 0 && state == TRANSLATING ){
+            currentObject->translate( 0, 0, -20, true );
+        }
         break;
     default:
         break;
@@ -222,7 +230,7 @@ void testApp::mouseReleased(int x, int y, int button){
                 currentObject->rotate( Z, pRawY - y, true );
                 break;
             case TRANSLATING:
-                currentObject->translate( x - pRawX, y - pRawY, true );
+                currentObject->translate( x - pRawX, y - pRawY, 0, true );
                 break;
             case DRAW_CUBE:
                 ((Cube*)objectList.back())->setVertices( pmouse, current );

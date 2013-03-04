@@ -45,7 +45,7 @@ class DrawableObject {
         virtual void draw(Renderer* renderer);
         virtual int getTotalVertices() { return totalVertices; };
         virtual void rotate( Axis axis, float amount, bool permanent);
-        virtual void translate( float tX, float tY, bool permanent);
+        virtual void translate( float tX, float tY, float tZ, bool permanent);
         void resetTransMatrix();
         void resetAuxMatrix();
         Subtype getSubtype() { return subtype; };
