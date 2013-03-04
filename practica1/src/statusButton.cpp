@@ -3,10 +3,10 @@
 class testApp : public ofBaseApp{
     public:
 		void setCurrentObject( DrawableObject* currentObject_ );
-		void setState( AppStates state_ );
-		DrawableObject* getCurrentObject();
-		void setPerspective( bool active );
-		void setZBuffer( bool active );
+		void setState( const AppStates state_ );
+		DrawableObject* getCurrentObject() const;
+		void setPerspective( const bool active );
+		void setZBuffer( const bool active );
 };
 
 //--------------------------------------------------------------

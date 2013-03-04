@@ -4,8 +4,8 @@
 
 class testApp : public ofBaseApp{
     public:
-		void setState( AppStates state_ );
-		AppStates getState();
+		void setState( const AppStates state_ );
+		AppStates getState() const;
 
 };
 

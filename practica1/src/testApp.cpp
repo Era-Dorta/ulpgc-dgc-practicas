@@ -297,28 +297,28 @@ void testApp::dragEvent(ofDragInfo dragInfo){
 }
 
 //--------------------------------------------------------------
-void testApp::setState( AppStates state_ ){
+void testApp::setState( const AppStates state_ ){
     state = state_;
     opReady = false;
 }
 
 //--------------------------------------------------------------
-AppStates testApp::getState(){
+AppStates testApp::getState() const{
     return state;
 }
 
 //--------------------------------------------------------------
-void testApp::setPerspective( bool active ){
+void testApp::setPerspective( const bool active ){
     withPerspective = active;
 }
 
 //--------------------------------------------------------------
-bool testApp::getPerspective(){
+bool testApp::getPerspective() const{
     return withPerspective;
 }
 
 //--------------------------------------------------------------
-void testApp::setZBuffer( bool active ){
+void testApp::setZBuffer( const bool active ){
     zbuffer = active;
     renderer.setZBuffer(zbuffer);
     //Activate/Deactivate fillTriangles in all objects
@@ -328,7 +328,7 @@ void testApp::setZBuffer( bool active ){
 }
 
 //--------------------------------------------------------------
-bool testApp::getZBuffer(){
+bool testApp::getZBuffer() const{
     return zbuffer;
 }
 
@@ -338,6 +338,6 @@ void testApp::setCurrentObject( DrawableObject* currentObject_ ){
 }
 
 //--------------------------------------------------------------
-DrawableObject* testApp::getCurrentObject(){
+DrawableObject* testApp::getCurrentObject() const{
     return currentObject;
 }

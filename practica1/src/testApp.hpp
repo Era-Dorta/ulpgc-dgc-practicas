@@ -36,6 +36,7 @@ class testApp : public ofBaseApp{
         ofColor currentColor;
 
 	public:
+        //Default methods
 		void setup();
 		void update();
 		void draw();
@@ -49,14 +50,16 @@ class testApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-		void setState( AppStates state_ );
+
+		//Other methods
+		void setState( const AppStates state_ );
 		void setCurrentObject( DrawableObject* currentObject_ );
-		void setPerspective( bool active );
-		bool getPerspective();
-		void setZBuffer( bool active );
-		bool getZBuffer();
-		DrawableObject* getCurrentObject();
-		AppStates getState();
+		void setPerspective( const bool active );
+		bool getPerspective() const;
+		void setZBuffer( const bool active );
+		bool getZBuffer() const;
+		DrawableObject* getCurrentObject() const;
+		AppStates getState() const;
 };
 
 #endif

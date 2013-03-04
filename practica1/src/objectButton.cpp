@@ -3,8 +3,8 @@
 class testApp : public ofBaseApp{
     public:
 		void setCurrentObject( DrawableObject* currentObject_ );
-		void setState( AppStates state_ );
-		DrawableObject* getCurrentObject();
+		void setState( const AppStates state_ );
+		DrawableObject* getCurrentObject() const;
 };
 
 
