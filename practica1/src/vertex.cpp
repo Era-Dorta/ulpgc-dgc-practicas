@@ -49,7 +49,7 @@ float Vertex::getZ() const {
 }
 
 //--------------------------------------------------------------
-void Vertex::set( int pos, float val ){
+void Vertex::set( const int pos, const float val ){
     switch(pos){
     case 0:
         setX(val);
@@ -67,7 +67,7 @@ void Vertex::set( int pos, float val ){
 }
 
 //--------------------------------------------------------------
-float Vertex::module(){
+float Vertex::module() const{
     float res = 0;
     for(int i = 0; i < 3; i++){
         res += coordinates[i]*coordinates[i];
@@ -84,7 +84,7 @@ void Vertex::normalize(){
 }
 
 //--------------------------------------------------------------
-bool Vertex::operator==( const Vertex &otherVertex ){
+bool Vertex::operator==( const Vertex &otherVertex ) const{
     return ( getX() ==  otherVertex.getX() && getY() == otherVertex.getY() && getZ() == otherVertex.getZ());
 }
 
@@ -96,7 +96,7 @@ void Vertex::operator=( const Vertex  &otherVertex ){
 }
 
 //--------------------------------------------------------------
-Vertex Vertex::operator*( const float matrix[4][4] ){
+Vertex Vertex::operator*( const float matrix[4][4] ) const{
     Vertex vRes;
     for(int i = 0; i < 4; i++){
         float res = 0;
@@ -109,7 +109,7 @@ Vertex Vertex::operator*( const float matrix[4][4] ){
 }
 
 //--------------------------------------------------------------
-Vertex Vertex::operator*( const Vertex &otherVertex ){
+Vertex Vertex::operator*( const Vertex &otherVertex ) const{
     Vertex vRes;
     vRes.setX( coordinates[1]*otherVertex.coordinates[2] - coordinates[2]*otherVertex.coordinates[1] );
     vRes.setY( coordinates[2]*otherVertex.coordinates[0] - coordinates[0]*otherVertex.coordinates[2] );
@@ -118,7 +118,7 @@ Vertex Vertex::operator*( const Vertex &otherVertex ){
 }
 
 //--------------------------------------------------------------
-Vertex Vertex::operator-( const Vertex &otherVertex ){
+Vertex Vertex::operator-( const Vertex &otherVertex ) const{
     Vertex vRes;
     for(int i = 0; i < 3; i++){
         vRes.set(i, coordinates[i] - otherVertex.coordinates[i] );
@@ -127,7 +127,7 @@ Vertex Vertex::operator-( const Vertex &otherVertex ){
 }
 
 //--------------------------------------------------------------
-Vertex Vertex::operator+( const Vertex &otherVertex ){
+Vertex Vertex::operator+( const Vertex &otherVertex ) const{
     Vertex vRes;
     for(int i = 0; i < 3; i++){
         vRes.set(i, coordinates[i] + otherVertex.coordinates[i] );
@@ -136,7 +136,7 @@ Vertex Vertex::operator+( const Vertex &otherVertex ){
 }
 
 //--------------------------------------------------------------
-Vertex Vertex::operator/( const float &val ){
+Vertex Vertex::operator/( const float &val ) const{
     Vertex vRes;
     for(int i = 0; i < 3; i++){
         vRes.set(i, coordinates[i] / val );
@@ -145,7 +145,7 @@ Vertex Vertex::operator/( const float &val ){
 }
 
 //--------------------------------------------------------------
-Vertex Vertex::operator*( const float &val ){
+Vertex Vertex::operator*( const float &val ) const{
     Vertex vRes;
     for(int i = 0; i < 3; i++){
         vRes.set(i, coordinates[i] * val );

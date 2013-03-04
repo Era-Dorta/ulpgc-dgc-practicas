@@ -27,16 +27,16 @@ class Vertex {
         void setH( float h ) { coordinates[3] = h; };
         void set( int pos, float val );
         void set (float x, float y, float z){ coordinates[0] = x; coordinates[1] = y; coordinates[2] = z;};
-        float module();
+        float module() const;
         void normalize();
-        bool operator==( const Vertex &otherVertex );
-        Vertex operator*( const float matrix[4][4] );
-        Vertex operator*( const Vertex &otherVertex );
+        bool operator==( const Vertex &otherVertex ) const;
+        Vertex operator*( const float matrix[4][4] ) const;
+        Vertex operator*( const Vertex &otherVertex ) const;
         void operator=( const Vertex &otherVertex );
-        Vertex operator-( const Vertex &otherVertex );
-        Vertex operator+( const Vertex &otherVertex );
-        Vertex operator/( const float &val );
-        Vertex operator*( const float &val );
+        Vertex operator-( const Vertex &otherVertex ) const;
+        Vertex operator+( const Vertex &otherVertex ) const;
+        Vertex operator/( const float &val ) const;
+        Vertex operator*( const float &val ) const;
 
 };
 
