@@ -91,14 +91,7 @@ void Renderer::rPixel(const float x, const float y, const float z){
 
 //--------------------------------------------------------------
 void Renderer::rLine(const Vertex& vertex0, const Vertex& vertex1){
-    float x0 = vertex0.getX();
-    float y0 = vertex0.getY();
-    float z0 = vertex0.getZ();
-    float x1 = vertex1.getX();
-    float y1 = vertex1.getY();
-    float z1 = vertex1.getZ();
-
-    rLine(x0, y0, z0, x1, y1, z1);
+    rLine(vertex0.getX(), vertex0.getY(), vertex0.getZ(), vertex1.getX(), vertex1.getY(), vertex1.getZ());
 }
 
 //--------------------------------------------------------------
