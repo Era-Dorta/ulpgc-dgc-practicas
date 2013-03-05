@@ -8,7 +8,7 @@
 using namespace std;
 
 enum Axis { X, Y, Z };
-enum Subtype { CUBE, REVOLUTION };
+enum Subtype { TRIANGLE, CUBE, REVOLUTION };
 
 class DrawableObject {
 
