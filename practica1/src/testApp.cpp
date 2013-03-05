@@ -3,7 +3,7 @@
 #include "cube.hpp"
 #include <cmath>
 
-#define N_ACTION_BUTTONS 7
+#define N_ACTION_BUTTONS 8
 #define N_STATUS_BUTTONS 5
 #define N_BUTTONS N_ACTION_BUTTONS + N_STATUS_BUTTONS
 
@@ -35,7 +35,7 @@ void testApp::setup(){
     nextObjButPos.set(-500,300,0);
     Vertex auxVertex;
     string buttonNames[N_ACTION_BUTTONS] = { "Rotate X", "Rotate Y", "Rotate Z",
-        "Translate", "New Cube", "New Rev", "Delete" };
+        "Translate", "New Triang", "New Cube", "New Rev", "Delete" };
     for(i = 0; i < N_ACTION_BUTTONS; i++){
         auxVertex.set(x, y + i*(height + 10), 0);
         buttonList.push_back( new Button(this, auxVertex, buttonNames[i], (AppStates)i, width, height) );
@@ -123,6 +123,9 @@ void testApp::mouseDragged(int x, int y, int button){
             case TRANSLATING:
                 currentObject->translate( x - pRawX, y - pRawY, 0, false );
                 break;
+            case DRAW_TRIANGLE:
+                ((Triangle*)objectList.back())->setVertices( pmouse, current );
+                break;
             case DRAW_CUBE:
                 ((Cube*)objectList.back())->setVertices( pmouse, current );
                 break;
@@ -161,6 +164,11 @@ void testApp::mousePressed(int x, int y, int button){
         case DRAW_CUBE:
             currentColor = ofColor::fromHex(rand());
             objectList.push_back( new Cube(currentColor) );
+            currentObject = objectList.back();
+            break;
+        case DRAW_TRIANGLE:
+            currentColor = ofColor::fromHex(rand());
+            objectList.push_back( new Triangle(currentColor) );
             currentObject = objectList.back();
             break;
         case DRAW_REVOLUTION:
@@ -241,6 +249,12 @@ void testApp::mouseReleased(int x, int y, int button){
                 break;
             case TRANSLATING:
                 currentObject->translate( x - pRawX, y - pRawY, 0, true );
+                break;
+            case DRAW_TRIANGLE:
+                ((Triangle*)objectList.back())->setVertices( pmouse, current );
+                auxButton = new ObjectButton(this, nextObjButPos, "Tria", objectList.back(), currentColor);
+                buttonList.push_back( auxButton );
+                nextObjButPos.setX(nextObjButPos.getX() + 40);
                 break;
             case DRAW_CUBE:
                 ((Cube*)objectList.back())->setVertices( pmouse, current );

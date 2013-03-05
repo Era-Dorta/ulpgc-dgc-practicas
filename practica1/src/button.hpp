@@ -10,7 +10,7 @@
 #include <iostream>
 using namespace std;
 class testApp;
-enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, TRANSLATING,
+enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, TRANSLATING, DRAW_TRIANGLE,
     DRAW_CUBE, DRAW_REVOLUTION, DELETE, PERSPECTIVE, DRAW_TRIANGLES,
     DRAW_NORMALS, FILL_TRIANGLES, Z_BUFFER, OBJECT_BUTTON };
 //Class button is declared here to avoid some nasty
