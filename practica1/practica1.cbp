@@ -59,6 +59,8 @@
 		</Unit>
 		<Unit filename="src/testApp.cpp" />
 		<Unit filename="src/testApp.hpp" />
+		<Unit filename="src/triangle.cpp" />
+		<Unit filename="src/triangle.hpp" />
 		<Unit filename="src/vertex.cpp" />
 		<Unit filename="src/vertex.hpp" />
 		<Extensions>

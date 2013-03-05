@@ -244,12 +244,17 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
     Vertex v3;
     v3 = vertices[1];
     //Interpolate where vertex1.x cuts the line vertex0-vertex2
-    v3.setX( vertices[2].getX()*((vertices[0].getY()-vertices[1].getY())/(vertices[0].getY()-vertices[2].getY())) +
-        vertices[0].getX()*(1-(vertices[0].getY()-vertices[1].getY())/(vertices[0].getY()-vertices[2].getY())) );
+    v3.setX( vertices[2].getX()*( (vertices[0].getY() - vertices[1].getY()) / (vertices[0].getY() - vertices[2].getY()) ) +
+        vertices[0].getX()*( 1 - (vertices[0].getY() - vertices[1].getY()) / (vertices[0].getY() - vertices[2].getY())) );
+    //Interpolate where vertex1.z cuts the line vertex0-vertex2
+    v3.setZ( vertices[2].getZ()*( (vertices[0].getY() - vertices[1].getY()) / (vertices[0].getY() - vertices[2].getY()) ) +
+        vertices[0].getZ()*( 1 - (vertices[0].getY() - vertices[1].getY()) / (vertices[0].getY() - vertices[2].getY())) );
     if(v3.getX() > vertices[1].getX()){
+        //Triangle is d shape
         triangleFillBotFlat(vertices[0], vertices[1], v3);
         triangleFillTopFlat(vertices[1], v3, vertices[2]);
     }else{
+        //Triangle is b shape
         triangleFillBotFlat(vertices[0], v3, vertices[1]);
         triangleFillTopFlat(v3, vertices[1], vertices[2]);
     }
