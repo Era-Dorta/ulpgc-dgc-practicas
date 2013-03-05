@@ -56,6 +56,18 @@ void testApp::setup(){
     buttonList[DRAW_REVOLUTION]->checkPress(auxVertex);
 
     opReady = true;
+
+    //FIXME Codigo de prueba de un triangulo que falla
+    ofColor currentColor = ofColor::fromHex(rand());
+    objectList.push_back( new Triangle(currentColor) );
+    currentObject = objectList.back();
+    Vertex v1(-114.092,-15.2327,0), v2(126.128,-17.0803,0);
+    ((Triangle*)objectList.back())->setVertices( v1, v2 );
+    ObjectButton* auxButton = new ObjectButton(this, nextObjButPos, "Tria", objectList.back(), currentColor);
+    buttonList.push_back( auxButton );
+    nextObjButPos.setX(nextObjButPos.getX() + 40);
+    currentObject->setDrawTriangles(true);
+    currentObject->setFillTriangles(true);
 }
 
 //--------------------------------------------------------------

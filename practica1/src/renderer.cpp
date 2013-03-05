@@ -210,6 +210,9 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
         for(int i = x_i; i <= x_f; i++){
             rPixel(i, j, z_p);
             z_p += inv_mzp;
+            if(i > 127){
+                cout << "noooo\n";
+            }
         }
         x_i -= inv_m20;
         x_f -= inv_m21;
