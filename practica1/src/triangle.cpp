@@ -5,6 +5,7 @@ Triangle::Triangle( const ofColor color_ )
 :DrawableObject(3, color_)
 {
     subtype = TRIANGLE;
+    drawTriangles_ = true;
     DrawableObject::resetTransMatrix();
     DrawableObject::resetAuxMatrix();
     for( int i = 0; i < totalVertices; i++){

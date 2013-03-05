@@ -49,8 +49,8 @@ class DrawableObject {
         void resetTransMatrix();
         void resetAuxMatrix();
         Subtype getSubtype() const { return subtype; };
-        void setDrawTriangles( const bool activate ) { drawTriangles_ = activate; };
-        bool getDrawTriangles() const { return drawTriangles_; };
+        virtual void setDrawTriangles( const bool activate ) { drawTriangles_ = activate; };
+        virtual bool getDrawTriangles() const { return drawTriangles_; };
         void setNormals( const bool activate );
         bool getNormals() const { return drawNormals_; };
         void setFillTriangles( const bool activate );
