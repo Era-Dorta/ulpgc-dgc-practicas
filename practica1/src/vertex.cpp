@@ -152,3 +152,11 @@ Vertex Vertex::operator*( const float &val ) const{
     }
     return vRes;
 }
+
+//--------------------------------------------------------------
+ostream& operator<< (ostream &out, const Vertex &vertex){
+    out << "v: " << vertex.getX() << " " << vertex.getY() << " " << vertex.getZ();
+    return out;
+
+}
+

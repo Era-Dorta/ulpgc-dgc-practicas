@@ -4,6 +4,8 @@
 #define VERTEX_H
 
 #include <cmath>
+#include <iostream>
+using namespace std;
 
 class Vertex {
 
@@ -37,10 +39,11 @@ class Vertex {
         Vertex operator+( const Vertex &otherVertex ) const;
         Vertex operator/( const float &val ) const;
         Vertex operator*( const float &val ) const;
-
 };
 
 typedef struct Vertex Vertex;
+
+ostream& operator<< (ostream &out, const Vertex &vertex);
 
 //Center of the screen
 static Vertex center = Vertex(512,384,0);

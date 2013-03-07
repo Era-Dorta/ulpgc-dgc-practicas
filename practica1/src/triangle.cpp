@@ -62,6 +62,7 @@ void Triangle::setVertices( const Vertex &vertex0, const Vertex &vertex1 ){
 void Triangle::draw(const Renderer* renderer) const {
     ofSetColor ( color );
     //Draw using triangles
+    cout << transVertices[0] << " "<<transVertices[1] << " "<<transVertices[2] << endl;
     DrawableObject::draw(renderer);
 }
 
