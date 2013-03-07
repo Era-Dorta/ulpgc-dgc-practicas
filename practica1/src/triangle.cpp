@@ -58,11 +58,24 @@ void Triangle::setVertices( const Vertex &vertex0, const Vertex &vertex1 ){
     calculateCentroids();
 }
 
+void Triangle::setVertices( const Vertex &vertex0, const Vertex &vertex1, const Vertex &vertex2 ){
+    vertices[0] = vertex0;
+    vertices[1] = vertex1;
+    vertices[2] = vertex2;
+
+    for( int i = 0; i < totalVertices; i++){
+        transVertices[i] = vertices[i]*transMatrix;
+    }
+
+    calculateNormals();
+    calculateCentroids();
+}
+
 //--------------------------------------------------------------
 void Triangle::draw(const Renderer* renderer) const {
     ofSetColor ( color );
     //Draw using triangles
-    cout << transVertices[0] << " "<<transVertices[1] << " "<<transVertices[2] << endl;
+   // cout << transVertices[0] << " "<<transVertices[1] << " "<<transVertices[2] << endl;
     DrawableObject::draw(renderer);
 }
 

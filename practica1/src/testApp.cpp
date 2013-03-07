@@ -68,6 +68,30 @@ void testApp::setup(){
     nextObjButPos.setX(nextObjButPos.getX() + 40);
     currentObject->setDrawTriangles(true);
     currentObject->setFillTriangles(true);
+    pmouse.set(0,0,0);
+        for( unsigned int i = 0; i < buttonList.size(); i++){
+            buttonList[i]->checkPress(pmouse);
+        }
+        for( unsigned int i = 0; i < buttonList.size(); i++){
+            buttonList[i]->update();
+        }
+
+    currentColor = ofColor::fromHex(rand());
+    objectList.push_back( new Triangle(currentColor) );
+    currentObject = objectList.back();
+    Vertex v3(-33,-112.635, -49.3158), v4(124, 44.416, 20.819), v5(45.5, -255.99, -113.334);
+    ((Triangle*)objectList.back())->setVertices( v3, v4, v5 );
+    auxButton = new ObjectButton(this, nextObjButPos, "Tria", objectList.back(), currentColor);
+    buttonList.push_back( auxButton );
+    nextObjButPos.setX(nextObjButPos.getX() + 40);
+    currentObject->setDrawTriangles(true);
+    currentObject->setFillTriangles(true);
+            for( unsigned int i = 0; i < buttonList.size(); i++){
+            buttonList[i]->checkPress(pmouse);
+        }
+            for( unsigned int i = 0; i < buttonList.size(); i++){
+            buttonList[i]->update();
+        }
 }
 
 //--------------------------------------------------------------

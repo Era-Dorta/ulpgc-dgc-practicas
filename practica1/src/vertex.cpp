@@ -155,7 +155,7 @@ Vertex Vertex::operator*( const float &val ) const{
 
 //--------------------------------------------------------------
 ostream& operator<< (ostream &out, const Vertex &vertex){
-    out << "v: " << vertex.getX() << " " << vertex.getY() << " " << vertex.getZ();
+    out << "v: " << vertex.getX() << ", " << vertex.getY() << ", " << vertex.getZ();
     return out;
 
 }
