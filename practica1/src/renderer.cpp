@@ -139,14 +139,14 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
         inv_m02 = (vertex2.getX() - vertex0.getX())/inv_m02;
     }
 
-    inv_z01 = vertex1.getZ() - vertex0.getZ();
+    inv_z01 = vertex1.getY() - vertex0.getY();
     if(inv_z01){
-        inv_z01 = (vertex1.getY() - vertex0.getY())/inv_z01;
+        inv_z01 = (vertex1.getZ() - vertex0.getZ())/inv_z01;
     }
 
-    inv_z02 = vertex2.getZ() - vertex0.getZ();
+    inv_z02 = vertex2.getY() - vertex0.getY();
     if(inv_z02){
-        inv_z02 = (vertex2.getY() - vertex0.getY())/inv_z02;
+        inv_z02 = (vertex2.getZ() - vertex0.getZ())/inv_z02;
     }
 
     x_i = vertex0.getX();
@@ -190,14 +190,14 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
         inv_m21 = (vertex1.getX() - vertex2.getX())/inv_m21;
     }
 
-    inv_z20 = vertex0.getZ() - vertex2.getZ();
+    inv_z20 = vertex0.getY() - vertex2.getY();
     if(inv_z20){
-        inv_z20 = (vertex0.getY() - vertex2.getY())/inv_z20;
+        inv_z20 = (vertex0.getZ() - vertex2.getZ())/inv_z20;
     }
 
-    inv_z21 = vertex1.getZ() - vertex2.getZ();
+    inv_z21 = vertex1.getY() - vertex2.getY();
     if(inv_z21){
-        inv_z21 = (vertex1.getY() - vertex2.getY())/inv_z21;
+        inv_z21 = (vertex1.getZ() - vertex2.getZ())/inv_z21;
     }
 
     x_i = vertex2.getX();
@@ -228,8 +228,9 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
     vertices.push_back(applyPerspective(vertex1));
     vertices.push_back(applyPerspective(vertex2));
 
-    sort (vertices.begin(), vertices.end(), Vertex::compareYX);
 
+    sort (vertices.begin(), vertices.end(), Vertex::compareYX);
+// Vertex v0 = vertices[0],v1 = vertices[1],v2= vertices[2];
     //The triangle is already Top Flat or Bottom Flat
     if(vertices[0].getY() == vertices[1].getY()){
         triangleFillTopFlat(vertices[0], vertices[1], vertices[2]);

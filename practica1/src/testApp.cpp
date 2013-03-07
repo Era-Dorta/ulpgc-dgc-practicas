@@ -67,7 +67,6 @@ void testApp::setup(){
     buttonList.push_back( auxButton );
     nextObjButPos.setX(nextObjButPos.getX() + 40);
     currentObject->setDrawTriangles(true);
-    currentObject->setFillTriangles(true);
     pmouse.set(0,0,0);
         for( unsigned int i = 0; i < buttonList.size(); i++){
             buttonList[i]->checkPress(pmouse);
@@ -85,7 +84,6 @@ void testApp::setup(){
     buttonList.push_back( auxButton );
     nextObjButPos.setX(nextObjButPos.getX() + 40);
     currentObject->setDrawTriangles(true);
-    currentObject->setFillTriangles(true);
             for( unsigned int i = 0; i < buttonList.size(); i++){
             buttonList[i]->checkPress(pmouse);
         }
