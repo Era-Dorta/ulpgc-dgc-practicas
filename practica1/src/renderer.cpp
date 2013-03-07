@@ -230,7 +230,6 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
 
 
     sort (vertices.begin(), vertices.end(), Vertex::compareYX);
-// Vertex v0 = vertices[0],v1 = vertices[1],v2= vertices[2];
     //The triangle is already Top Flat or Bottom Flat
     if(vertices[0].getY() == vertices[1].getY()){
         triangleFillTopFlat(vertices[0], vertices[1], vertices[2]);
