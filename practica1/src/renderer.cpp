@@ -182,8 +182,9 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     z_f = vertex0.getZ();
     inv_mzp = 0;
     z_p = z_i;
-    for(int j = vertex0.getY(); j <= vertex1.getY(); j++){
-        for(int i = x_i; i <= x_f; i++){
+
+    for(int j = vertex0.getY() - 0.5; j <= vertex1.getY() + 0.5; j++){
+        for(int i = x_i - 0.5; i <= x_f + 0.5; i++){
 
             if(z_p < z_min){
                 z_p = z_min;
@@ -195,6 +196,7 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
             rPixel(i, j, z_p);
             z_p += inv_mzp;
         }
+
         x_i += inv_m01;
 
         if(x_i < x_min){
@@ -294,8 +296,9 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
     z_f = vertex2.getZ();
     inv_mzp = 0;
     z_p = z_i;
-    for(int j = vertex2.getY(); j >= vertex0.getY(); j--){
-        for(int i = x_i; i <= x_f; i++){
+
+    for(int j = vertex2.getY() + 0.5; j >= vertex0.getY() - 0.5; j--){
+        for(int i = x_i - 0.5; i <= x_f + 0.5; i++){
 
             if(z_p < z_min){
                 z_p = z_min;
