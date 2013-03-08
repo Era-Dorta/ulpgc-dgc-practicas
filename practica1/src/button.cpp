@@ -67,15 +67,15 @@ void Button::update(){
 }
 
 //--------------------------------------------------------------
-void Button::draw(const Renderer* renderer) const {
-    ofSetColor ( color );
+void Button::draw(Renderer* const renderer) const {
+    renderer->setColor ( color );
     if( pressed ){
         ofFill();
     }else{
         ofNoFill();
     }
     renderer->rRect(position, width, height);
-    ofSetColor ( colorInverted );
+    renderer->setColor ( colorInverted );
     renderer->rDrawBitmapString(buttonTex, texPosition);
 }
 

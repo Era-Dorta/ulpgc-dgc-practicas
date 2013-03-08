@@ -37,7 +37,7 @@ class Button{
         virtual void checkPress( const Vertex mouse );
         virtual bool isPressed() const;
         virtual void update();
-        virtual void draw(const Renderer* renderer) const;
+        virtual void draw(Renderer* const renderer) const;
         virtual int getWidth() const { return width; };
 };
 

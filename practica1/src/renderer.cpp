@@ -14,6 +14,7 @@ Renderer::Renderer(const int w_, const int h_ ){
     perspective_ = false;
     w = w_;
     h = h_;
+    currentColor = ofColor::white;
     zBuffer = new float*[w];
     for(int i = 0; i < w; i++){
         zBuffer[i] = new float[h];
@@ -385,4 +386,10 @@ void Renderer::resetZBuffer(){
             }
         }
     }
+}
+
+//--------------------------------------------------------------
+void Renderer::setColor( const ofColor& newColor ){
+    currentColor = newColor;
+    ofSetColor( currentColor );
 }

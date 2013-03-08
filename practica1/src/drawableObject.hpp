@@ -42,7 +42,7 @@ class DrawableObject {
         DrawableObject( const int totalVertices_, const ofColor color_ = ofColor::white );
         DrawableObject( const DrawableObject& otherDrawableObject );
         virtual ~DrawableObject();
-        virtual void draw(const Renderer* renderer) const;
+        virtual void draw(Renderer* const renderer) const;
         virtual int getTotalVertices() const{ return totalVertices; };
         virtual void rotate( const Axis axis, const float amount, const bool permanent);
         virtual void translate( const float tX, const float tY, const float tZ, const bool permanent);

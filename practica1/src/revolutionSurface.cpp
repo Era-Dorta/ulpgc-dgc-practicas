@@ -103,11 +103,11 @@ void RevolutionSurface::setDrawHelper( const Vertex &mouse ){
 }
 
 //--------------------------------------------------------------
-void RevolutionSurface::draw(const Renderer* renderer) const {
+void RevolutionSurface::draw(Renderer* const renderer) const {
     int i, j;
     //If the object is empty draw nothing
     if( totalVertices >= 1 ){
-        ofSetColor ( color );
+        renderer->setColor ( color );
         if(hasAllVertices_){
             //User ended drawing the object
             if(drawNormals_ || drawTriangles_){
@@ -128,7 +128,7 @@ void RevolutionSurface::draw(const Renderer* renderer) const {
             }
         }else{
             //User is still drawing the object
-            ofSetColor ( ofColor::white);
+            renderer->setColor ( ofColor::white);
             for( i = 1; i < totalVertices; i++ ){
                 renderer->rLine(transVertices[i - 1], transVertices[i]);
             }

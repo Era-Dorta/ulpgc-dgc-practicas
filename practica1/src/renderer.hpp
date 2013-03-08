@@ -3,6 +3,7 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include "ofMain.h"
 #include "vertex.hpp"
 #include <string>
 using namespace std;
@@ -15,6 +16,7 @@ class Renderer{
         float **zBuffer;
         bool perspective_;
         bool useZBuffer;
+        ofColor currentColor;
 
     private:
         void triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2) const;
@@ -37,6 +39,8 @@ class Renderer{
         void rRect( const Vertex& vertex, const float w, const float h) const;
         void setZBuffer( const bool activate ){ useZBuffer = activate; };
         void resetZBuffer();
+        ofColor getColor() const { return currentColor; };
+        void setColor( const ofColor& newColor );
 };
 
 #endif

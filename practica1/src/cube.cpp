@@ -94,8 +94,8 @@ void Cube::setVertices( const Vertex &vertex0, const Vertex &vertex1 ){
 }
 
 //--------------------------------------------------------------
-void Cube::draw(const Renderer* renderer) const {
-    ofSetColor ( color );
+void Cube::draw(Renderer* const renderer) const {
+    renderer->setColor( color );
     if(drawNormals_ || drawTriangles_){
         //Draw using triangles
         DrawableObject::draw(renderer);

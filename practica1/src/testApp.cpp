@@ -207,9 +207,11 @@ void testApp::mousePressed(int x, int y, int button){
         if( objectList.size() > 0 && state == DRAW_REVOLUTION ){
             //User finished adding vertices, construct the object
             RevolutionSurface* revObject = (RevolutionSurface*)objectList.back();
-            revObject->noMoreVertices();
-            buttonList.push_back( new ObjectButton(this, nextObjButPos, "Rev", revObject, currentColor) );
-            nextObjButPos.setX(nextObjButPos.getX() + 40);
+            if(!revObject->hasAllVertices()){
+                revObject->noMoreVertices();
+                buttonList.push_back( new ObjectButton(this, nextObjButPos, "Rev", revObject, currentColor) );
+                nextObjButPos.setX(nextObjButPos.getX() + 40);
+            }
         }
         break;
     case WHEEL_FW:

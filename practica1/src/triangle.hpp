@@ -11,7 +11,7 @@ class Triangle : public DrawableObject{
         Triangle( const Vertex &vertex0, const Vertex &vertex1 );
         void setVertices( const Vertex &vertex0, const Vertex &vertex1 );
         void setVertices( const Vertex &vertex0, const Vertex &vertex1, const Vertex &vertex2 );
-        virtual void draw(const Renderer* renderer) const;
+        virtual void draw(Renderer* const renderer) const;
         virtual void setDrawTriangles( const bool activate ){};
         virtual bool getDrawTriangles() const { return drawTriangles_; };
 };
