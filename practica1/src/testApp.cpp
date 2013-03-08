@@ -8,7 +8,7 @@
 #define N_BUTTONS N_ACTION_BUTTONS + N_STATUS_BUTTONS
 
 //Center of the screen
-extern Vertex center;
+const extern Vertex center;
 
 //--------------------------------------------------------------
 testApp::~testApp(){

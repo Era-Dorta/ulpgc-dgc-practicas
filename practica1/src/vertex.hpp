@@ -46,6 +46,6 @@ typedef struct Vertex Vertex;
 ostream& operator<< (ostream &out, const Vertex &vertex);
 
 //Center of the screen
-static Vertex center = Vertex(512,384,0);
+const static Vertex center = Vertex(512,384,0);
 #endif
 // VERTEX_H

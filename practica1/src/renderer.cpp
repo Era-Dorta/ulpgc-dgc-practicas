@@ -15,6 +15,7 @@ Renderer::Renderer(const int w_, const int h_ ){
     w = w_;
     h = h_;
     currentColor = ofColor::white;
+    useLight = false;
     zBuffer = new float*[w];
     for(int i = 0; i < w; i++){
         zBuffer[i] = new float[h];
@@ -327,7 +328,15 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
 }
 
 //--------------------------------------------------------------
-void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2) const{
+void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2, const Vertex&normal ) const{
+}
+
+//--------------------------------------------------------------
+void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2, const Vertex&normal) const{
+}
+
+//--------------------------------------------------------------
+void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2, const Vertex& normal) const{
     vector<Vertex> vertices;
     vertices.reserve(3);
     vertices.push_back(applyPerspective(vertex0));
@@ -338,11 +347,19 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
     sort (vertices.begin(), vertices.end(), Vertex::compareYX);
     //The triangle is already Top Flat or Bottom Flat
     if(vertices[0].getY() == vertices[1].getY()){
-        triangleFillTopFlat(vertices[0], vertices[1], vertices[2]);
+        if(useLight){
+            triangleFillTopFlat(vertices[0], vertices[1], vertices[2], normal);
+        }else{
+            triangleFillTopFlat(vertices[0], vertices[1], vertices[2]);
+        }
         return;
     }else{
         if(vertices[1].getY() == vertices[2].getY()){
-            triangleFillBotFlat(vertices[0], vertices[1], vertices[2]);
+            if(useLight){
+                triangleFillBotFlat(vertices[0], vertices[1], vertices[2], normal);
+            }else{
+                triangleFillBotFlat(vertices[0], vertices[1], vertices[2]);
+            }
             return;
         }
     }
@@ -357,12 +374,22 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
         vertices[0].getZ()*( 1 - (vertices[0].getY() - vertices[1].getY()) / (vertices[0].getY() - vertices[2].getY())) );
     if(v3.getX() > vertices[1].getX()){
         //Triangle is d shape
-        triangleFillBotFlat(vertices[0], vertices[1], v3);
-        triangleFillTopFlat(vertices[1], v3, vertices[2]);
+            if(useLight){
+                triangleFillBotFlat(vertices[0], vertices[1], v3, normal);
+                triangleFillTopFlat(vertices[1], v3, vertices[2], normal);
+            }else{
+                triangleFillBotFlat(vertices[0], vertices[1], v3);
+                triangleFillTopFlat(vertices[1], v3, vertices[2]);
+            }
     }else{
         //Triangle is b shape
-        triangleFillBotFlat(vertices[0], v3, vertices[1]);
-        triangleFillTopFlat(v3, vertices[1], vertices[2]);
+            if(useLight){
+                triangleFillBotFlat(vertices[0], v3, vertices[1], normal);
+                triangleFillTopFlat(v3, vertices[1], vertices[2], normal);
+            }else{
+                triangleFillBotFlat(vertices[0], v3, vertices[1]);
+                triangleFillTopFlat(v3, vertices[1], vertices[2]);
+            }
     }
 }
 
