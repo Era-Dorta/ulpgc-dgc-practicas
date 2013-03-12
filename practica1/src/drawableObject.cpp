@@ -249,6 +249,10 @@ void DrawableObject::rotate( const Axis axis, const float amount, const bool per
     }
 
     applyTransform(permanent);
+
+    for( int i = 0; i < totalTriangles; i++ ){
+        transNormals[i].normalize();
+    }
 }
 
 //--------------------------------------------------------------
