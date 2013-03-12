@@ -367,7 +367,20 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     Vertex lightVector = lightSource - normal;
     lightVector.normalize();
     float cosNL = normal.dot(lightVector);
-    ofSetColor(cosNL*cColorRed, cosNL*cColorGreen, cosNL*cColorBlue);
+    int auxR, auxG, auxB;
+    auxR = cosNL*cColorRed;
+    if(auxR > 255){
+        auxR = 255;
+    }
+    auxG = cosNL*cColorGreen;
+    if(auxR > 255){
+        auxR = 255;
+    }
+    auxB = cosNL*cColorBlue;
+    if(auxR > 255){
+        auxR = 255;
+    }
+    ofSetColor(auxR, auxG, auxB);
 
     z_max = vertex0.getZ();
     z_min = vertex1.getZ();
@@ -480,7 +493,20 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
     Vertex lightVector = lightSource - normal;
     lightVector.normalize();
     float cosNL = normal.dot(lightVector);
-    ofSetColor(cosNL*cColorRed, cosNL*cColorGreen, cosNL*cColorBlue);
+    int auxR, auxG, auxB;
+    auxR = cosNL*cColorRed;
+    if(auxR > 255){
+        auxR = 255;
+    }
+    auxG = cosNL*cColorGreen;
+    if(auxR > 255){
+        auxR = 255;
+    }
+    auxB = cosNL*cColorBlue;
+    if(auxR > 255){
+        auxR = 255;
+    }
+    ofSetColor(auxR, auxG, auxB);
 
     z_max = vertex0.getZ();
     z_min = vertex1.getZ();
