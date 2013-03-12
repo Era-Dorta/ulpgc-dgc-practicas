@@ -373,12 +373,12 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
         auxR = 255;
     }
     auxG = cosNL*cColorGreen;
-    if(auxR > 255){
-        auxR = 255;
+    if(auxG > 255){
+        auxG = 255;
     }
     auxB = cosNL*cColorBlue;
-    if(auxR > 255){
-        auxR = 255;
+    if(auxB > 255){
+        auxB = 255;
     }
     ofSetColor(auxR, auxG, auxB);
 
@@ -499,12 +499,12 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
         auxR = 255;
     }
     auxG = cosNL*cColorGreen;
-    if(auxR > 255){
-        auxR = 255;
+    if(auxG > 255){
+        auxG = 255;
     }
     auxB = cosNL*cColorBlue;
-    if(auxR > 255){
-        auxR = 255;
+    if(auxB > 255){
+        auxB = 255;
     }
     ofSetColor(auxR, auxG, auxB);
 
