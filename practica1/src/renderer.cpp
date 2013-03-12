@@ -16,6 +16,7 @@ Renderer::Renderer(const int w_, const int h_ ){
     h = h_;
     currentColor = ofColor::white;
     useLight = false;
+    lightSource.set(-500,-500,500);
     zBuffer = new float*[w];
     for(int i = 0; i < w; i++){
         zBuffer[i] = new float[h];
@@ -348,10 +349,229 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
 
 //--------------------------------------------------------------
 void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2, const Vertex&normal ) const{
+    if( vertex0.getY() == vertex1.getY() || vertex1.getX() == vertex2.getX() ){
+        return;
+    }
+    float inv_m01, inv_m02, x_i, x_f, inv_z01, inv_z02, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
+    Vertex lightVector = lightSource - normal;
+    lightVector.normalize();
+    float cosNL = normal.dot(lightVector);
+    ofSetColor(cosNL*currentColor);
+
+    z_max = vertex0.getZ();
+    z_min = vertex1.getZ();
+    x_max = vertex2.getX();
+    x_min = vertex1.getX();
+
+    if(x_max < vertex0.getX()){
+        x_max = vertex0.getX();
+    }
+
+    if(x_min > vertex0.getX()){
+        x_min = vertex0.getX();
+    }
+
+    if(z_max < vertex1.getZ()){
+        z_min = vertex0.getZ();
+        z_max = vertex1.getZ();
+        if(z_max < vertex2.getZ()){
+            z_max = vertex2.getZ();
+        }
+    }
+
+    if(z_min > vertex2.getZ()){
+        z_min = vertex2.getZ();
+    }
+
+    inv_m01 = vertex1.getY() - vertex0.getY();
+    if(inv_m01){
+        inv_m01 = (vertex1.getX() - vertex0.getX())/inv_m01;
+    }
+
+    inv_m02 = vertex2.getY() - vertex0.getY();
+    if(inv_m02){
+        inv_m02 = (vertex2.getX() - vertex0.getX())/inv_m02;
+    }
+
+    inv_z01 = vertex1.getY() - vertex0.getY();
+    if(inv_z01){
+        inv_z01 = (vertex1.getZ() - vertex0.getZ())/inv_z01;
+    }
+
+    inv_z02 = vertex2.getY() - vertex0.getY();
+    if(inv_z02){
+        inv_z02 = (vertex2.getZ() - vertex0.getZ())/inv_z02;
+    }
+
+    x_i = vertex0.getX();
+    x_f = vertex0.getX();
+    z_i = vertex0.getZ();
+    z_f = vertex0.getZ();
+    inv_mzp = 0;
+    z_p = z_i;
+
+
+
+    for(int j = vertex0.getY() - 0.5; j <= vertex1.getY() + 0.5; j++){
+        for(int i = x_i - 0.5; i <= x_f + 0.5; i++){
+
+            if(z_p < z_min){
+                z_p = z_min;
+            }
+            if(z_p > z_max){
+                z_p = z_max;
+            }
+            rPixel(i, j, z_p);
+            z_p += inv_mzp;
+        }
+
+        x_i += inv_m01;
+
+        if(x_i < x_min){
+            x_i = x_min;
+        }
+
+        x_f += inv_m02;
+
+        if(x_f > x_max){
+            x_f = x_max;
+        }
+
+        z_i += inv_z01;
+
+        if(z_i < z_min){
+            z_i = z_min;
+        }
+        if(z_i > z_max){
+            z_i = z_max;
+        }
+
+        z_f += inv_z02;
+
+        if(z_f < z_min){
+            z_f = z_min;
+        }
+        if(z_f > z_max){
+            z_f = z_max;
+        }
+
+        inv_mzp = (z_f - z_i)/(x_f - x_i);
+        z_p = z_i;
+    }
 }
 
 //--------------------------------------------------------------
 void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2, const Vertex&normal) const{
+    if( vertex0.getY() == vertex2.getY() || vertex0.getX() == vertex1.getX() ){
+        return;
+    }
+    float inv_m20, inv_m21, x_i, x_f, inv_z20, inv_z21, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
+    Vertex lightVector = lightSource - normal;
+    lightVector.normalize();
+    float cosNL = normal.dot(lightVector);
+    ofSetColor(cosNL*currentColor);
+
+    z_max = vertex0.getZ();
+    z_min = vertex1.getZ();
+    x_max = vertex1.getX();
+    x_min = vertex0.getX();
+
+    if(x_max < vertex2.getX()){
+        x_max = vertex2.getX();
+    }
+
+    if(x_min > vertex2.getX()){
+        x_min = vertex2.getX();
+    }
+
+    if(z_max < vertex1.getZ()){
+        z_min = vertex0.getZ();
+        z_max = vertex1.getZ();
+
+    }
+
+    if(z_max < vertex2.getZ()){
+        z_max = vertex2.getZ();
+    }
+
+    if(z_min > vertex2.getZ()){
+        z_min = vertex2.getZ();
+    }
+
+    inv_m20 = vertex0.getY() - vertex2.getY();
+    if(inv_m20){
+        inv_m20 = (vertex0.getX() - vertex2.getX())/inv_m20;
+    }
+
+    inv_m21 = vertex1.getY() - vertex2.getY();
+    if(inv_m21){
+        inv_m21 = (vertex1.getX() - vertex2.getX())/inv_m21;
+    }
+
+    inv_z20 = vertex0.getY() - vertex2.getY();
+    if(inv_z20){
+        inv_z20 = (vertex0.getZ() - vertex2.getZ())/inv_z20;
+    }
+
+    inv_z21 = vertex1.getY() - vertex2.getY();
+    if(inv_z21){
+        inv_z21 = (vertex1.getZ() - vertex2.getZ())/inv_z21;
+    }
+
+    x_i = vertex2.getX();
+    x_f = vertex2.getX();
+    z_i = vertex2.getZ();
+    z_f = vertex2.getZ();
+    inv_mzp = 0;
+    z_p = z_i;
+
+    for(int j = vertex2.getY() + 0.5; j >= vertex0.getY() - 0.5; j--){
+        for(int i = x_i - 0.5; i <= x_f + 0.5; i++){
+
+            if(z_p < z_min){
+                z_p = z_min;
+            }
+            if(z_p > z_max){
+                z_p = z_max;
+            }
+
+            rPixel(i, j, z_p);
+            z_p += inv_mzp;
+        }
+
+        x_i -= inv_m20;
+
+        if(x_i < x_min){
+            x_i = x_min;
+        }
+
+        x_f -= inv_m21;
+
+        if(x_f > x_max){
+            x_f = x_max;
+        }
+
+        z_i -= inv_z20;
+
+        if(z_i < z_min){
+            z_i = z_min;
+        }
+        if(z_i > z_max){
+            z_i = z_max;
+        }
+
+        z_f -= inv_z21;
+
+        if(z_f < z_min){
+            z_f = z_min;
+        }
+        if(z_f > z_max){
+            z_f = z_max;
+        }
+
+        inv_mzp = (z_f - z_i)/(x_f - x_i);
+        z_p = z_i;
+    }
 }
 
 //--------------------------------------------------------------

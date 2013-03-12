@@ -33,7 +33,10 @@ class Vertex {
         void normalize();
         bool operator==( const Vertex &otherVertex ) const;
         Vertex operator*( const float matrix[4][4] ) const;
+        //Dot product
         Vertex operator*( const Vertex &otherVertex ) const;
+        //Scalar product
+        float dot( const Vertex &otherVertex ) const;
         void operator=( const Vertex &otherVertex );
         Vertex operator-( const Vertex &otherVertex ) const;
         Vertex operator+( const Vertex &otherVertex ) const;

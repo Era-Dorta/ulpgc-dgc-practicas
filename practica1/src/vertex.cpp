@@ -96,6 +96,13 @@ void Vertex::operator=( const Vertex  &otherVertex ){
 }
 
 //--------------------------------------------------------------
+float Vertex::dot( const Vertex &otherVertex ) const{
+    return (coordinates[0]*otherVertex.coordinates[0] +
+        coordinates[1]*otherVertex.coordinates[1] +
+        coordinates[2]*otherVertex.coordinates[2]);
+}
+
+//--------------------------------------------------------------
 Vertex Vertex::operator*( const float matrix[4][4] ) const{
     Vertex vRes;
     for(int i = 0; i < 4; i++){
