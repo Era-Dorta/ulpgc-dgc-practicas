@@ -61,6 +61,8 @@ class testApp : public ofBaseApp{
 		bool getPerspective() const;
 		void setZBuffer( const bool active );
 		bool getZBuffer() const;
+		void setPhong( const bool active );
+		bool getPhong() const;
 		DrawableObject* getCurrentObject() const;
 		AppStates getState() const;
 };

@@ -7,6 +7,7 @@ class testApp : public ofBaseApp{
 		DrawableObject* getCurrentObject() const;
 		void setPerspective( const bool active );
 		void setZBuffer( const bool active );
+		void setPhong( const bool active );
 };
 
 //--------------------------------------------------------------
@@ -43,6 +44,9 @@ void StatusButton::checkPress( const Vertex mouse )
             break;
         case Z_BUFFER:
             app->setZBuffer(pressed);
+            break;
+        case PHONG:
+            app->setPhong(pressed);
             break;
         case PERSPECTIVE:
             app->setPerspective(pressed);

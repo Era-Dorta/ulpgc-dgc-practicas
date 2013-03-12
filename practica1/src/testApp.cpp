@@ -4,7 +4,7 @@
 #include <cmath>
 
 #define N_ACTION_BUTTONS 8
-#define N_STATUS_BUTTONS 5
+#define N_STATUS_BUTTONS 6
 #define N_BUTTONS N_ACTION_BUTTONS + N_STATUS_BUTTONS
 
 //Center of the screen
@@ -42,7 +42,7 @@ void testApp::setup(){
     }
 ;
 
-    string sButtonNames[N_STATUS_BUTTONS] = { "Perspective","Triangles", "Normals", "Fill trian", "Z-Buffer" };
+    string sButtonNames[N_STATUS_BUTTONS] = { "Perspective","Triangles", "Normals", "Fill trian", "Z-Buffer", "Phong" };
     for(i = N_ACTION_BUTTONS; i < N_BUTTONS; i++){
         auxVertex.set( x, y + i*(height + 10), 0 );
         buttonList.push_back( new StatusButton(this, auxVertex, sButtonNames[i - N_ACTION_BUTTONS], (AppStates)i, width, height) );
@@ -165,11 +165,13 @@ void testApp::mousePressed(int x, int y, int button){
             currentColor = ofColor::fromHex(rand());
             objectList.push_back( new Cube(currentColor) );
             currentObject = objectList.back();
+            currentObject->setFillTriangles(zbuffer);
             break;
         case DRAW_TRIANGLE:
             currentColor = ofColor::fromHex(rand());
             objectList.push_back( new Triangle(currentColor) );
             currentObject = objectList.back();
+            currentObject->setFillTriangles(zbuffer);
             break;
         case DRAW_REVOLUTION:
             //First click on revolution, and previous object is not
@@ -196,7 +198,7 @@ void testApp::mousePressed(int x, int y, int button){
                 //The user just clicked so avoid drawing a new line
                 ((RevolutionSurface*)currentObject)->setDrawHelper(pmouse);
             }
-
+            currentObject->setFillTriangles(zbuffer);
             break;
         default:
             break;
@@ -358,6 +360,19 @@ void testApp::setZBuffer( const bool active ){
 //--------------------------------------------------------------
 bool testApp::getZBuffer() const{
     return zbuffer;
+}
+
+//--------------------------------------------------------------
+void testApp::setPhong( const bool active ){
+    if(active){
+        setZBuffer(true);
+    }
+    renderer.setLight(active);
+}
+
+//--------------------------------------------------------------
+bool testApp::getPhong() const{
+    return renderer.getLight();
 }
 
 //--------------------------------------------------------------
