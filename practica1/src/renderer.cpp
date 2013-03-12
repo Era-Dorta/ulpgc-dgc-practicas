@@ -10,6 +10,17 @@ const int k = 400;
 const float invK = 1.0/k;
 
 //--------------------------------------------------------------
+Renderer::Renderer(){
+    zBuffer = NULL;
+    perspective_ = false;
+    w = 0;
+    h = 0;
+    useZBuffer = false;
+    useLight = false;
+    lightSource.set(-100,-100,100);
+}
+
+//--------------------------------------------------------------
 Renderer::Renderer(const int w_, const int h_ ){
     perspective_ = false;
     w = w_;
@@ -356,7 +367,7 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     Vertex lightVector = lightSource - normal;
     lightVector.normalize();
     float cosNL = normal.dot(lightVector);
-    ofSetColor(cosNL*currentColor.getHex());
+    ofSetColor(cosNL*cColorRed, cosNL*cColorGreen, cosNL*cColorBlue);
 
     z_max = vertex0.getZ();
     z_min = vertex1.getZ();
@@ -469,7 +480,7 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
     Vertex lightVector = lightSource - normal;
     lightVector.normalize();
     float cosNL = normal.dot(lightVector);
-    ofSetColor(cosNL*currentColor.getHex());
+    ofSetColor(cosNL*cColorRed, cosNL*cColorGreen, cosNL*cColorBlue);
 
     z_max = vertex0.getZ();
     z_min = vertex1.getZ();
@@ -657,5 +668,8 @@ void Renderer::resetZBuffer(){
 //--------------------------------------------------------------
 void Renderer::setColor( const ofColor& newColor ){
     currentColor = newColor;
+    cColorRed = (newColor.getHex() & 0xFF0000) >> 4;
+    cColorGreen = (newColor.getHex() & 0xFF00) >> 2;
+    cColorBlue = newColor.getHex() & 0xFF;
     ofSetColor( currentColor );
 }

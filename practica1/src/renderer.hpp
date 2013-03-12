@@ -17,6 +17,7 @@ class Renderer{
         bool perspective_;
         bool useZBuffer;
         ofColor currentColor;
+        unsigned char cColorRed, cColorGreen, cColorBlue;
         Vertex lightSource;
         bool useLight;
 
@@ -28,7 +29,7 @@ class Renderer{
         Vertex applyPerspective(const Vertex& vertex) const;
 
     public:
-        Renderer(){zBuffer = NULL; perspective_ = false; w = 0; h = 0; useZBuffer = false; };
+        Renderer();
         Renderer( const int w, const int h );
         ~Renderer();
         void setup( const int w, const int h );
