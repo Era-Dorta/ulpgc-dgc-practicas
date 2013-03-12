@@ -67,6 +67,15 @@ void Vertex::set( const int pos, const float val ){
 }
 
 //--------------------------------------------------------------
+void Vertex::checkH(){
+    float aux = 1/coordinates[3];
+    coordinates[0] *= aux;
+    coordinates[1] *= aux;
+    coordinates[2] *= aux;
+    coordinates[3] = 1;
+}
+
+//--------------------------------------------------------------
 float Vertex::module() const{
     float res = 0;
     for(int i = 0; i < 3; i++){

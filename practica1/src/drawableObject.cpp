@@ -259,6 +259,10 @@ void DrawableObject::translate( const float tX, const float tY, const float tZ, 
     auxMatrix[3][2] = tZ;
 
     applyTransform(permanent);
+
+    for( int i = 0; i < totalTriangles; i++ ){
+        transNormals[i].normalize();
+    }
 }
 
 //--------------------------------------------------------------

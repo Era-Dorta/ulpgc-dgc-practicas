@@ -29,6 +29,7 @@ class Vertex {
         void setH( float h ) { coordinates[3] = h; };
         void set( int pos, float val );
         void set (float x, float y, float z){ coordinates[0] = x; coordinates[1] = y; coordinates[2] = z;};
+        void checkH();
         float module() const;
         void normalize();
         bool operator==( const Vertex &otherVertex ) const;
