@@ -380,9 +380,9 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     lightVector.normalize();
     float cosNL = normal.dot(lightVector);
     float auxR, auxG, auxB;
-    auxR = cosNL*cColorRed + cColorRed*0.1;
-    auxG = cosNL*cColorGreen+ cColorGreen*0.1;
-    auxB = cosNL*cColorBlue+ cColorBlue*0.1;
+    auxR = cosNL*currentColor.r + currentColor.r*0.2;
+    auxG = cosNL*currentColor.g + currentColor.g*0.2;
+    auxB = cosNL*currentColor.b + currentColor.b*0.2;
 
     range(auxR, 0, 255);
     range(auxG, 0, 255);
@@ -502,9 +502,9 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
     lightVector.normalize();
     float cosNL = normal.dot(lightVector);
     float auxR, auxG, auxB;
-    auxR = cosNL*cColorRed + cColorRed*0.1;
-    auxG = cosNL*cColorGreen+ cColorGreen*0.1;
-    auxB = cosNL*cColorBlue+ cColorBlue*0.1;
+    auxR = cosNL*currentColor.r + currentColor.r*0.2;
+    auxG = cosNL*currentColor.g + currentColor.g*0.2;
+    auxB = cosNL*currentColor.b + currentColor.b*0.2;
 
     range(auxR, 0, 255);
     range(auxG, 0, 255);
@@ -698,8 +698,5 @@ void Renderer::resetZBuffer(){
 //--------------------------------------------------------------
 void Renderer::setColor( const ofColor& newColor ){
     currentColor = newColor;
-    cColorRed = (newColor.getHex() & 0xFF0000) >> 4;
-    cColorGreen = (newColor.getHex() & 0xFF00) >> 2;
-    cColorBlue = newColor.getHex() & 0xFF;
     ofSetColor( currentColor );
 }
