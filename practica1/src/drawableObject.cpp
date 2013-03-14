@@ -260,8 +260,8 @@ void DrawableObject::draw(Renderer* const renderer) const{
 void DrawableObject::rotate( const Axis axis, const float amount, const bool permanent){
     float cosVal, sinVal;
     resetAuxMatrix();
-    cosVal = cos(0.01*amount);
-    sinVal = sin(0.01*amount);
+    cosVal = cos(ROTATION_FACTOR*amount);
+    sinVal = sin(ROTATION_FACTOR*amount);
     switch(axis){
     case X:
         auxMatrix[1][1] = cosVal;
@@ -303,9 +303,9 @@ void DrawableObject::translate( const float tX, const float tY, const float tZ, 
 //--------------------------------------------------------------
 void DrawableObject::scale( const float sX, const float sY, const float sZ, const bool permanent){
     resetAuxMatrix();
-    auxMatrix[0][0] = sX*0.01 + 1;
-    auxMatrix[1][1] = sY*0.01 + 1;
-    auxMatrix[2][2] = sZ*0.01 + 1;
+    auxMatrix[0][0] = sX*ROTATION_FACTOR + 1;
+    auxMatrix[1][1] = sY*ROTATION_FACTOR + 1;
+    auxMatrix[2][2] = sZ*ROTATION_FACTOR + 1;
 
     applyTranslateTransform(permanent);
 }

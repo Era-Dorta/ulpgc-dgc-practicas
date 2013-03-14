@@ -5,6 +5,8 @@
 #include "renderer.hpp"
 #include "ofMain.h"
 #include <cmath>
+
+#define ROTATION_FACTOR 0.01
 using namespace std;
 
 enum Axis { X, Y, Z };
