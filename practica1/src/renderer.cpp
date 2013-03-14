@@ -209,14 +209,7 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
 
     for(int j = vertex0.getY() - 0.5; j <= vertex1.getY() + 0.5; j++){
         for(int i = x_i - 0.5; i <= x_f + 0.5; i++){
-
-            if(z_p < z_min){
-                z_p = z_min;
-            }
-            if(z_p > z_max){
-                z_p = z_max;
-            }
-
+            range(z_p, z_min, z_max);
             rPixel(i, j, z_p);
             z_p += inv_mzp;
         }
@@ -234,22 +227,10 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
         }
 
         z_i += inv_z01;
-
-        if(z_i < z_min){
-            z_i = z_min;
-        }
-        if(z_i > z_max){
-            z_i = z_max;
-        }
+        range(z_i, z_min, z_max);
 
         z_f += inv_z02;
-
-        if(z_f < z_min){
-            z_f = z_min;
-        }
-        if(z_f > z_max){
-            z_f = z_max;
-        }
+        range(z_f, z_min, z_max);
 
         inv_mzp = (z_f - z_i)/(x_f - x_i);
         z_p = z_i;
@@ -323,14 +304,7 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
 
     for(int j = vertex2.getY() + 0.5; j >= vertex0.getY() - 0.5; j--){
         for(int i = x_i - 0.5; i <= x_f + 0.5; i++){
-
-            if(z_p < z_min){
-                z_p = z_min;
-            }
-            if(z_p > z_max){
-                z_p = z_max;
-            }
-
+            range(z_p, z_min, z_max);
             rPixel(i, j, z_p);
             z_p += inv_mzp;
         }
@@ -348,22 +322,10 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
         }
 
         z_i -= inv_z20;
-
-        if(z_i < z_min){
-            z_i = z_min;
-        }
-        if(z_i > z_max){
-            z_i = z_max;
-        }
+        range(z_i, z_min, z_max);
 
         z_f -= inv_z21;
-
-        if(z_f < z_min){
-            z_f = z_min;
-        }
-        if(z_f > z_max){
-            z_f = z_max;
-        }
+        range(z_f, z_min, z_max);
 
         inv_mzp = (z_f - z_i)/(x_f - x_i);
         z_p = z_i;
@@ -448,13 +410,7 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
 
     for(int j = vertex0.getY() - 0.5; j <= vertex1.getY() + 0.5; j++){
         for(int i = x_i - 0.5; i <= x_f + 0.5; i++){
-
-            if(z_p < z_min){
-                z_p = z_min;
-            }
-            if(z_p > z_max){
-                z_p = z_max;
-            }
+            range(z_p, z_min, z_max);
             rPixel(i, j, z_p);
             z_p += inv_mzp;
         }
@@ -472,22 +428,10 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
         }
 
         z_i += inv_z01;
-
-        if(z_i < z_min){
-            z_i = z_min;
-        }
-        if(z_i > z_max){
-            z_i = z_max;
-        }
+        range(z_i, z_min, z_max);
 
         z_f += inv_z02;
-
-        if(z_f < z_min){
-            z_f = z_min;
-        }
-        if(z_f > z_max){
-            z_f = z_max;
-        }
+        range(z_f, z_min, z_max);
 
         inv_mzp = (z_f - z_i)/(x_f - x_i);
         z_p = z_i;
@@ -572,14 +516,7 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
 
     for(int j = vertex2.getY() + 0.5; j >= vertex0.getY() - 0.5; j--){
         for(int i = x_i - 0.5; i <= x_f + 0.5; i++){
-
-            if(z_p < z_min){
-                z_p = z_min;
-            }
-            if(z_p > z_max){
-                z_p = z_max;
-            }
-
+            range(z_p, z_min, z_max);
             rPixel(i, j, z_p);
             z_p += inv_mzp;
         }
@@ -597,22 +534,10 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
         }
 
         z_i -= inv_z20;
-
-        if(z_i < z_min){
-            z_i = z_min;
-        }
-        if(z_i > z_max){
-            z_i = z_max;
-        }
+        range(z_i, z_min, z_max);
 
         z_f -= inv_z21;
-
-        if(z_f < z_min){
-            z_f = z_min;
-        }
-        if(z_f > z_max){
-            z_f = z_max;
-        }
+        range(z_f, z_min, z_max);
 
         inv_mzp = (z_f - z_i)/(x_f - x_i);
         z_p = z_i;
