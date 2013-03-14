@@ -47,6 +47,7 @@ class DrawableObject {
         virtual int getTotalVertices() const{ return totalVertices; };
         virtual void rotate( const Axis axis, const float amount, const bool permanent);
         virtual void translate( const float tX, const float tY, const float tZ, const bool permanent);
+        virtual void scale( const float sX, const float sY, const float sZ, const bool permanent);
         void resetTransMatrix();
         void resetAuxMatrix();
         Subtype getSubtype() const { return subtype; };

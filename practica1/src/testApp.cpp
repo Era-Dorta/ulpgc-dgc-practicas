@@ -3,7 +3,7 @@
 #include "cube.hpp"
 #include <cmath>
 
-#define N_ACTION_BUTTONS 8
+#define N_ACTION_BUTTONS 9
 #define N_STATUS_BUTTONS 6
 #define N_BUTTONS N_ACTION_BUTTONS + N_STATUS_BUTTONS
 
@@ -35,7 +35,7 @@ void testApp::setup(){
     nextObjButPos.set(-500,300,0);
     Vertex auxVertex;
     string buttonNames[N_ACTION_BUTTONS] = { "Rotate X", "Rotate Y", "Rotate Z",
-        "Translate", "New Triang", "New Cube", "New Rev", "Delete" };
+        "Translate", "Scale", "New Triang", "New Cube", "New Rev", "Delete" };
     for(i = 0; i < N_ACTION_BUTTONS; i++){
         auxVertex.set(x, y + i*(height + 10), 0);
         buttonList.push_back( new Button(this, auxVertex, buttonNames[i], (AppStates)i, width, height) );
@@ -122,6 +122,9 @@ void testApp::mouseDragged(int x, int y, int button){
                 break;
             case TRANSLATING:
                 currentObject->translate( x - pRawX, y - pRawY, 0, false );
+                break;
+            case SCALING:
+                currentObject->scale( x - pRawX, y - pRawY, 0, false );
                 break;
             case DRAW_TRIANGLE:
                 ((Triangle*)objectList.back())->setVertices( pmouse, current );
@@ -217,15 +220,35 @@ void testApp::mousePressed(int x, int y, int button){
         }
         break;
     case WHEEL_FW:
-        //Translate object in z
-        if( objectList.size() > 0 && state == TRANSLATING ){
-            currentObject->translate( 0, 0, 20, true );
+        //Translate or Scale object in z
+        if( objectList.size() > 0){
+            switch(state){
+            case TRANSLATING:
+                currentObject->translate( 0, 0, 20, true );
+                break;
+            case SCALING:
+                currentObject->scale( 0, 0, 20, true );
+                break;
+            default:
+                break;
+            }
+
         }
         break;
     case WHEEL_BK:
-        //Translate object in z
-        if( objectList.size() > 0 && state == TRANSLATING ){
-            currentObject->translate( 0, 0, -20, true );
+        //Translate or Scale object in z
+        if( objectList.size() > 0){
+            switch(state){
+            case TRANSLATING:
+                currentObject->translate( 0, 0, -20, true );
+                break;
+            case SCALING:
+                currentObject->scale( 0, 0, -20, true );
+                break;
+            default:
+                break;
+            }
+
         }
         break;
     default:
@@ -253,6 +276,9 @@ void testApp::mouseReleased(int x, int y, int button){
                 break;
             case TRANSLATING:
                 currentObject->translate( x - pRawX, y - pRawY, 0, true );
+                break;
+            case SCALING:
+                currentObject->scale( x - pRawX, y - pRawY, 0, true );
                 break;
             case DRAW_TRIANGLE:
                 ((Triangle*)objectList.back())->setVertices( pmouse, current );
