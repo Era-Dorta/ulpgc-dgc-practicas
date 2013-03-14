@@ -39,7 +39,7 @@ void DrawableObject:: applyTransform( const bool permanent ){
         //Multiply transMatrix by auxMatrix and save the
         //result in transMAtrix, recalculate the transformed
         //vertices
-        multiplyMatrix(transMatrix, auxMatrix);
+        multiplyMatrix(transMatrix, auxMatrix, permanent);
         for( int i = 0; i < totalVertices; i++){
             transVertices[i] = vertices[i]*transMatrix;
         }
@@ -51,7 +51,7 @@ void DrawableObject:: applyTransform( const bool permanent ){
         //Multiply transMatrix by auxMatrix and save the
         //result in auxMatrix, recalculate the transformed
         //vertices
-        multiplyMatrix(transMatrix, auxMatrix, 0);
+        multiplyMatrix(transMatrix, auxMatrix, permanent);
         for( int i = 0; i < totalVertices; i++){
             transVertices[i] = vertices[i]*auxMatrix;
         }
@@ -131,16 +131,25 @@ DrawableObject::DrawableObject( const int totalVertices_, const ofColor color_  
 
 //--------------------------------------------------------------
 DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
+
     //Copy simple attributes
+    totalTriangles = otherDrawableObject.totalTriangles;
     totalVertices = otherDrawableObject.totalVertices;
     subtype = otherDrawableObject.subtype;
-    totalTriangles = otherDrawableObject.totalTriangles;
+    color = otherDrawableObject.color;
     drawTriangles_ = otherDrawableObject.drawTriangles_;
     drawNormals_ = otherDrawableObject.drawNormals_;
     drawFillTriangles_ = otherDrawableObject.drawFillTriangles_;
+
     //Get memory for the vertices
-    vertices = new Vertex[totalVertices];
-    transVertices = new Vertex[totalVertices];
+    if(totalVertices){
+        vertices = new Vertex[totalVertices];
+        transVertices = new Vertex[totalVertices];
+    }else{
+        vertices = NULL;
+        transVertices = NULL;
+    }
+
     //Copy vertices content
     for( int i = 0; i < totalVertices; i++ ){
         vertices[i] = otherDrawableObject.vertices[i];
@@ -177,7 +186,6 @@ DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
         transNormals = NULL;
         transTriangleCentroids = NULL;
     }
-    color = otherDrawableObject.color;
 }
 
 //--------------------------------------------------------------

@@ -20,11 +20,11 @@ class DrawableObject {
         Vertex* triangleCentroids;
         Vertex* transNormals;
         Vertex* transTriangleCentroids;
+        float transMatrix[4][4];
+        float auxMatrix[4][4];
         int totalTriangles;
         int totalVertices;
         Subtype subtype;
-        float transMatrix[4][4];
-        float auxMatrix[4][4];
         ofColor color;
         bool drawTriangles_;
         bool drawNormals_;

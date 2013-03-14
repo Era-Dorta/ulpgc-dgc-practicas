@@ -380,13 +380,15 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     lightVector.normalize();
     float cosNL = normal.dot(lightVector);
     float auxR, auxG, auxB;
+
+    range(cosNL, 0, 1);
     auxR = cosNL*currentColor.r + currentColor.r*0.2;
     auxG = cosNL*currentColor.g + currentColor.g*0.2;
     auxB = cosNL*currentColor.b + currentColor.b*0.2;
 
-    range(auxR, 0, 255);
-    range(auxG, 0, 255);
-    range(auxB, 0, 255);
+    range(auxR, 0, currentColor.r);
+    range(auxG, 0, currentColor.g);
+    range(auxB, 0, currentColor.b);
 
     ofSetColor(auxR, auxG, auxB);
 
@@ -502,13 +504,15 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
     lightVector.normalize();
     float cosNL = normal.dot(lightVector);
     float auxR, auxG, auxB;
+
+    range(cosNL, 0, 1);
     auxR = cosNL*currentColor.r + currentColor.r*0.2;
     auxG = cosNL*currentColor.g + currentColor.g*0.2;
     auxB = cosNL*currentColor.b + currentColor.b*0.2;
 
-    range(auxR, 0, 255);
-    range(auxG, 0, 255);
-    range(auxB, 0, 255);
+    range(auxR, 0, currentColor.r);
+    range(auxG, 0, currentColor.g);
+    range(auxB, 0, currentColor.b);
 
     ofSetColor(auxR, auxG, auxB);
 
