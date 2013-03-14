@@ -22,6 +22,7 @@ class Renderer{
         bool useLight;
 
     private:
+        void range( float& val, const float& min, const float&  max) const;
         void triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2) const;
         void triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2) const;
         void triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2, const Vertex&normal ) const;

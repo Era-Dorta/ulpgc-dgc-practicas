@@ -17,7 +17,7 @@ Renderer::Renderer(){
     h = 0;
     useZBuffer = false;
     useLight = false;
-    lightSource.set(-100,-100,100);
+    lightSource.set(-500,-500,500);
 }
 
 //--------------------------------------------------------------
@@ -128,6 +128,18 @@ void Renderer::rTriangle(const Vertex& vertex0, const Vertex& vertex1, const Ver
     rLine(vertex0, vertex1);
     rLine(vertex0, vertex2);
     rLine(vertex1, vertex2);
+}
+
+//--------------------------------------------------------------
+void Renderer::range( float& val, const float& min, const float&  max) const{
+    if( val < min){
+        val = min;
+        return;
+    }
+    if( val > max){
+        val = max;
+        return;
+    }
 }
 
 /*
@@ -367,19 +379,15 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     Vertex lightVector = lightSource - normal;
     lightVector.normalize();
     float cosNL = normal.dot(lightVector);
-    int auxR, auxG, auxB;
-    auxR = cosNL*cColorRed;
-    if(auxR > 255){
-        auxR = 255;
-    }
-    auxG = cosNL*cColorGreen;
-    if(auxG > 255){
-        auxG = 255;
-    }
-    auxB = cosNL*cColorBlue;
-    if(auxB > 255){
-        auxB = 255;
-    }
+    float auxR, auxG, auxB;
+    auxR = cosNL*cColorRed + cColorRed*0.1;
+    auxG = cosNL*cColorGreen+ cColorGreen*0.1;
+    auxB = cosNL*cColorBlue+ cColorBlue*0.1;
+
+    range(auxR, 0, 255);
+    range(auxG, 0, 255);
+    range(auxB, 0, 255);
+
     ofSetColor(auxR, auxG, auxB);
 
     z_max = vertex0.getZ();
@@ -493,19 +501,15 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
     Vertex lightVector = lightSource - normal;
     lightVector.normalize();
     float cosNL = normal.dot(lightVector);
-    int auxR, auxG, auxB;
-    auxR = cosNL*cColorRed;
-    if(auxR > 255){
-        auxR = 255;
-    }
-    auxG = cosNL*cColorGreen;
-    if(auxG > 255){
-        auxG = 255;
-    }
-    auxB = cosNL*cColorBlue;
-    if(auxB > 255){
-        auxB = 255;
-    }
+    float auxR, auxG, auxB;
+    auxR = cosNL*cColorRed + cColorRed*0.1;
+    auxG = cosNL*cColorGreen+ cColorGreen*0.1;
+    auxB = cosNL*cColorBlue+ cColorBlue*0.1;
+
+    range(auxR, 0, 255);
+    range(auxG, 0, 255);
+    range(auxB, 0, 255);
+
     ofSetColor(auxR, auxG, auxB);
 
     z_max = vertex0.getZ();
