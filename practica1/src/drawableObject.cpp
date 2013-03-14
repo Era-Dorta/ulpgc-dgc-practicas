@@ -34,7 +34,7 @@ void DrawableObject::multiplyMatrix( float matrix0[4][4], float matrix1[4][4], i
 }
 
 //--------------------------------------------------------------
-void DrawableObject:: applyTransform( const bool permanent ){
+void DrawableObject::applyTransform( const bool permanent ){
     if(permanent){
         //Multiply transMatrix by auxMatrix and save the
         //result in transMAtrix, recalculate the transformed
@@ -57,6 +57,33 @@ void DrawableObject:: applyTransform( const bool permanent ){
         }
         for( int i = 0; i < totalTriangles; i++){
             transNormals[i] = normals[i]*auxMatrix;
+            transTriangleCentroids[i] = triangleCentroids[i]*auxMatrix;
+        }
+    }
+}
+
+//--------------------------------------------------------------
+void DrawableObject::applyTranslateTransform( const bool permanent ){
+    if(permanent){
+        //Multiply transMatrix by auxMatrix and save the
+        //result in transMAtrix, recalculate the transformed
+        //vertices
+        multiplyMatrix(transMatrix, auxMatrix, permanent);
+        for( int i = 0; i < totalVertices; i++){
+            transVertices[i] = vertices[i]*transMatrix;
+        }
+        for( int i = 0; i < totalTriangles; i++){
+            transTriangleCentroids[i] = triangleCentroids[i]*transMatrix;
+        }
+    }else{
+        //Multiply transMatrix by auxMatrix and save the
+        //result in auxMatrix, recalculate the transformed
+        //vertices
+        multiplyMatrix(transMatrix, auxMatrix, permanent);
+        for( int i = 0; i < totalVertices; i++){
+            transVertices[i] = vertices[i]*auxMatrix;
+        }
+        for( int i = 0; i < totalTriangles; i++){
             transTriangleCentroids[i] = triangleCentroids[i]*auxMatrix;
         }
     }
@@ -270,11 +297,7 @@ void DrawableObject::translate( const float tX, const float tY, const float tZ, 
     auxMatrix[3][1] = tY;
     auxMatrix[3][2] = tZ;
 
-    applyTransform(permanent);
-
-    for( int i = 0; i < totalTriangles; i++ ){
-        transNormals[i].normalize();
-    }
+    applyTranslateTransform(permanent);
 }
 
 //--------------------------------------------------------------

@@ -33,6 +33,7 @@ class DrawableObject {
     private:
         void multiplyMatrix( float matrix0[4][4], float matrix1[4][4], int firstSave = 1 );
         void applyTransform( const bool permanent );
+        void applyTranslateTransform( const bool permanent );
 
     protected:
         void calculateNormals();
