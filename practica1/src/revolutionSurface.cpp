@@ -4,7 +4,7 @@
 
 //ROT defines how many times a revolution object
 //is rotated
-#define ROT 3
+#define ROT 4
 //--------------------------------------------------------------
 RevolutionSurface::RevolutionSurface(const ofColor color_)
 :DrawableObject(0, color_)

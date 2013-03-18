@@ -23,8 +23,8 @@ Cube::Cube( const ofColor color_ )
     triangles[5] = new int[3] {5,7,6};
     triangles[6] = new int[3] {4,5,1};
     triangles[7] = new int[3] {4,1,0};
-    triangles[8] = new int[3] {7,6,2};
-    triangles[9] = new int[3] {7,2,3};
+    triangles[8] = new int[3] {3,2,6};
+    triangles[9] = new int[3] {3,6,7};
     triangles[10] = new int[3] {4,0,3};
     triangles[11] = new int[3] {4,3,7};
 }
@@ -48,8 +48,8 @@ Cube::Cube( const Vertex &vertex0, const Vertex &vertex1 )
     triangles[5] = new int[3] {5,7,6};
     triangles[6] = new int[3] {4,5,1};
     triangles[7] = new int[3] {4,1,0};
-    triangles[8] = new int[3] {7,6,2};
-    triangles[9] = new int[3] {7,2,3};
+    triangles[8] = new int[3] {3,2,6};
+    triangles[9] = new int[3] {3,6,7};
     triangles[10] = new int[3] {4,0,3};
     triangles[11] = new int[3] {4,3,7};
 }
