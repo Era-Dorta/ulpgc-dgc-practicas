@@ -17,7 +17,6 @@ class Renderer{
         bool perspective_;
         bool useZBuffer;
         ofColor currentColor;
-        Vertex lightSource;
         bool useLight;
 
     private:

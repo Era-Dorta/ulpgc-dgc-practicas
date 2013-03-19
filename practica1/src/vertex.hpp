@@ -38,6 +38,7 @@ class Vertex {
         Vertex operator*( const Vertex &otherVertex ) const;
         //Scalar product
         float dot( const Vertex &otherVertex ) const;
+        float distance( const Vertex &otherVertex ) const;
         void operator=( const Vertex &otherVertex );
         Vertex operator-( const Vertex &otherVertex ) const;
         Vertex operator+( const Vertex &otherVertex ) const;
@@ -51,5 +52,7 @@ ostream& operator<< (ostream &out, const Vertex &vertex);
 
 //Center of the screen
 const static Vertex center = Vertex(512,384,0);
+//Point where the light comes from
+const static Vertex lightSource = Vertex(-500,-500,500);
 #endif
 // VERTEX_H

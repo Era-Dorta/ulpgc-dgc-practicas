@@ -86,9 +86,9 @@ float Vertex::module() const{
 
 //--------------------------------------------------------------
 void Vertex::normalize(){
-    float mod = module();
+    float mod = 1.0/module();
     for(int i = 0; i < 3; i++){
-        coordinates[i] = coordinates[i]/mod;
+        coordinates[i] = coordinates[i]*mod;
     }
 }
 
@@ -109,6 +109,14 @@ float Vertex::dot( const Vertex &otherVertex ) const{
     return (coordinates[0]*otherVertex.coordinates[0] +
         coordinates[1]*otherVertex.coordinates[1] +
         coordinates[2]*otherVertex.coordinates[2]);
+}
+
+//--------------------------------------------------------------
+float Vertex::distance( const Vertex &otherVertex ) const{
+    return sqrt( (coordinates[0] - otherVertex.coordinates[0])*(coordinates[0] - otherVertex.coordinates[0]) +
+                (coordinates[1] - otherVertex.coordinates[1])*(coordinates[1] - otherVertex.coordinates[1]) +
+                (coordinates[2] - otherVertex.coordinates[2])*(coordinates[2] - otherVertex.coordinates[2])
+                 );
 }
 
 //--------------------------------------------------------------

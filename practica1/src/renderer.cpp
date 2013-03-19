@@ -17,7 +17,6 @@ Renderer::Renderer(){
     h = 0;
     useZBuffer = false;
     useLight = false;
-    lightSource.set(-500,-500,500);
 }
 
 //--------------------------------------------------------------
@@ -27,7 +26,6 @@ Renderer::Renderer(const int w_, const int h_ ){
     h = h_;
     currentColor = ofColor::white;
     useLight = false;
-    lightSource.set(-500,-500,500);
     zBuffer = new float*[w];
     for(int i = 0; i < w; i++){
         zBuffer[i] = new float[h];
