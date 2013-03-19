@@ -4,10 +4,13 @@
 #include <vector>       // std::vector
 #include <cfloat>       // std::FLT_MAX
 #include <climits>      //std::INT_MIN
+
 using namespace std;
 
 const int k = 400;
 const float invK = 1.0/k;
+const float kD = 100;
+const float kA = 0.2;
 
 //--------------------------------------------------------------
 Renderer::Renderer(){
@@ -342,9 +345,9 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     float auxR, auxG, auxB;
 
     range(cosNL, 0, 1);
-    auxR = cosNL*currentColor.r*distance*100 + currentColor.r*0.2;
-    auxG = cosNL*currentColor.g*distance*100 + currentColor.g*0.2;
-    auxB = cosNL*currentColor.b*distance*100 + currentColor.b*0.2;
+    auxR = cosNL*currentColor.r*distance*kD + currentColor.r*kA;
+    auxG = cosNL*currentColor.g*distance*kD + currentColor.g*kA;
+    auxB = cosNL*currentColor.b*distance*kD + currentColor.b*kA;
 
     range(auxR, 0, currentColor.r);
     range(auxG, 0, currentColor.g);
@@ -448,9 +451,9 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
     float auxR, auxG, auxB;
 
     range(cosNL, 0, 1);
-    auxR = cosNL*currentColor.r*distance*100 + currentColor.r*0.2;
-    auxG = cosNL*currentColor.g*distance*100 + currentColor.g*0.2;
-    auxB = cosNL*currentColor.b*distance*100 + currentColor.b*0.2;
+    auxR = cosNL*currentColor.r*distance*kD + currentColor.r*kA;
+    auxG = cosNL*currentColor.g*distance*kD + currentColor.g*kA;
+    auxB = cosNL*currentColor.b*distance*kD + currentColor.b*kA;
 
     range(auxR, 0, currentColor.r);
     range(auxG, 0, currentColor.g);
