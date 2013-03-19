@@ -141,7 +141,7 @@ void DrawableObject::calculateDistances(){
         }
 
         for(int i = 0; i < totalTriangles; i++){
-            invertedDistances[i] = 1.0/(lightSource.distance(triangleCentroids[i]) + 0.1);
+            invertedDistances[i] = 1.0/(lightSource.distance(transTriangleCentroids[i]) + 0.5);
         }
     }
 }
@@ -252,7 +252,7 @@ void DrawableObject::draw(Renderer* const renderer) const{
 
     if(drawFillTriangles_){
         for( int i = 0; i < totalTriangles; i++ ){
-            renderer->rTriangleFill(transVertices[triangles[i][0]], transVertices[triangles[i][1]], transVertices[triangles[i][2]], transNormals[i]);
+            renderer->rTriangleFill(transVertices[triangles[i][0]], transVertices[triangles[i][1]], transVertices[triangles[i][2]], transNormals[i], invertedDistances[i]);
         }
     }else{
         if(drawNormals_){
