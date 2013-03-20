@@ -11,9 +11,9 @@ const int k = 400;
 const float invK = 1.0/k;
 const float kD = 100;
 const float kA = 0.2;
-const float kS = 1;
+const float kS = 100;
 const Vertex observer(0,0,k);
-const float n = 20;
+const float n = 1;
 const ofColor lightColor = ofColor::white;
 
 //--------------------------------------------------------------
@@ -345,7 +345,7 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     }
     float inv_m01, inv_m02, x_i, x_f, inv_z01, inv_z02, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
     Vertex lightVector = lightSource - normal, h, s;
-    float cosNL = normal.dot(lightVector);
+    float cosNL, cosNH;
     float auxR, auxG, auxB;
 
     s = centroid - observer;
@@ -353,10 +353,21 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     lightVector.normalize();
     h = (lightVector + s ) * 0.5;
 
+    cosNL = normal.dot(lightVector);
     range(cosNL, 0, 1);
-    auxR = currentColor.r*kA + distance*(kD*cosNL*currentColor.r + pow(kS*h.dot(s), n)*lightColor.r);
-    auxG = currentColor.g*kA + distance*(kD*cosNL*currentColor.g + pow(kS*h.dot(s), n)*lightColor.g);
-    auxB = currentColor.b*kA + distance*(kD*cosNL*currentColor.b + pow(kS*h.dot(s), n)*lightColor.b);
+    cosNL = kD*cosNL;
+
+    cosNH = normal.dot(h);
+    range(cosNH, 0, 1);
+    cosNH = kS*pow(cosNH, n);
+
+    auxR = currentColor.r*kA + distance*(cosNL*currentColor.r + cosNH*lightColor.r);
+    auxG = currentColor.g*kA + distance*(cosNL*currentColor.g + cosNH*lightColor.g);
+    auxB = currentColor.b*kA + distance*(cosNL*currentColor.b + cosNH*lightColor.b);
+
+    range(auxR, 0, 255);
+    range(auxG, 0, 255);
+    range(auxB, 0, 255);
 
     ofSetColor(auxR, auxG, auxB);
 
@@ -452,7 +463,7 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
     }
     float inv_m20, inv_m21, x_i, x_f, inv_z20, inv_z21, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
     Vertex lightVector = lightSource - normal, h, s;
-    float cosNL = normal.dot(lightVector);
+    float cosNL, cosNH;
     float auxR, auxG, auxB;
 
     s = centroid - observer;
@@ -460,14 +471,21 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
     lightVector.normalize();
     h = (lightVector + s ) * 0.5;
 
+    cosNL = normal.dot(lightVector);
     range(cosNL, 0, 1);
-    auxR = currentColor.r*kA + distance*(kD*cosNL*currentColor.r + pow(kS*h.dot(s), n)*lightColor.r);
-    auxG = currentColor.g*kA + distance*(kD*cosNL*currentColor.g + pow(kS*h.dot(s), n)*lightColor.g);
-    auxB = currentColor.b*kA + distance*(kD*cosNL*currentColor.b + pow(kS*h.dot(s), n)*lightColor.b);
+    cosNL = kD*cosNL;
 
-    range(auxR, 0, currentColor.r);
-    range(auxG, 0, currentColor.g);
-    range(auxB, 0, currentColor.b);
+    cosNH = normal.dot(h);
+    range(cosNH, 0, 1);
+    cosNH = kS*pow(cosNH, n);
+
+    auxR = currentColor.r*kA + distance*(cosNL*currentColor.r + cosNH*lightColor.r);
+    auxG = currentColor.g*kA + distance*(cosNL*currentColor.g + cosNH*lightColor.g);
+    auxB = currentColor.b*kA + distance*(cosNL*currentColor.b + cosNH*lightColor.b);
+
+    range(auxR, 0, 255);
+    range(auxG, 0, 255);
+    range(auxB, 0, 255);
 
     ofSetColor(auxR, auxG, auxB);
 
