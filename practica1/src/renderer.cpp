@@ -11,9 +11,10 @@ const int k = 400;
 const float invK = 1.0/k;
 const float kD = 100;
 const float kA = 0.2;
-const float kS = 0;
+const float kS = 1;
 const Vertex observer(0,0,k);
 const float n = 20;
+const ofColor lightColor = ofColor::white;
 
 //--------------------------------------------------------------
 Renderer::Renderer(){
@@ -353,9 +354,9 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     h = (lightVector + s ) * 0.5;
 
     range(cosNL, 0, 1);
-    auxR = currentColor.r*kA + distance*(kD*cosNL*currentColor.r + pow(kS*h.dot(s), n));
-    auxG = currentColor.g*kA + distance*(kD*cosNL*currentColor.g + pow(kS*h.dot(s), n));
-    auxB = currentColor.b*kA + distance*(kD*cosNL*currentColor.b + pow(kS*h.dot(s), n));
+    auxR = currentColor.r*kA + distance*(kD*cosNL*currentColor.r + pow(kS*h.dot(s), n)*lightColor.r);
+    auxG = currentColor.g*kA + distance*(kD*cosNL*currentColor.g + pow(kS*h.dot(s), n)*lightColor.g);
+    auxB = currentColor.b*kA + distance*(kD*cosNL*currentColor.b + pow(kS*h.dot(s), n)*lightColor.b);
 
     ofSetColor(auxR, auxG, auxB);
 
@@ -460,9 +461,9 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
     h = (lightVector + s ) * 0.5;
 
     range(cosNL, 0, 1);
-    auxR = currentColor.r*kA + distance*(kD*cosNL*currentColor.r + pow(kS*h.dot(s), n));
-    auxG = currentColor.g*kA + distance*(kD*cosNL*currentColor.g + pow(kS*h.dot(s), n));
-    auxB = currentColor.b*kA + distance*(kD*cosNL*currentColor.b + pow(kS*h.dot(s), n));
+    auxR = currentColor.r*kA + distance*(kD*cosNL*currentColor.r + pow(kS*h.dot(s), n)*lightColor.r);
+    auxG = currentColor.g*kA + distance*(kD*cosNL*currentColor.g + pow(kS*h.dot(s), n)*lightColor.g);
+    auxB = currentColor.b*kA + distance*(kD*cosNL*currentColor.b + pow(kS*h.dot(s), n)*lightColor.b);
 
     range(auxR, 0, currentColor.r);
     range(auxG, 0, currentColor.g);
@@ -618,8 +619,7 @@ void Renderer::drawLightSource() const{
 
     if(useLight){
         Vertex aux0 = lightSource, aux1 = lightSource;
-
-        ofSetColor( ofColor::yellow);
+        ofSetColor( ofColor::yellow );
         aux0.setX( lightSource.getX() - 10 );
         aux1.setX( lightSource.getX() + 10 );
         rLine(aux0, aux1);
