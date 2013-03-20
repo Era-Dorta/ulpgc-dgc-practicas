@@ -70,6 +70,8 @@ void testApp::draw(){
     for( unsigned int i = 0; i < objectList.size(); i++){
         objectList[i]->draw(&renderer);
     }
+    renderer.drawLightSource();
+
     renderer.perspective(false);
     for( unsigned int i = 0; i < buttonList.size(); i++){
         buttonList[i]->draw(&renderer);

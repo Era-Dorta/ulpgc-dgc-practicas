@@ -53,6 +53,6 @@ ostream& operator<< (ostream &out, const Vertex &vertex);
 //Center of the screen
 const static Vertex center = Vertex(512,384,0);
 //Point where the light comes from
-const static Vertex lightSource = Vertex(-100,-100,100);
+const static Vertex lightSource = Vertex(-100,-100,200);
 #endif
 // VERTEX_H

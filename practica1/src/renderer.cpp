@@ -604,6 +604,25 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
 }
 
 //--------------------------------------------------------------
+void Renderer::drawLightSource() const{
+
+    if(useLight){
+        Vertex aux0 = lightSource, aux1 = lightSource;
+
+        ofSetColor( ofColor::yellow);
+        aux0.setX( lightSource.getX() - 10 );
+        aux1.setX( lightSource.getX() + 10 );
+        rLine(aux0, aux1);
+
+        aux0.setX( lightSource.getX() );
+        aux1.setX( lightSource.getX() );
+        aux0.setY( lightSource.getY() - 10 );
+        aux1.setY( lightSource.getY() + 10 );
+        rLine(aux0, aux1);
+    }
+}
+
+//--------------------------------------------------------------
 void Renderer::rDrawBitmapString( const string tex, const Vertex& vertex) const{
     ofDrawBitmapString(tex, vertex.getX() + center.getX(), vertex.getY() + center.getY());
 }
