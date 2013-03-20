@@ -13,6 +13,7 @@ const float kD = 100;
 const float kA = 0.2;
 const float kS = 0;
 const Vertex observer(0,0,k);
+const float n = 20;
 
 //--------------------------------------------------------------
 Renderer::Renderer(){
@@ -343,20 +344,18 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     }
     float inv_m01, inv_m02, x_i, x_f, inv_z01, inv_z02, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
     Vertex lightVector = lightSource - normal, h, s;
-    s = centroid - observer;
-    s.normalize();
-    lightVector.normalize();
     float cosNL = normal.dot(lightVector);
     float auxR, auxG, auxB;
 
-    range(cosNL, 0, 1);
-    auxR = currentColor.r*kA + distance*(kD*cosNL*currentColor.r + kS*h.dot(s));
-    auxG = currentColor.g*kA + distance*(kD*cosNL*currentColor.g + kS*h.dot(s));
-    auxB = currentColor.b*kA + distance*(kD*cosNL*currentColor.b + kS*h.dot(s));
+    s = centroid - observer;
+    s.normalize();
+    lightVector.normalize();
+    h = (lightVector + s ) * 0.5;
 
-    range(auxR, 0, currentColor.r);
-    range(auxG, 0, currentColor.g);
-    range(auxB, 0, currentColor.b);
+    range(cosNL, 0, 1);
+    auxR = currentColor.r*kA + distance*(kD*cosNL*currentColor.r + pow(kS*h.dot(s), n));
+    auxG = currentColor.g*kA + distance*(kD*cosNL*currentColor.g + pow(kS*h.dot(s), n));
+    auxB = currentColor.b*kA + distance*(kD*cosNL*currentColor.b + pow(kS*h.dot(s), n));
 
     ofSetColor(auxR, auxG, auxB);
 
@@ -452,16 +451,18 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
     }
     float inv_m20, inv_m21, x_i, x_f, inv_z20, inv_z21, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
     Vertex lightVector = lightSource - normal, h, s;
-    s = centroid - observer;
-    s.normalize();
-    lightVector.normalize();
     float cosNL = normal.dot(lightVector);
     float auxR, auxG, auxB;
 
+    s = centroid - observer;
+    s.normalize();
+    lightVector.normalize();
+    h = (lightVector + s ) * 0.5;
+
     range(cosNL, 0, 1);
-    auxR = currentColor.r*kA + distance*(kD*cosNL*currentColor.r + kS*h.dot(s));
-    auxG = currentColor.g*kA + distance*(kD*cosNL*currentColor.g + kS*h.dot(s));
-    auxB = currentColor.b*kA + distance*(kD*cosNL*currentColor.b + kS*h.dot(s));
+    auxR = currentColor.r*kA + distance*(kD*cosNL*currentColor.r + pow(kS*h.dot(s), n));
+    auxG = currentColor.g*kA + distance*(kD*cosNL*currentColor.g + pow(kS*h.dot(s), n));
+    auxB = currentColor.b*kA + distance*(kD*cosNL*currentColor.b + pow(kS*h.dot(s), n));
 
     range(auxR, 0, currentColor.r);
     range(auxG, 0, currentColor.g);
