@@ -11,6 +11,8 @@ const int k = 400;
 const float invK = 1.0/k;
 const float kD = 100;
 const float kA = 0.2;
+const float kS = 0;
+const Vertex observer(0,0,k);
 
 //--------------------------------------------------------------
 Renderer::Renderer(){
@@ -334,20 +336,23 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
 }
 
 //--------------------------------------------------------------
-void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2, const Vertex&normal, const float& distance ) const{
+void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2,
+    const Vertex&normal, const Vertex& centroid, const float& distance ) const{
     if( vertex0.getY() == vertex1.getY() || vertex1.getX() == vertex2.getX() ){
         return;
     }
     float inv_m01, inv_m02, x_i, x_f, inv_z01, inv_z02, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
-    Vertex lightVector = lightSource - normal;
+    Vertex lightVector = lightSource - normal, h, s;
+    s = centroid - observer;
+    s.normalize();
     lightVector.normalize();
     float cosNL = normal.dot(lightVector);
     float auxR, auxG, auxB;
 
     range(cosNL, 0, 1);
-    auxR = cosNL*currentColor.r*distance*kD + currentColor.r*kA;
-    auxG = cosNL*currentColor.g*distance*kD + currentColor.g*kA;
-    auxB = cosNL*currentColor.b*distance*kD + currentColor.b*kA;
+    auxR = currentColor.r*kA + distance*(kD*cosNL*currentColor.r + kS*h.dot(s));
+    auxG = currentColor.g*kA + distance*(kD*cosNL*currentColor.g + kS*h.dot(s));
+    auxB = currentColor.b*kA + distance*(kD*cosNL*currentColor.b + kS*h.dot(s));
 
     range(auxR, 0, currentColor.r);
     range(auxG, 0, currentColor.g);
@@ -440,20 +445,23 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
 }
 
 //--------------------------------------------------------------
-void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2, const Vertex&normal, const float& distance) const{
+void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2,
+    const Vertex&normal, const Vertex& centroid, const float& distance) const{
     if( vertex0.getY() == vertex2.getY() || vertex0.getX() == vertex1.getX() ){
         return;
     }
     float inv_m20, inv_m21, x_i, x_f, inv_z20, inv_z21, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
-    Vertex lightVector = lightSource - normal;
+    Vertex lightVector = lightSource - normal, h, s;
+    s = centroid - observer;
+    s.normalize();
     lightVector.normalize();
     float cosNL = normal.dot(lightVector);
     float auxR, auxG, auxB;
 
     range(cosNL, 0, 1);
-    auxR = cosNL*currentColor.r*distance*kD + currentColor.r*kA;
-    auxG = cosNL*currentColor.g*distance*kD + currentColor.g*kA;
-    auxB = cosNL*currentColor.b*distance*kD + currentColor.b*kA;
+    auxR = currentColor.r*kA + distance*(kD*cosNL*currentColor.r + kS*h.dot(s));
+    auxG = currentColor.g*kA + distance*(kD*cosNL*currentColor.g + kS*h.dot(s));
+    auxB = currentColor.b*kA + distance*(kD*cosNL*currentColor.b + kS*h.dot(s));
 
     range(auxR, 0, currentColor.r);
     range(auxG, 0, currentColor.g);
@@ -546,7 +554,8 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
 }
 
 //--------------------------------------------------------------
-void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2, const Vertex& normal, const float& distance) const{
+void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2,
+    const Vertex& normal, const Vertex& centroid, const float& distance) const{
     vector<Vertex> vertices;
     vertices.reserve(3);
     vertices.push_back(applyPerspective(vertex0));
@@ -558,7 +567,7 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
     //The triangle is already Top Flat or Bottom Flat
     if(vertices[0].getY() == vertices[1].getY()){
         if(useLight){
-            triangleFillTopFlat(vertices[0], vertices[1], vertices[2], normal, distance);
+            triangleFillTopFlat(vertices[0], vertices[1], vertices[2], normal, centroid, distance);
         }else{
             triangleFillTopFlat(vertices[0], vertices[1], vertices[2]);
         }
@@ -566,7 +575,7 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
     }else{
         if(vertices[1].getY() == vertices[2].getY()){
             if(useLight){
-                triangleFillBotFlat(vertices[0], vertices[1], vertices[2], normal, distance);
+                triangleFillBotFlat(vertices[0], vertices[1], vertices[2], normal, centroid, distance);
             }else{
                 triangleFillBotFlat(vertices[0], vertices[1], vertices[2]);
             }
@@ -585,8 +594,8 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
     if(v3.getX() > vertices[1].getX()){
         //Triangle is d shape
             if(useLight){
-                triangleFillBotFlat(vertices[0], vertices[1], v3, normal, distance);
-                triangleFillTopFlat(vertices[1], v3, vertices[2], normal, distance);
+                triangleFillBotFlat(vertices[0], vertices[1], v3, normal, centroid, distance);
+                triangleFillTopFlat(vertices[1], v3, vertices[2], normal, centroid, distance);
             }else{
                 triangleFillBotFlat(vertices[0], vertices[1], v3);
                 triangleFillTopFlat(vertices[1], v3, vertices[2]);
@@ -594,8 +603,8 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
     }else{
         //Triangle is b shape
             if(useLight){
-                triangleFillBotFlat(vertices[0], v3, vertices[1], normal, distance);
-                triangleFillTopFlat(v3, vertices[1], vertices[2], normal, distance);
+                triangleFillBotFlat(vertices[0], v3, vertices[1], normal, centroid, distance);
+                triangleFillTopFlat(v3, vertices[1], vertices[2], normal, centroid, distance);
             }else{
                 triangleFillBotFlat(vertices[0], v3, vertices[1]);
                 triangleFillTopFlat(v3, vertices[1], vertices[2]);
