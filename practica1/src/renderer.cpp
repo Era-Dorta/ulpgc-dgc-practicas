@@ -344,13 +344,14 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
         return;
     }
     float inv_m01, inv_m02, x_i, x_f, inv_z01, inv_z02, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
-    Vertex lightVector = lightSource - normal, h, s;
+    Vertex lightVector, h, s;
     float cosNL, cosNH;
     float auxR, auxG, auxB;
 
+    lightVector = lightSource - centroid;
+    lightVector.normalize();
     s = centroid - observer;
     s.normalize();
-    lightVector.normalize();
     h = (lightVector + s ) * 0.5;
 
     cosNL = normal.dot(lightVector);
@@ -462,13 +463,14 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
         return;
     }
     float inv_m20, inv_m21, x_i, x_f, inv_z20, inv_z21, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
-    Vertex lightVector = lightSource - normal, h, s;
+    Vertex lightVector, h, s;
     float cosNL, cosNH;
     float auxR, auxG, auxB;
 
+    lightVector = lightSource - centroid;
+    lightVector.normalize();
     s = centroid - observer;
     s.normalize();
-    lightVector.normalize();
     h = (lightVector + s ) * 0.5;
 
     cosNL = normal.dot(lightVector);
