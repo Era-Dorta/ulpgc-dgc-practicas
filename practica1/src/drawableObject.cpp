@@ -134,20 +134,6 @@ void DrawableObject::calculateCentroids(){
 }
 
 //--------------------------------------------------------------
-/*
-void DrawableObject::calculateDistances(){
-    if( triangleCentroids != NULL){
-        if(invertedDistances == NULL){
-            invertedDistances = new float[totalTriangles];
-        }
-
-        for(int i = 0; i < totalTriangles; i++){
-            invertedDistances[i] = 1.0/(lightSource.distance(transTriangleCentroids[i]) + 0.5);
-        }
-    }
-}*/
-
-//--------------------------------------------------------------
 DrawableObject::DrawableObject( const int totalVertices_, const ofColor color_  ){
 
     totalVertices = totalVertices_;
