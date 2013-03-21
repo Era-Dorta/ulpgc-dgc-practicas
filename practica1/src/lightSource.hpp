@@ -7,7 +7,7 @@
 class LightSource : public DrawableObject{
 
     public:
-        LightSource( const ofColor color_ = ofColor::white );
+        LightSource( const ofColor color_ = ofColor::red );
         LightSource( const Vertex &vertex );
         void setVertex( const Vertex &vertex );
         virtual void draw(Renderer* const renderer) const;
@@ -17,6 +17,7 @@ class LightSource : public DrawableObject{
         virtual bool getNormals() const { return drawNormals_; };
         virtual void setFillTriangles( const bool activate ) { drawFillTriangles_ = false; };
         virtual bool getFillTriangles() const { return drawFillTriangles_; };
+        const Vertex getLightPosition() const;
 };
 
 #endif

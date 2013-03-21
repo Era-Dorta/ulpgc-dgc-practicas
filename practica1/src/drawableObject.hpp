@@ -22,7 +22,6 @@ class DrawableObject {
         Vertex* triangleCentroids;
         Vertex* transNormals;
         Vertex* transTriangleCentroids;
-        float* invertedDistances;
         float transMatrix[4][4];
         float auxMatrix[4][4];
         int totalTriangles;
@@ -41,7 +40,6 @@ class DrawableObject {
     protected:
         void calculateNormals();
         void calculateCentroids();
-        void calculateDistances();
 
     public:
         DrawableObject( const int totalVertices_, const ofColor color_ = ofColor::white );
@@ -61,6 +59,8 @@ class DrawableObject {
         virtual bool getNormals() const { return drawNormals_; };
         virtual void setFillTriangles( const bool activate );
         virtual bool getFillTriangles() const { return drawFillTriangles_; };
+        virtual void setColor( const ofColor color_ ){ color = color_; };
+        virtual ofColor getColor() const { return color; };
 };
 
 #endif

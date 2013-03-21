@@ -56,7 +56,6 @@ void Triangle::setVertices( const Vertex &vertex0, const Vertex &vertex1 ){
 
     calculateNormals();
     calculateCentroids();
-    calculateDistances();
 }
 
 void Triangle::setVertices( const Vertex &vertex0, const Vertex &vertex1, const Vertex &vertex2 ){
@@ -70,7 +69,6 @@ void Triangle::setVertices( const Vertex &vertex0, const Vertex &vertex1, const 
 
     calculateNormals();
     calculateCentroids();
-    calculateDistances();
 }
 
 //--------------------------------------------------------------

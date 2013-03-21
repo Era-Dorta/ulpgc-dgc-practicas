@@ -91,7 +91,6 @@ void Cube::setVertices( const Vertex &vertex0, const Vertex &vertex1 ){
 
     calculateNormals();
     calculateCentroids();
-    calculateDistances();
 }
 
 //--------------------------------------------------------------

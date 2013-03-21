@@ -94,8 +94,6 @@ void RevolutionSurface::noMoreVertices(){
 
     calculateNormals();
     calculateCentroids();
-    calculateDistances();
-
 }
 
 //--------------------------------------------------------------

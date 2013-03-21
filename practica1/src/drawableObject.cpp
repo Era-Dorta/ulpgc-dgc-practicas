@@ -134,6 +134,7 @@ void DrawableObject::calculateCentroids(){
 }
 
 //--------------------------------------------------------------
+/*
 void DrawableObject::calculateDistances(){
     if( triangleCentroids != NULL){
         if(invertedDistances == NULL){
@@ -144,7 +145,7 @@ void DrawableObject::calculateDistances(){
             invertedDistances[i] = 1.0/(lightSource.distance(transTriangleCentroids[i]) + 0.5);
         }
     }
-}
+}*/
 
 //--------------------------------------------------------------
 DrawableObject::DrawableObject( const int totalVertices_, const ofColor color_  ){
@@ -162,7 +163,6 @@ DrawableObject::DrawableObject( const int totalVertices_, const ofColor color_  
     triangleCentroids = NULL;
     transNormals = NULL;
     transTriangleCentroids = NULL;
-    invertedDistances = NULL;
     totalTriangles = 0;
     drawTriangles_ = false;
     drawNormals_ = false;
@@ -209,7 +209,6 @@ DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
         triangleCentroids = new Vertex[otherDrawableObject.totalTriangles];
         transNormals = new Vertex[otherDrawableObject.totalTriangles];
         transTriangleCentroids = new Vertex[otherDrawableObject.totalTriangles];
-        invertedDistances = new float[otherDrawableObject.totalTriangles];
         //Copy triangles indices
         for( int i = 0; i < totalTriangles; i++ ){
             triangles[i] = new int[3];
@@ -217,7 +216,6 @@ DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
             transNormals[i] = otherDrawableObject.transNormals[i];
             triangleCentroids[i] = otherDrawableObject.triangleCentroids[i];
             transTriangleCentroids[i] = otherDrawableObject.transTriangleCentroids[i];
-            invertedDistances[i] = otherDrawableObject.invertedDistances[i];
             for( int j = 0; j < 3; j++ ){
                 triangles[i][j] = otherDrawableObject.triangles[i][j];
             }
@@ -228,7 +226,6 @@ DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
         triangleCentroids = NULL;
         transNormals = NULL;
         transTriangleCentroids = NULL;
-        invertedDistances = NULL;
     }
 }
 
@@ -244,7 +241,6 @@ DrawableObject::~DrawableObject(){
     delete[] transNormals;
     delete[] triangleCentroids;
     delete[] transTriangleCentroids;
-    delete[] invertedDistances;
 }
 
 //--------------------------------------------------------------
@@ -253,7 +249,7 @@ void DrawableObject::draw(Renderer* const renderer) const{
     if(drawFillTriangles_){
         for( int i = 0; i < totalTriangles; i++ ){
             renderer->rTriangleFill(transVertices[triangles[i][0]], transVertices[triangles[i][1]],
-                transVertices[triangles[i][2]], transNormals[i], transTriangleCentroids[i], invertedDistances[i]);
+                transVertices[triangles[i][2]], transNormals[i], transTriangleCentroids[i]);
         }
     }else{
         if(drawNormals_){
@@ -307,7 +303,6 @@ void DrawableObject::rotate( const Axis axis, const float amount, const bool per
     for( int i = 0; i < totalTriangles; i++ ){
         transNormals[i].normalize();
     }
-    calculateDistances();
 }
 
 //--------------------------------------------------------------
@@ -318,7 +313,6 @@ void DrawableObject::translate( const float tX, const float tY, const float tZ, 
     auxMatrix[3][2] = tZ;
 
     applyTranslateTransform(permanent);
-    calculateDistances();
 }
 
 //--------------------------------------------------------------
@@ -329,7 +323,6 @@ void DrawableObject::scale( const float sX, const float sY, const float sZ, cons
     auxMatrix[2][2] = sZ*ROTATION_FACTOR + 1;
 
     applyTranslateTransform(permanent);
-    calculateDistances();
 }
 
 //--------------------------------------------------------------

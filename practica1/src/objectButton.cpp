@@ -34,6 +34,10 @@ void ObjectButton::checkPress( const Vertex mouse )
         pressed = true;
         app->setCurrentObject( object );
         app->setState( state );
+
+        if(object->getSubtype() == LIGHT){
+            object->setColor(ofColor::red);
+        }
     }
 }
 
@@ -41,6 +45,9 @@ void ObjectButton::checkPress( const Vertex mouse )
 void ObjectButton::update(){
     if(app->getCurrentObject() != object){
         pressed = false;
+        if(object->getSubtype() == LIGHT){
+            object->setColor(ofColor::white);
+        }
     }else{
         pressed = true;
     }

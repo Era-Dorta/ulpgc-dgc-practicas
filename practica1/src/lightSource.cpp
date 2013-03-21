@@ -47,3 +47,8 @@ void LightSource::draw(Renderer* const renderer) const{
         renderer->rLine(transVertices[1], transVertices[2]);
         renderer->rLine(transVertices[3], transVertices[4]);
 }
+
+//--------------------------------------------------------------
+const Vertex LightSource::getLightPosition() const{
+    return transVertices[0];
+}
