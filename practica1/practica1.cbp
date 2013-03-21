@@ -40,6 +40,8 @@
 		<Unit filename="src/cube.hpp" />
 		<Unit filename="src/drawableObject.cpp" />
 		<Unit filename="src/drawableObject.hpp" />
+		<Unit filename="src/lightSource.cpp" />
+		<Unit filename="src/lightSource.hpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/objectButton.cpp">
 			<Option virtualFolder="src/ButtonSources/" />
