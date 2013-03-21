@@ -57,7 +57,7 @@ class Renderer{
         bool getLight() const { return useLight; };
         void setLight( const bool& activate ){useLight = activate;};
         void addLight( LightSource* const light );
-        void deleteLight( const LightSource& light );
+        void deleteLight( LightSource* const light );
 };
 
 #endif

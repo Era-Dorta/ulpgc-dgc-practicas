@@ -705,14 +705,14 @@ void Renderer::addLight( LightSource* const light ){
 }
 
 //--------------------------------------------------------------
-void Renderer::deleteLight( const LightSource& light ){
+void Renderer::deleteLight( LightSource* const light ){
     LightSource** auxLightSources;
     auxLightSources = new LightSource*[nLightSources - 1];
 
     //Copy old vertices in allocated memory
     int j = 0;
     for( int i = 0; i < nLightSources; i++){
-        if( lightSources[i] != &light){
+        if( lightSources[i] != light){
             auxLightSources[j] = lightSources[i];
             j++;
         }

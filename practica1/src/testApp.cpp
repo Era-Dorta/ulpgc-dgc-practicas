@@ -212,6 +212,7 @@ void testApp::mousePressed(int x, int y, int button){
         case DRAW_LIGHT:
             objectList.push_back( new LightSource() );
             currentObject = objectList.back();
+            renderer.addLight((LightSource*)currentObject);
             break;
         default:
             break;
@@ -314,6 +315,10 @@ void testApp::mouseReleased(int x, int y, int button){
         }else{
             switch(state){
             case DELETE:
+
+                if( currentObject->getSubtype() == LIGHT ){
+                    renderer.deleteLight((LightSource*)currentObject);
+                }
                 //Find object's button  and delete
                 for( i = N_BUTTONS - 1; i < buttonList.size(); i++){
                     if( ((ObjectButton*)buttonList[i])->getObject() == currentObject ){
