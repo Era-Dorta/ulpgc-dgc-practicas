@@ -1,5 +1,6 @@
 #include "renderer.hpp"
 #include "ofMain.h"
+#include "lightSource.hpp"
 #include <algorithm>    // std::sort
 #include <vector>       // std::vector
 #include <cfloat>       // std::FLT_MAX
@@ -24,6 +25,8 @@ Renderer::Renderer(){
     h = 0;
     useZBuffer = false;
     useLight = false;
+    lightSources = NULL;
+    nLightSources = 0;
 }
 
 //--------------------------------------------------------------
@@ -40,6 +43,8 @@ Renderer::Renderer(const int w_, const int h_ ){
             zBuffer[i][j] = INT_MIN;
         }
     }
+    lightSources = NULL;
+    nLightSources = 0;
 }
 
 //--------------------------------------------------------------
@@ -49,6 +54,7 @@ Renderer::~Renderer(){
 
     }
     delete[] zBuffer;
+    delete[] lightSources;
 }
 
 void Renderer::setup( const int w_, const int h_ ){
@@ -678,4 +684,42 @@ void Renderer::resetZBuffer(){
 void Renderer::setColor( const ofColor& newColor ){
     currentColor = newColor;
     ofSetColor( currentColor );
+}
+
+//--------------------------------------------------------------
+void Renderer::addLight( LightSource* const light ){
+    LightSource** auxLightSources;
+    auxLightSources = new LightSource*[nLightSources + 1];
+
+    //Copy old vertices in allocated memory
+    for( int i = 0; i < nLightSources; i++){
+        auxLightSources[i] = lightSources[i];
+    }
+
+    auxLightSources[nLightSources] = light;
+    nLightSources++;
+
+    delete[] lightSources;
+    lightSources = auxLightSources;
+
+}
+
+//--------------------------------------------------------------
+void Renderer::deleteLight( const LightSource& light ){
+    LightSource** auxLightSources;
+    auxLightSources = new LightSource*[nLightSources - 1];
+
+    //Copy old vertices in allocated memory
+    int j = 0;
+    for( int i = 0; i < nLightSources; i++){
+        if( lightSources[i] != &light){
+            auxLightSources[j] = lightSources[i];
+            j++;
+        }
+    }
+
+    nLightSources--;
+
+    delete[] lightSources;
+    lightSources = auxLightSources;
 }

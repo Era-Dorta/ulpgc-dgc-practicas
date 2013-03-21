@@ -1,9 +1,11 @@
 #include "testApp.hpp"
-#include "revolutionSurface.hpp"
-#include "cube.hpp"
-#include <cmath>
 
-#define N_ACTION_BUTTONS 9
+#include "triangle.hpp"
+#include "cube.hpp"
+#include "revolutionSurface.hpp"
+#include "lightSource.hpp"
+
+#define N_ACTION_BUTTONS 10
 #define N_STATUS_BUTTONS 6
 #define N_BUTTONS N_ACTION_BUTTONS + N_STATUS_BUTTONS
 
@@ -35,7 +37,7 @@ void testApp::setup(){
     nextObjButPos.set(-500,300,0);
     Vertex auxVertex;
     string buttonNames[N_ACTION_BUTTONS] = { "Rotate X", "Rotate Y", "Rotate Z",
-        "Translate", "Scale", "New Triang", "New Cube", "New Rev", "Delete" };
+        "Translate", "Scale", "New Triang", "New Cube", "New Rev", "New Light","Delete" };
     for(i = 0; i < N_ACTION_BUTTONS; i++){
         auxVertex.set(x, y + i*(height + 10), 0);
         buttonList.push_back( new Button(this, auxVertex, buttonNames[i], (AppStates)i, width, height) );
@@ -70,7 +72,6 @@ void testApp::draw(){
     for( unsigned int i = 0; i < objectList.size(); i++){
         objectList[i]->draw(&renderer);
     }
-    renderer.drawLightSource();
 
     renderer.perspective(false);
     for( unsigned int i = 0; i < buttonList.size(); i++){
@@ -135,6 +136,9 @@ void testApp::mouseDragged(int x, int y, int button){
                 ((Cube*)objectList.back())->setVertices( pmouse, current );
                 break;
             case DRAW_REVOLUTION:
+                break;
+            case DRAW_LIGHT:
+                ((LightSource*)objectList.back())->setVertex( current );
                 break;
             default:
                 break;
@@ -204,6 +208,10 @@ void testApp::mousePressed(int x, int y, int button){
                 ((RevolutionSurface*)currentObject)->setDrawHelper(pmouse);
             }
             currentObject->setFillTriangles(zbuffer);
+            break;
+        case DRAW_LIGHT:
+            objectList.push_back( new LightSource() );
+            currentObject = objectList.back();
             break;
         default:
             break;
@@ -291,6 +299,12 @@ void testApp::mouseReleased(int x, int y, int button){
             case DRAW_CUBE:
                 ((Cube*)objectList.back())->setVertices( pmouse, current );
                 auxButton = new ObjectButton(this, nextObjButPos, "Cube", objectList.back(), currentColor);
+                buttonList.push_back( auxButton );
+                nextObjButPos.setX(nextObjButPos.getX() + 40);
+                break;
+            case DRAW_LIGHT:
+                ((LightSource*)objectList.back())->setVertex( current );
+                auxButton = new ObjectButton(this, nextObjButPos, "LS", objectList.back(), ofColor::white);
                 buttonList.push_back( auxButton );
                 nextObjButPos.setX(nextObjButPos.getX() + 40);
                 break;

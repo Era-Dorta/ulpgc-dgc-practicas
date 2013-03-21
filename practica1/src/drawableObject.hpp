@@ -57,10 +57,10 @@ class DrawableObject {
         Subtype getSubtype() const { return subtype; };
         virtual void setDrawTriangles( const bool activate ) { drawTriangles_ = activate; };
         virtual bool getDrawTriangles() const { return drawTriangles_; };
-        void setNormals( const bool activate );
-        bool getNormals() const { return drawNormals_; };
-        void setFillTriangles( const bool activate );
-        bool getFillTriangles() const { return drawFillTriangles_; };
+        virtual void setNormals( const bool activate );
+        virtual bool getNormals() const { return drawNormals_; };
+        virtual void setFillTriangles( const bool activate );
+        virtual bool getFillTriangles() const { return drawFillTriangles_; };
 };
 
 #endif

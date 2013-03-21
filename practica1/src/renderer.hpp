@@ -6,6 +6,9 @@
 #include "ofMain.h"
 #include "vertex.hpp"
 #include <string>
+//Cannot include LightSource because that would cause
+//a circular dependency
+class LightSource;
 using namespace std;
 
 class Renderer{
@@ -13,7 +16,9 @@ class Renderer{
     private:
         int w;
         int h;
-        float **zBuffer;
+        float** zBuffer;
+        LightSource** lightSources;
+        int nLightSources;
         bool perspective_;
         bool useZBuffer;
         ofColor currentColor;
@@ -51,6 +56,8 @@ class Renderer{
         void setColor( const ofColor& newColor );
         bool getLight() const { return useLight; };
         void setLight( const bool& activate ){useLight = activate;};
+        void addLight( LightSource* const light );
+        void deleteLight( const LightSource& light );
 };
 
 #endif

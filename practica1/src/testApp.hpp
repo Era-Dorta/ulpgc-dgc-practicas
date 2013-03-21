@@ -6,10 +6,11 @@
 #include "ofMain.h"
 #include "vertex.hpp"
 #include "drawableObject.hpp"
-#include "triangle.hpp"
 #include "button.hpp"
 #include "objectButton.hpp"
 #include "statusButton.hpp"
+
+#include <cmath>
 #include <vector>
 #include <cstdlib>
 
