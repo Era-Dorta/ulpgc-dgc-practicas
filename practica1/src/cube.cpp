@@ -1,13 +1,25 @@
 #include "cube.hpp"
 #include "ofMain.h"
 
+#define ONE_FOURTH 1.0/4
 //--------------------------------------------------------------
 void Cube::calculateNormals()
 {
+    Vertex aux;
     DrawableObject::calculateNormals();
     for(int i = 0; i < totalVertices; i++){
-        verticesNormals[i] = normals[0];
-        transVerticesNormals[i] = transNormals[0];
+
+        aux.set(0,0,0);
+        for(int j = 0; j < totalTriangles; j++){
+            for(int k = 0; k < 3; k++){
+                if(triangles[j][k] == i){
+                    aux = aux + normals[j];
+                }
+            }
+        }
+        aux = aux*ONE_FOURTH;
+        verticesNormals[i] = aux;
+        transVerticesNormals[i] = aux;
     }
 }
 
