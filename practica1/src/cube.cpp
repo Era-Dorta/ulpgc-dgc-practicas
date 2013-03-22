@@ -18,6 +18,7 @@ void Cube::calculateNormals()
             }
         }
         aux = aux*ONE_FOURTH;
+        aux.normalize();
         verticesNormals[i] = aux;
         transVerticesNormals[i] = aux;
     }

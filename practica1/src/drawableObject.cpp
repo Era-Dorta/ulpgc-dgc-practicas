@@ -44,6 +44,8 @@ void DrawableObject::applyTransform( const bool permanent ){
         translation.set(transMatrix[3][0], transMatrix[3][1], transMatrix[3][2]);
         for( int i = 0; i < totalVertices; i++){
             transVertices[i] = vertices[i]*transMatrix;
+            transVerticesNormals[i] =  verticesNormals[i]*transMatrix;
+            transVerticesNormals[i] = transVerticesNormals[i] - translation;
         }
         for( int i = 0; i < totalTriangles; i++){
             transNormals[i] = normals[i]*transMatrix;
@@ -60,6 +62,8 @@ void DrawableObject::applyTransform( const bool permanent ){
         translation.set(auxMatrix[3][0], auxMatrix[3][1], auxMatrix[3][2]);
         for( int i = 0; i < totalVertices; i++){
             transVertices[i] = vertices[i]*auxMatrix;
+            transVerticesNormals[i] =  verticesNormals[i]*auxMatrix;
+            transVerticesNormals[i] = transVerticesNormals[i] - translation;
         }
         for( int i = 0; i < totalTriangles; i++){
             transNormals[i] = normals[i]*auxMatrix;
@@ -260,6 +264,9 @@ void DrawableObject::draw(Renderer* const renderer) const{
                 //Draw triangle's normal
                 renderer->rLine(transTriangleCentroids[i], transTriangleCentroids[i] + transNormals[i]*15);
             }
+            for( int i = 0; i < totalVertices; i++ ){
+                renderer->rLine(transVertices[i], transVertices[i] + transVerticesNormals[i]*15 );
+            }
         }else{
             if(drawTriangles_){
                 for( int i = 0; i < totalTriangles; i++ ){
@@ -303,6 +310,9 @@ void DrawableObject::rotate( const Axis axis, const float amount, const bool per
 
     for( int i = 0; i < totalTriangles; i++ ){
         transNormals[i].normalize();
+    }
+    for( int i = 0; i < totalVertices; i++ ){
+        transVerticesNormals[i].normalize();
     }
 }
 
