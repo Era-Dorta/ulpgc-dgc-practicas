@@ -24,7 +24,7 @@ Button::Button( testApp *app_, const Vertex vertex, const string buttonTex_,
     position = vertex;
     texPosition = position;
     texPosition.setX(position.getX() + 5 );
-    texPosition.setY(position.getY() + height/2 );
+    texPosition.setY(position.getY() + height/2 + 5);
 }
 
 //--------------------------------------------------------------

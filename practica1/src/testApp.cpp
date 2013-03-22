@@ -6,7 +6,7 @@
 #include "lightSource.hpp"
 
 #define N_ACTION_BUTTONS 10
-#define N_STATUS_BUTTONS 6
+#define N_STATUS_BUTTONS 7
 #define N_BUTTONS N_ACTION_BUTTONS + N_STATUS_BUTTONS
 
 //Center of the screen
@@ -31,30 +31,35 @@ void testApp::setup(){
     state = DRAW_CUBE;
     currentObject = NULL;
     //Create buttons
-    int x = 400, y = -300;
+    int x = 400, y = -350;
     const int width = 90;
-    const int height = 30;
+    const int height = 27;
+    const int buttonsDistance = 7;
     nextObjButPos.set(-500,300,0);
     Vertex auxVertex;
     string buttonNames[N_ACTION_BUTTONS] = { "Rotate X", "Rotate Y", "Rotate Z",
         "Translate", "Scale", "New Triang", "New Cube", "New Rev", "New Light","Delete" };
-    for(i = 0; i < N_ACTION_BUTTONS; i++){
-        auxVertex.set(x, y + i*(height + 10), 0);
+    for(i = 0; i < N_ACTION_BUTTONS - DRAW_TRIANGLE; i++){
+        auxVertex.set(x, y + i*(height + buttonsDistance), 0);
         buttonList.push_back( new Button(this, auxVertex, buttonNames[i], (AppStates)i, width, height) );
     }
-;
 
-    string sButtonNames[N_STATUS_BUTTONS] = { "Perspective","Triangles", "Normals", "Fill trian", "Z-Buffer", "Phong" };
+    for(; i < N_ACTION_BUTTONS; i++){
+        auxVertex.set(x, y + i*(height + buttonsDistance), 0);
+        buttonList.push_back( new Button(this, auxVertex, buttonNames[i], (AppStates)i, width, height, ofColor::yellow) );
+    }
+
+    string sButtonNames[N_STATUS_BUTTONS] = { "Perspective","Triangles", "Normals", "Fill trian", "Z-Buffer", "Phong", "Gouraud" };
     for(i = N_ACTION_BUTTONS; i < N_BUTTONS; i++){
-        auxVertex.set( x, y + i*(height + 10), 0 );
-        buttonList.push_back( new StatusButton(this, auxVertex, sButtonNames[i - N_ACTION_BUTTONS], (AppStates)i, width, height) );
+        auxVertex.set( x, y + i*(height + buttonsDistance), 0 );
+        buttonList.push_back( new StatusButton(this, auxVertex, sButtonNames[i - N_ACTION_BUTTONS], (AppStates)i, width, height, ofColor::green) );
     }
 
     //By default activate perspective and draw cube
-    auxVertex.set( x + 1, y + PERSPECTIVE*(height + 10), 0 );
+    auxVertex.set( x + 1, y + PERSPECTIVE*(height + buttonsDistance), 0 );
     buttonList[PERSPECTIVE]->checkPress(auxVertex);
 
-    auxVertex.set( x + 1, y + DRAW_REVOLUTION*(height + 10), 0 );
+    auxVertex.set( x + 1, y + DRAW_REVOLUTION*(height + buttonsDistance), 0 );
     buttonList[DRAW_REVOLUTION]->checkPress(auxVertex);
 
     opReady = true;
@@ -235,10 +240,10 @@ void testApp::mousePressed(int x, int y, int button){
         if( objectList.size() > 0){
             switch(state){
             case TRANSLATING:
-                currentObject->translate( 0, 0, 20, true );
+                currentObject->translate( 0, 0, -20, true );
                 break;
             case SCALING:
-                currentObject->scale( 0, 0, 20, true );
+                currentObject->scale( 0, 0, -20, true );
                 break;
             default:
                 break;
@@ -251,10 +256,10 @@ void testApp::mousePressed(int x, int y, int button){
         if( objectList.size() > 0){
             switch(state){
             case TRANSLATING:
-                currentObject->translate( 0, 0, -20, true );
+                currentObject->translate( 0, 0, 20, true );
                 break;
             case SCALING:
-                currentObject->scale( 0, 0, -20, true );
+                currentObject->scale( 0, 0, 20, true );
                 break;
             default:
                 break;
