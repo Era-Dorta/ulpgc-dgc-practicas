@@ -107,6 +107,9 @@ void DrawableObject::calculateNormals(){
     if(normals == NULL){
         normals = new Vertex[totalTriangles];
         transNormals = new Vertex[totalTriangles];
+    }
+
+    if(verticesNormals == NULL){
         verticesNormals = new Vertex[totalVertices];
         transVerticesNormals = new Vertex[totalVertices];
     }
@@ -311,8 +314,11 @@ void DrawableObject::rotate( const Axis axis, const float amount, const bool per
     for( int i = 0; i < totalTriangles; i++ ){
         transNormals[i].normalize();
     }
-    for( int i = 0; i < totalVertices; i++ ){
-        transVerticesNormals[i].normalize();
+
+    if(transVerticesNormals != NULL){
+        for( int i = 0; i < totalVertices; i++ ){
+            transVerticesNormals[i].normalize();
+        }
     }
 }
 

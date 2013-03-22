@@ -6,10 +6,19 @@
 //is rotated
 #define ROT 32
 
+#define ONE_SIXTH 1.0/6
 //--------------------------------------------------------------
 void RevolutionSurface::calculateNormals()
 {
+    Vertex aux;
     DrawableObject::calculateNormals();
+    for(int i = 0; i < totalVertices; i++){
+
+        aux.set(0,0,0);
+
+        verticesNormals[i] = aux;
+        transVerticesNormals[i] = aux;
+    }
 }
 
 //--------------------------------------------------------------
@@ -55,6 +64,11 @@ void RevolutionSurface::noMoreVertices(){
     float rotation = (2*PI/ROT)/ROTATION_FACTOR;
     Vertex* auxVertices,* auxTransVertices;
 
+    //Locate memory for the verticesNormals here
+    //to avoid segmentation fault at rotation
+    verticesNormals = new Vertex[totalVertices*ROT];
+    transVerticesNormals = new Vertex[totalVertices*ROT];
+
     //Rotate the vertices ROT times and save them
     //as new vertices
     auxVertices = new Vertex[totalVertices*ROT];
@@ -85,15 +99,15 @@ void RevolutionSurface::noMoreVertices(){
             triangles[index] = new int[3];
 
             triangles[index][0] = vIndex;
-            triangles[index][1] = (vIndex + lineVerticesAmount)%totalVertices;
-            triangles[index][2] = (vIndex + 1 + lineVerticesAmount)%totalVertices;
+            triangles[index][1] = (vIndex + 1 + lineVerticesAmount)%totalVertices;
+            triangles[index][2] = (vIndex + 1)%totalVertices;
 
             index++;
             triangles[index] = new int[3];
 
             triangles[index][0] = vIndex;
-            triangles[index][1] = (vIndex + 1 + lineVerticesAmount)%totalVertices;
-            triangles[index][2] = (vIndex + 1)%totalVertices;
+            triangles[index][1] = (vIndex + lineVerticesAmount)%totalVertices;
+            triangles[index][2] = (vIndex + 1 + lineVerticesAmount)%totalVertices;
 
             index++;
         }
