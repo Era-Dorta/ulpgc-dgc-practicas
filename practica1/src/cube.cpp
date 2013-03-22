@@ -1,7 +1,6 @@
 #include "cube.hpp"
 #include "ofMain.h"
 
-#define ONE_FOURTH 1.0/4
 //--------------------------------------------------------------
 void Cube::calculateNormals()
 {
@@ -17,7 +16,6 @@ void Cube::calculateNormals()
                 }
             }
         }
-        aux = aux*ONE_FOURTH;
         aux.normalize();
         verticesNormals[i] = aux;
         transVerticesNormals[i] = aux;

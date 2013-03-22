@@ -4,20 +4,23 @@
 
 //ROT defines how many times a revolution object
 //is rotated
-#define ROT 32
+#define ROT 4
 
-#define ONE_SIXTH 1.0/6
 //--------------------------------------------------------------
 void RevolutionSurface::calculateNormals()
 {
     Vertex aux;
     DrawableObject::calculateNormals();
-    for(int i = 0; i < totalVertices; i++){
 
+    //Top vertex of each of each column
+    for(int i = 0; i < ROT; i++){
         aux.set(0,0,0);
-
-        verticesNormals[i] = aux;
-        transVerticesNormals[i] = aux;
+        aux =  aux + normals[(lineVerticesAmount - 1)*2*i];
+        aux =  aux + normals[((lineVerticesAmount - 1)*2*(i + 1))%totalTriangles];
+        aux =  aux + normals[(((lineVerticesAmount - 1)*2*(i + 1)) + 1)%totalTriangles];
+        aux.normalize();
+        verticesNormals[lineVerticesAmount*(i + 1)%totalVertices] = aux;
+        transVerticesNormals[lineVerticesAmount*(i + 1)%totalVertices] = aux;
     }
 }
 
