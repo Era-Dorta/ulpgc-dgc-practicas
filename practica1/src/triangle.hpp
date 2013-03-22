@@ -6,6 +6,9 @@
 
 class Triangle : public DrawableObject{
 
+    protected:
+        virtual void calculateNormals();
+
     public:
         Triangle( const ofColor color_ = ofColor::white );
         Triangle( const Vertex &vertex0, const Vertex &vertex1 );

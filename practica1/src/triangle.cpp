@@ -1,5 +1,12 @@
 #include "triangle.hpp"
 #include "ofMain.h"
+
+//--------------------------------------------------------------
+void Triangle::calculateNormals()
+{
+    DrawableObject::calculateNormals();
+}
+
 //--------------------------------------------------------------
 Triangle::Triangle( const ofColor color_ )
 :DrawableObject(3, color_)

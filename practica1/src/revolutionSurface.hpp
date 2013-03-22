@@ -11,6 +11,9 @@ class RevolutionSurface : public DrawableObject{
         int lineVerticesAmount;
         Vertex pmouse;
 
+    protected:
+        virtual void calculateNormals();
+
     public:
         RevolutionSurface( const ofColor color_ = ofColor::white );
         void setVertex( const Vertex &vertex );

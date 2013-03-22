@@ -19,8 +19,10 @@ class DrawableObject {
         Vertex* transVertices;
         int** triangles;
         Vertex* normals;
+        Vertex* verticesNormals;
         Vertex* triangleCentroids;
         Vertex* transNormals;
+        Vertex* transVerticesNormals;
         Vertex* transTriangleCentroids;
         float transMatrix[4][4];
         float auxMatrix[4][4];
@@ -38,7 +40,7 @@ class DrawableObject {
         void applyTranslateTransform( const bool permanent );
 
     protected:
-        void calculateNormals();
+        virtual void calculateNormals();
         void calculateCentroids();
 
     public:

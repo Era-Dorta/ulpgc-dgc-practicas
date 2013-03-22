@@ -6,6 +6,9 @@
 
 class Cube : public DrawableObject{
 
+    protected:
+        virtual void calculateNormals();
+
     public:
         Cube( const ofColor color_ = ofColor::white );
         Cube( const Vertex &vertex0, const Vertex &vertex1 );

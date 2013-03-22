@@ -1,5 +1,12 @@
 #include "cube.hpp"
 #include "ofMain.h"
+
+//--------------------------------------------------------------
+void Cube::calculateNormals()
+{
+    DrawableObject::calculateNormals();
+}
+
 //--------------------------------------------------------------
 Cube::Cube( const ofColor color_ )
 :DrawableObject(8, color_)

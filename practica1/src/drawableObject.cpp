@@ -103,6 +103,8 @@ void DrawableObject::calculateNormals(){
     if(normals == NULL){
         normals = new Vertex[totalTriangles];
         transNormals = new Vertex[totalTriangles];
+        verticesNormals = new Vertex[totalVertices];
+        transVerticesNormals = new Vertex[totalVertices];
     }
 
     for(int i = 0; i < totalTriangles; i++){
@@ -146,8 +148,10 @@ DrawableObject::DrawableObject( const int totalVertices_, const ofColor color_  
     }
      triangles = NULL;
     normals = NULL;
+    verticesNormals = NULL;
     triangleCentroids = NULL;
     transNormals = NULL;
+    transVerticesNormals = NULL;
     transTriangleCentroids = NULL;
     totalTriangles = 0;
     drawTriangles_ = false;
@@ -206,11 +210,20 @@ DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
                 triangles[i][j] = otherDrawableObject.triangles[i][j];
             }
         }
+        verticesNormals = new Vertex[otherDrawableObject.totalVertices];
+        transVerticesNormals = new Vertex[otherDrawableObject.totalVertices];
+        //Copy the mean normal of each vertex
+        for( int i = 0; i < totalVertices; i++ ){
+            verticesNormals[i] = otherDrawableObject.verticesNormals[i];
+            transVerticesNormals[i] = otherDrawableObject.transVerticesNormals[i];
+        }
     }else{
         triangles = NULL;
         normals = NULL;
+        verticesNormals = NULL;
         triangleCentroids = NULL;
         transNormals = NULL;
+        transVerticesNormals = NULL;
         transTriangleCentroids = NULL;
     }
 }
@@ -224,8 +237,10 @@ DrawableObject::~DrawableObject(){
     }
     delete[] triangles;
     delete[] normals;
-    delete[] transNormals;
+    delete[] verticesNormals;
     delete[] triangleCentroids;
+    delete[] transNormals;
+    delete[] transVerticesNormals;
     delete[] transTriangleCentroids;
 }
 

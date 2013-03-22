@@ -5,6 +5,13 @@
 //ROT defines how many times a revolution object
 //is rotated
 #define ROT 32
+
+//--------------------------------------------------------------
+void RevolutionSurface::calculateNormals()
+{
+    DrawableObject::calculateNormals();
+}
+
 //--------------------------------------------------------------
 RevolutionSurface::RevolutionSurface(const ofColor color_)
 :DrawableObject(0, color_)
