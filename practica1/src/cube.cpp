@@ -5,6 +5,10 @@
 void Cube::calculateNormals()
 {
     DrawableObject::calculateNormals();
+    for(int i = 0; i < totalVertices; i++){
+        verticesNormals[i] = normals[0];
+        transVerticesNormals[i] = transNormals[0];
+    }
 }
 
 //--------------------------------------------------------------
