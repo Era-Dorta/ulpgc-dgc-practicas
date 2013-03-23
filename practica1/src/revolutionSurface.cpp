@@ -100,11 +100,6 @@ void RevolutionSurface::noMoreVertices(){
     float rotation = (2*PI/ROT)/ROTATION_FACTOR;
     Vertex* auxVertices,* auxTransVertices;
 
-    //Locate memory for the verticesNormals here
-    //to avoid segmentation fault at rotation
-    verticesNormals = new Vertex[totalVertices*ROT];
-    transVerticesNormals = new Vertex[totalVertices*ROT];
-
     //Rotate the vertices ROT times and save them
     //as new vertices
     auxVertices = new Vertex[totalVertices*ROT];

@@ -24,7 +24,7 @@ Renderer::Renderer(){
     w = 0;
     h = 0;
     useZBuffer = false;
-    useLight = false;
+    lightingMode = NONE;
     lightSources = NULL;
     nLightSources = 0;
 }
@@ -35,7 +35,7 @@ Renderer::Renderer(const int w_, const int h_ ){
     w = w_;
     h = h_;
     currentColor = ofColor::white;
-    useLight = false;
+    lightingMode = NONE;
     zBuffer = new float*[w];
     for(int i = 0; i < w; i++){
         zBuffer[i] = new float[h];
@@ -610,20 +610,33 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
     sort (vertices.begin(), vertices.end(), Vertex::compareYX);
     //The triangle is already Top Flat or Bottom Flat
     if(vertices[0].getY() == vertices[1].getY()){
-        if(useLight){
-            triangleFillTopFlat(vertices[0], vertices[1], vertices[2], triangleNormal, centroid);
-        }else{
+        switch(lightingMode){
+        case NONE:
             triangleFillTopFlat(vertices[0], vertices[1], vertices[2]);
+            break;
+        case PHONG_REFLECTION:
+            triangleFillTopFlat(vertices[0], vertices[1], vertices[2], triangleNormal, centroid);
+            break;
+        case GOURAUD_SHADING:
+            break;
+        case PHONG_SHADING:
+            break;
         }
         return;
     }else{
         if(vertices[1].getY() == vertices[2].getY()){
-            if(useLight){
-                triangleFillBotFlat(vertices[0], vertices[1], vertices[2], triangleNormal, centroid);
-            }else{
+            switch(lightingMode){
+            case NONE:
                 triangleFillBotFlat(vertices[0], vertices[1], vertices[2]);
+                break;
+            case PHONG_REFLECTION:
+                triangleFillBotFlat(vertices[0], vertices[1], vertices[2], triangleNormal, centroid);
+                break;
+            case GOURAUD_SHADING:
+                break;
+            case PHONG_SHADING:
+                break;
             }
-            return;
         }
     }
 
@@ -637,21 +650,35 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
         vertices[0].getZ()*( 1 - (vertices[0].getY() - vertices[1].getY()) / (vertices[0].getY() - vertices[2].getY())) );
     if(v3.getX() > vertices[1].getX()){
         //Triangle is d shape
-        if(useLight){
-            triangleFillBotFlat(vertices[0], vertices[1], v3, triangleNormal, centroid);
-            triangleFillTopFlat(vertices[1], v3, vertices[2], triangleNormal, centroid);
-        }else{
+        switch(lightingMode){
+        case NONE:
             triangleFillBotFlat(vertices[0], vertices[1], v3);
             triangleFillTopFlat(vertices[1], v3, vertices[2]);
+            break;
+        case PHONG_REFLECTION:
+            triangleFillBotFlat(vertices[0], vertices[1], v3, triangleNormal, centroid);
+            triangleFillTopFlat(vertices[1], v3, vertices[2], triangleNormal, centroid);
+            break;
+        case GOURAUD_SHADING:
+            break;
+        case PHONG_SHADING:
+            break;
         }
     }else{
         //Triangle is b shape
-        if(useLight){
-            triangleFillBotFlat(vertices[0], v3, vertices[1], triangleNormal, centroid);
-            triangleFillTopFlat(v3, vertices[1], vertices[2], triangleNormal, centroid);
-        }else{
+        switch(lightingMode){
+        case NONE:
             triangleFillBotFlat(vertices[0], v3, vertices[1]);
             triangleFillTopFlat(v3, vertices[1], vertices[2]);
+            break;
+        case PHONG_REFLECTION:
+            triangleFillBotFlat(vertices[0], v3, vertices[1], triangleNormal, centroid);
+            triangleFillTopFlat(v3, vertices[1], vertices[2], triangleNormal, centroid);
+            break;
+        case GOURAUD_SHADING:
+            break;
+        case PHONG_SHADING:
+            break;
         }
     }
 }

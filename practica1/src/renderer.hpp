@@ -11,6 +11,8 @@
 class LightSource;
 using namespace std;
 
+enum LightingMode { NONE, PHONG_REFLECTION, GOURAUD_SHADING, PHONG_SHADING };
+
 class Renderer{
 
     private:
@@ -22,7 +24,7 @@ class Renderer{
         bool perspective_;
         bool useZBuffer;
         ofColor currentColor;
-        bool useLight;
+        LightingMode lightingMode;
 
     private:
         void range( float& val, const float& min, const float&  max) const;
@@ -53,8 +55,8 @@ class Renderer{
         void resetZBuffer();
         ofColor getColor() const { return currentColor; };
         void setColor( const ofColor& newColor );
-        bool getLight() const { return useLight; };
-        void setLight( const bool& activate ){useLight = activate;};
+        LightingMode getLightingMode() const { return lightingMode; };
+        void setLightingMode( const LightingMode& mode ){lightingMode = mode;};
         void addLight( LightSource* const light );
         void deleteLight( LightSource* const light );
 };

@@ -44,9 +44,15 @@ void DrawableObject::applyTransform( const bool permanent ){
         translation.set(transMatrix[3][0], transMatrix[3][1], transMatrix[3][2]);
         for( int i = 0; i < totalVertices; i++){
             transVertices[i] = vertices[i]*transMatrix;
-            transVerticesNormals[i] =  verticesNormals[i]*transMatrix;
-            transVerticesNormals[i] = transVerticesNormals[i] - translation;
         }
+
+        if(transVerticesNormals != NULL){
+            for( int i = 0; i < totalVertices; i++){
+                transVerticesNormals[i] =  verticesNormals[i]*transMatrix;
+                transVerticesNormals[i] = transVerticesNormals[i] - translation;
+            }
+        }
+
         for( int i = 0; i < totalTriangles; i++){
             transNormals[i] = normals[i]*transMatrix;
             //Undo a posible translation of the normals, they are vectors
@@ -62,9 +68,15 @@ void DrawableObject::applyTransform( const bool permanent ){
         translation.set(auxMatrix[3][0], auxMatrix[3][1], auxMatrix[3][2]);
         for( int i = 0; i < totalVertices; i++){
             transVertices[i] = vertices[i]*auxMatrix;
-            transVerticesNormals[i] =  verticesNormals[i]*auxMatrix;
-            transVerticesNormals[i] = transVerticesNormals[i] - translation;
         }
+
+        if(transVerticesNormals != NULL){
+            for( int i = 0; i < totalVertices; i++){
+                transVerticesNormals[i] =  verticesNormals[i]*auxMatrix;
+                transVerticesNormals[i] = transVerticesNormals[i] - translation;
+            }
+        }
+
         for( int i = 0; i < totalTriangles; i++){
             transNormals[i] = normals[i]*auxMatrix;
             transNormals[i] = transNormals[i] - translation;
@@ -153,7 +165,7 @@ DrawableObject::DrawableObject( const int totalVertices_, const ofColor color_  
         vertices =  NULL;
         transVertices = NULL;
     }
-     triangles = NULL;
+    triangles = NULL;
     normals = NULL;
     verticesNormals = NULL;
     triangleCentroids = NULL;

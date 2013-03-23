@@ -5,11 +5,8 @@ LightSource::LightSource( const ofColor color_ )
 :DrawableObject(5, color_)
 {
     subtype = LIGHT;
-    drawTriangles_ = true;
     DrawableObject::resetTransMatrix();
     DrawableObject::resetAuxMatrix();
-    totalTriangles = 0;
-    triangles = NULL;
 }
 
 //--------------------------------------------------------------
@@ -20,8 +17,6 @@ LightSource::LightSource( const Vertex &vertex )
     DrawableObject::resetTransMatrix();
     DrawableObject::resetAuxMatrix();
     setVertex(vertex);
-    totalTriangles = 0;
-    triangles = NULL;
 }
 
 //--------------------------------------------------------------

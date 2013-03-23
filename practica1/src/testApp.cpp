@@ -415,16 +415,16 @@ bool testApp::getZBuffer() const{
 }
 
 //--------------------------------------------------------------
-void testApp::setPhong( const bool active ){
+void testApp::setPhongReflection( const bool active ){
     if(active){
         setZBuffer(true);
     }
-    renderer.setLight(active);
+    renderer.setLightingMode(PHONG_REFLECTION);
 }
 
 //--------------------------------------------------------------
-bool testApp::getPhong() const{
-    return renderer.getLight();
+bool testApp::getPhongReflection() const{
+    return renderer.getLightingMode() == PHONG_REFLECTION;
 }
 
 //--------------------------------------------------------------
