@@ -28,13 +28,20 @@ class Renderer{
 
     private:
         void range( float& val, const float& min, const float&  max) const;
+        Vertex applyPerspective(const Vertex& vertex) const;
+
         void triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2) const;
         void triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2) const;
         void triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
             const Vertex& vertex2, const Vertex&normal, const Vertex& centroid ) const;
         void triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
             const Vertex& vertex2, const Vertex&normal, const Vertex& centroid) const;
-        Vertex applyPerspective(const Vertex& vertex) const;
+        void triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& normal0,
+            const Vertex& vertex1, const Vertex& normal1,
+            const Vertex& vertex2, const Vertex& normal2 ) const;
+        void triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& normal0,
+            const Vertex& vertex1, const Vertex& normal1,
+            const Vertex& vertex2, const Vertex& normal2 ) const;
 
     public:
         Renderer();

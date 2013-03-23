@@ -28,7 +28,7 @@ void testApp::setup(){
     renderer.setup(1024, 768);
     withPerspective = true;
     zbuffer = false;
-    state = DRAW_CUBE;
+    state = TRANSLATING;
     currentObject = NULL;
     //Create buttons
     int x = 400, y = -350;
@@ -55,7 +55,7 @@ void testApp::setup(){
         buttonList.push_back( new StatusButton(this, auxVertex, sButtonNames[i - N_ACTION_BUTTONS], (AppStates)i, width, height, ofColor::green) );
     }
 
-    //By default activate perspective and draw cube
+    //By default activate perspective and draw rev
     auxVertex.set( x + 1, y + PERSPECTIVE*(height + buttonsDistance), 0 );
     buttonList[PERSPECTIVE]->checkPress(auxVertex);
 

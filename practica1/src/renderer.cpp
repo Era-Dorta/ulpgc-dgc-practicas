@@ -598,24 +598,294 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
 }
 
 //--------------------------------------------------------------
+void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& normal0,
+            const Vertex& vertex1, const Vertex& normal1,
+            const Vertex& vertex2, const Vertex& normal2 ) const{
+    if( vertex0.getY() == vertex1.getY() || vertex1.getX() == vertex2.getX() ){
+        return;
+    }
+    float inv_m01, inv_m02, x_i, x_f, inv_z01, inv_z02, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
+    Vertex lightVector, h, s;
+    float cosNL, cosNH, distance = 0;
+    float auxR = 0, auxG = 0, auxB = 0;
+
+    for(int i = 0; i < nLightSources;i++){
+        lightVector = lightSources[i]->getLightPosition() - vertex0;
+        lightVector.normalize();
+        s = vertex0 - observer;
+        s.normalize();
+        h = (lightVector + s ) * 0.5;
+
+        cosNL = normal0.dot(lightVector);
+        range(cosNL, 0, 1);
+        cosNL = kD*cosNL;
+
+        cosNH = normal0.dot(h);
+        range(cosNH, 0, 1);
+        cosNH = kS*pow(cosNH, n);
+
+        distance = 1.0/(lightSources[i]->getLightPosition().distance(vertex0) + 0.5);
+
+        auxR += distance*(cosNL*currentColor.r + cosNH*lightColor.r);
+        auxG += distance*(cosNL*currentColor.g + cosNH*lightColor.g);
+        auxB += distance*(cosNL*currentColor.b + cosNH*lightColor.b);
+    }
+
+    auxR += currentColor.r*kA;
+    auxG += currentColor.g*kA;
+    auxB += currentColor.b*kA;
+
+    range(auxR, 0, 255);
+    range(auxG, 0, 255);
+    range(auxB, 0, 255);
+
+    ofSetColor(auxR, auxG, auxB);
+
+    z_max = vertex0.getZ();
+    z_min = vertex1.getZ();
+    x_max = vertex2.getX();
+    x_min = vertex1.getX();
+
+    if(x_max < vertex0.getX()){
+        x_max = vertex0.getX();
+    }
+
+    if(x_min > vertex0.getX()){
+        x_min = vertex0.getX();
+    }
+
+    if(z_max < vertex1.getZ()){
+        z_min = vertex0.getZ();
+        z_max = vertex1.getZ();
+        if(z_max < vertex2.getZ()){
+            z_max = vertex2.getZ();
+        }
+    }
+
+    if(z_min > vertex2.getZ()){
+        z_min = vertex2.getZ();
+    }
+
+    inv_m01 = vertex1.getY() - vertex0.getY();
+    if(inv_m01){
+        inv_m01 = (vertex1.getX() - vertex0.getX())/inv_m01;
+    }
+
+    inv_m02 = vertex2.getY() - vertex0.getY();
+    if(inv_m02){
+        inv_m02 = (vertex2.getX() - vertex0.getX())/inv_m02;
+    }
+
+    inv_z01 = vertex1.getY() - vertex0.getY();
+    if(inv_z01){
+        inv_z01 = (vertex1.getZ() - vertex0.getZ())/inv_z01;
+    }
+
+    inv_z02 = vertex2.getY() - vertex0.getY();
+    if(inv_z02){
+        inv_z02 = (vertex2.getZ() - vertex0.getZ())/inv_z02;
+    }
+
+    x_i = vertex0.getX();
+    x_f = vertex0.getX();
+    z_i = vertex0.getZ();
+    z_f = vertex0.getZ();
+    inv_mzp = 0;
+    z_p = z_i;
+
+
+
+    for(int j = vertex0.getY() - 0.5; j <= vertex1.getY() + 0.5; j++){
+        for(int i = x_i - 0.5; i <= x_f + 0.5; i++){
+            range(z_p, z_min, z_max);
+            rPixel(i, j, z_p);
+            z_p += inv_mzp;
+        }
+
+        x_i += inv_m01;
+
+        if(x_i < x_min){
+            x_i = x_min;
+        }
+
+        x_f += inv_m02;
+
+        if(x_f > x_max){
+            x_f = x_max;
+        }
+
+        z_i += inv_z01;
+        range(z_i, z_min, z_max);
+
+        z_f += inv_z02;
+        range(z_f, z_min, z_max);
+
+        inv_mzp = (z_f - z_i)/(x_f - x_i);
+        z_p = z_i;
+    }
+}
+
+//--------------------------------------------------------------
+void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& normal0,
+            const Vertex& vertex1, const Vertex& normal1,
+            const Vertex& vertex2, const Vertex& normal2 ) const{
+    if( vertex0.getY() == vertex2.getY() || vertex0.getX() == vertex1.getX() ){
+        return;
+    }
+    float inv_m20, inv_m21, x_i, x_f, inv_z20, inv_z21, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
+    Vertex lightVector, h, s;
+    float cosNL, cosNH, distance = 0;
+    float auxR = 0, auxG = 0, auxB = 0;
+
+    for(int i = 0; i < nLightSources;i++){
+        lightVector = lightSources[i]->getLightPosition() - vertex0;
+        lightVector.normalize();
+        s = vertex0 - observer;
+        s.normalize();
+        h = (lightVector + s ) * 0.5;
+
+        cosNL = normal0.dot(lightVector);
+        range(cosNL, 0, 1);
+        cosNL = kD*cosNL;
+
+        cosNH = normal0.dot(h);
+        range(cosNH, 0, 1);
+        cosNH = kS*pow(cosNH, n);
+
+        distance = 1.0/(lightSources[i]->getLightPosition().distance(vertex0) + 0.5);
+
+        auxR += distance*(cosNL*currentColor.r + cosNH*lightColor.r);
+        auxG += distance*(cosNL*currentColor.g + cosNH*lightColor.g);
+        auxB += distance*(cosNL*currentColor.b + cosNH*lightColor.b);
+    }
+
+    auxR += currentColor.r*kA;
+    auxG += currentColor.g*kA;
+    auxB += currentColor.b*kA;
+
+    range(auxR, 0, 255);
+    range(auxG, 0, 255);
+    range(auxB, 0, 255);
+
+    ofSetColor(auxR, auxG, auxB);
+
+    z_max = vertex0.getZ();
+    z_min = vertex1.getZ();
+    x_max = vertex1.getX();
+    x_min = vertex0.getX();
+
+    if(x_max < vertex2.getX()){
+        x_max = vertex2.getX();
+    }
+
+    if(x_min > vertex2.getX()){
+        x_min = vertex2.getX();
+    }
+
+    if(z_max < vertex1.getZ()){
+        z_min = vertex0.getZ();
+        z_max = vertex1.getZ();
+
+    }
+
+    if(z_max < vertex2.getZ()){
+        z_max = vertex2.getZ();
+    }
+
+    if(z_min > vertex2.getZ()){
+        z_min = vertex2.getZ();
+    }
+
+    inv_m20 = vertex0.getY() - vertex2.getY();
+    if(inv_m20){
+        inv_m20 = (vertex0.getX() - vertex2.getX())/inv_m20;
+    }
+
+    inv_m21 = vertex1.getY() - vertex2.getY();
+    if(inv_m21){
+        inv_m21 = (vertex1.getX() - vertex2.getX())/inv_m21;
+    }
+
+    inv_z20 = vertex0.getY() - vertex2.getY();
+    if(inv_z20){
+        inv_z20 = (vertex0.getZ() - vertex2.getZ())/inv_z20;
+    }
+
+    inv_z21 = vertex1.getY() - vertex2.getY();
+    if(inv_z21){
+        inv_z21 = (vertex1.getZ() - vertex2.getZ())/inv_z21;
+    }
+
+    x_i = vertex2.getX();
+    x_f = vertex2.getX();
+    z_i = vertex2.getZ();
+    z_f = vertex2.getZ();
+    inv_mzp = 0;
+    z_p = z_i;
+
+    for(int j = vertex2.getY() + 0.5; j >= vertex0.getY() - 0.5; j--){
+        for(int i = x_i - 0.5; i <= x_f + 0.5; i++){
+            range(z_p, z_min, z_max);
+            rPixel(i, j, z_p);
+            z_p += inv_mzp;
+        }
+
+        x_i -= inv_m20;
+
+        if(x_i < x_min){
+            x_i = x_min;
+        }
+
+        x_f -= inv_m21;
+
+        if(x_f > x_max){
+            x_f = x_max;
+        }
+
+        z_i -= inv_z20;
+        range(z_i, z_min, z_max);
+
+        z_f -= inv_z21;
+        range(z_f, z_min, z_max);
+
+        inv_mzp = (z_f - z_i)/(x_f - x_i);
+        z_p = z_i;
+    }
+}
+
+typedef std::pair<Vertex,Vertex> VertexNormal;
+
+bool compareVertexNormal ( const VertexNormal& l, const VertexNormal& r){
+    return Vertex::compareYX(l.first, r.first);
+}
+
+//--------------------------------------------------------------
 void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const Vertex& vertex1, const Vertex& normal1,
     const Vertex& vertex2, const Vertex& normal2, const Vertex& triangleNormal, const Vertex& centroid) const{
-    vector<Vertex> vertices;
+
+    VertexNormal aux;
+    vector<VertexNormal> vertices;
     vertices.reserve(3);
-    vertices.push_back(applyPerspective(vertex0));
-    vertices.push_back(applyPerspective(vertex1));
-    vertices.push_back(applyPerspective(vertex2));
+    aux.first = vertex0;
+    aux.second = normal0;
+    vertices.push_back(aux);
+    aux.first = vertex1;
+    aux.second = normal1;
+    vertices.push_back(aux);
+    aux.first = vertex2;
+    aux.second = normal2;
+    vertices.push_back(aux);
 
 
-    sort (vertices.begin(), vertices.end(), Vertex::compareYX);
+    sort (vertices.begin(), vertices.end(), compareVertexNormal);
     //The triangle is already Top Flat or Bottom Flat
-    if(vertices[0].getY() == vertices[1].getY()){
+    if(vertices[0].first.getY() == vertices[1].first.getY()){
         switch(lightingMode){
         case NONE:
-            triangleFillTopFlat(vertices[0], vertices[1], vertices[2]);
+            triangleFillTopFlat(vertices[0].first, vertices[1].first, vertices[2].first);
             break;
         case PHONG_REFLECTION:
-            triangleFillTopFlat(vertices[0], vertices[1], vertices[2], triangleNormal, centroid);
+            triangleFillTopFlat(vertices[0].first, vertices[1].first, vertices[2].first, triangleNormal, centroid);
             break;
         case GOURAUD_SHADING:
             break;
@@ -624,15 +894,17 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
         }
         return;
     }else{
-        if(vertices[1].getY() == vertices[2].getY()){
+        if(vertices[1].first.getY() == vertices[2].first.getY()){
             switch(lightingMode){
             case NONE:
-                triangleFillBotFlat(vertices[0], vertices[1], vertices[2]);
+                triangleFillBotFlat(vertices[0].first, vertices[1].first, vertices[2].first);
                 break;
             case PHONG_REFLECTION:
-                triangleFillBotFlat(vertices[0], vertices[1], vertices[2], triangleNormal, centroid);
+                triangleFillBotFlat(vertices[0].first, vertices[1].first, vertices[2].first, triangleNormal, centroid);
                 break;
             case GOURAUD_SHADING:
+                triangleFillBotFlatGouraud(vertices[0].first, vertices[0].second, vertices[1].first,
+                    vertices[1].second, vertices[2].first, vertices[2].second);
                 break;
             case PHONG_SHADING:
                 break;
@@ -641,23 +913,23 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
     }
 
     Vertex v3;
-    v3 = vertices[1];
+    v3 = vertices[1].first;
     //Interpolate where vertex1.x cuts the line vertex0-vertex2
-    v3.setX( vertices[2].getX()*( (vertices[0].getY() - vertices[1].getY()) / (vertices[0].getY() - vertices[2].getY()) ) +
-        vertices[0].getX()*( 1 - (vertices[0].getY() - vertices[1].getY()) / (vertices[0].getY() - vertices[2].getY())) );
+    v3.setX( vertices[2].first.getX()*( (vertices[0].first.getY() - vertices[1].first.getY()) / (vertices[0].first.getY() - vertices[2].first.getY()) ) +
+        vertices[0].first.getX()*( 1 - (vertices[0].first.getY() - vertices[1].first.getY()) / (vertices[0].first.getY() - vertices[2].first.getY())) );
     //Interpolate where vertex1.z cuts the line vertex0-vertex2
-    v3.setZ( vertices[2].getZ()*( (vertices[0].getY() - vertices[1].getY()) / (vertices[0].getY() - vertices[2].getY()) ) +
-        vertices[0].getZ()*( 1 - (vertices[0].getY() - vertices[1].getY()) / (vertices[0].getY() - vertices[2].getY())) );
-    if(v3.getX() > vertices[1].getX()){
+    v3.setZ( vertices[2].first.getZ()*( (vertices[0].first.getY() - vertices[1].first.getY()) / (vertices[0].first.getY() - vertices[2].first.getY()) ) +
+        vertices[0].first.getZ()*( 1 - (vertices[0].first.getY() - vertices[1].first.getY()) / (vertices[0].first.getY() - vertices[2].first.getY())) );
+    if(v3.getX() > vertices[1].first.getX()){
         //Triangle is d shape
         switch(lightingMode){
         case NONE:
-            triangleFillBotFlat(vertices[0], vertices[1], v3);
-            triangleFillTopFlat(vertices[1], v3, vertices[2]);
+            triangleFillBotFlat(vertices[0].first, vertices[1].first, v3);
+            triangleFillTopFlat(vertices[1].first, v3, vertices[2].first);
             break;
         case PHONG_REFLECTION:
-            triangleFillBotFlat(vertices[0], vertices[1], v3, triangleNormal, centroid);
-            triangleFillTopFlat(vertices[1], v3, vertices[2], triangleNormal, centroid);
+            triangleFillBotFlat(vertices[0].first, vertices[1].first, v3, triangleNormal, centroid);
+            triangleFillTopFlat(vertices[1].first, v3, vertices[2].first, triangleNormal, centroid);
             break;
         case GOURAUD_SHADING:
             break;
@@ -668,12 +940,12 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
         //Triangle is b shape
         switch(lightingMode){
         case NONE:
-            triangleFillBotFlat(vertices[0], v3, vertices[1]);
-            triangleFillTopFlat(v3, vertices[1], vertices[2]);
+            triangleFillBotFlat(vertices[0].first, v3, vertices[1].first);
+            triangleFillTopFlat(v3, vertices[1].first, vertices[2].first);
             break;
         case PHONG_REFLECTION:
-            triangleFillBotFlat(vertices[0], v3, vertices[1], triangleNormal, centroid);
-            triangleFillTopFlat(v3, vertices[1], vertices[2], triangleNormal, centroid);
+            triangleFillBotFlat(vertices[0].first, v3, vertices[1].first, triangleNormal, centroid);
+            triangleFillTopFlat(v3, vertices[1].first, vertices[2].first, triangleNormal, centroid);
             break;
         case GOURAUD_SHADING:
             break;

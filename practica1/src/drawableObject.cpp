@@ -156,7 +156,6 @@ void DrawableObject::calculateCentroids(){
 
 //--------------------------------------------------------------
 DrawableObject::DrawableObject( const int totalVertices_, const ofColor color_  ){
-
     totalVertices = totalVertices_;
     if( totalVertices ){
         vertices = new Vertex[totalVertices];
@@ -181,7 +180,6 @@ DrawableObject::DrawableObject( const int totalVertices_, const ofColor color_  
 
 //--------------------------------------------------------------
 DrawableObject::DrawableObject( const DrawableObject& otherDrawableObject ){
-
     //Copy simple attributes
     totalTriangles = otherDrawableObject.totalTriangles;
     totalVertices = otherDrawableObject.totalVertices;
