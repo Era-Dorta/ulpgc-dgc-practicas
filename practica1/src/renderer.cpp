@@ -598,8 +598,8 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
 }
 
 //--------------------------------------------------------------
-void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const Vertex& vertex2,
-    const Vertex& normal, const Vertex& centroid) const{
+void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const Vertex& vertex1, const Vertex& normal1,
+    const Vertex& vertex2, const Vertex& normal2, const Vertex& triangleNormal, const Vertex& centroid) const{
     vector<Vertex> vertices;
     vertices.reserve(3);
     vertices.push_back(applyPerspective(vertex0));
@@ -611,7 +611,7 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
     //The triangle is already Top Flat or Bottom Flat
     if(vertices[0].getY() == vertices[1].getY()){
         if(useLight){
-            triangleFillTopFlat(vertices[0], vertices[1], vertices[2], normal, centroid);
+            triangleFillTopFlat(vertices[0], vertices[1], vertices[2], triangleNormal, centroid);
         }else{
             triangleFillTopFlat(vertices[0], vertices[1], vertices[2]);
         }
@@ -619,7 +619,7 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
     }else{
         if(vertices[1].getY() == vertices[2].getY()){
             if(useLight){
-                triangleFillBotFlat(vertices[0], vertices[1], vertices[2], normal, centroid);
+                triangleFillBotFlat(vertices[0], vertices[1], vertices[2], triangleNormal, centroid);
             }else{
                 triangleFillBotFlat(vertices[0], vertices[1], vertices[2]);
             }
@@ -637,22 +637,22 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& vertex1, const
         vertices[0].getZ()*( 1 - (vertices[0].getY() - vertices[1].getY()) / (vertices[0].getY() - vertices[2].getY())) );
     if(v3.getX() > vertices[1].getX()){
         //Triangle is d shape
-            if(useLight){
-                triangleFillBotFlat(vertices[0], vertices[1], v3, normal, centroid);
-                triangleFillTopFlat(vertices[1], v3, vertices[2], normal, centroid);
-            }else{
-                triangleFillBotFlat(vertices[0], vertices[1], v3);
-                triangleFillTopFlat(vertices[1], v3, vertices[2]);
-            }
+        if(useLight){
+            triangleFillBotFlat(vertices[0], vertices[1], v3, triangleNormal, centroid);
+            triangleFillTopFlat(vertices[1], v3, vertices[2], triangleNormal, centroid);
+        }else{
+            triangleFillBotFlat(vertices[0], vertices[1], v3);
+            triangleFillTopFlat(vertices[1], v3, vertices[2]);
+        }
     }else{
         //Triangle is b shape
-            if(useLight){
-                triangleFillBotFlat(vertices[0], v3, vertices[1], normal, centroid);
-                triangleFillTopFlat(v3, vertices[1], vertices[2], normal, centroid);
-            }else{
-                triangleFillBotFlat(vertices[0], v3, vertices[1]);
-                triangleFillTopFlat(v3, vertices[1], vertices[2]);
-            }
+        if(useLight){
+            triangleFillBotFlat(vertices[0], v3, vertices[1], triangleNormal, centroid);
+            triangleFillTopFlat(v3, vertices[1], vertices[2], triangleNormal, centroid);
+        }else{
+            triangleFillBotFlat(vertices[0], v3, vertices[1]);
+            triangleFillTopFlat(v3, vertices[1], vertices[2]);
+        }
     }
 }
 

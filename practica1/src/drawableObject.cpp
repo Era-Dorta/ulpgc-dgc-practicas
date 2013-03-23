@@ -256,8 +256,10 @@ void DrawableObject::draw(Renderer* const renderer) const{
 
     if(drawFillTriangles_){
         for( int i = 0; i < totalTriangles; i++ ){
-            renderer->rTriangleFill(transVertices[triangles[i][0]], transVertices[triangles[i][1]],
-                transVertices[triangles[i][2]], transNormals[i], transTriangleCentroids[i]);
+            renderer->rTriangleFill(transVertices[triangles[i][0]], transVerticesNormals[triangles[i][0]],
+                transVertices[triangles[i][1]], transVerticesNormals[triangles[i][1]],
+                transVertices[triangles[i][2]], transVerticesNormals[triangles[i][2]],
+                transNormals[i], transTriangleCentroids[i]);
         }
     }else{
         if(drawNormals_){
