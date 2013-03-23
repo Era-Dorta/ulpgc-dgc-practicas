@@ -12,8 +12,12 @@ void RevolutionSurface::calculateNormals()
     Vertex aux;
     DrawableObject::calculateNormals();
     int index;
-    //Top and bottom vertex of each column
+    int currentLeft = totalTriangles - lineVerticesAmount - 2, currentRight = 1;
+    int prevRight = currentRight;
+
+    //Calculate normals for each vertex
     for(int i = 0; i < ROT; i++){
+        //Top vertices
         aux.set(0,0,0);
         aux =  aux + normals[(lineVerticesAmount - 1)*2*i];
         aux =  aux + normals[((lineVerticesAmount - 1)*2*(i + 1))%totalTriangles];
@@ -23,6 +27,7 @@ void RevolutionSurface::calculateNormals()
         verticesNormals[index] = aux;
         transVerticesNormals[index] = aux;
 
+        //Bottom vertices
         aux.set(0,0,0);
         aux =  aux + normals[(lineVerticesAmount - 1)*2*i + lineVerticesAmount];
         aux =  aux + normals[(lineVerticesAmount - 1)*2*i + lineVerticesAmount + 1];
@@ -31,6 +36,24 @@ void RevolutionSurface::calculateNormals()
         index = (lineVerticesAmount*(i + 1) + lineVerticesAmount - 1)%totalVertices;
         verticesNormals[index] = aux;
         transVerticesNormals[index] = aux;
+
+        //Vertices between top and bottom
+        for(int j = 1; j < lineVerticesAmount - 1; j++){
+            aux.set(0,0,0);
+            for(int k = 0; k < 3; k++){
+                aux = aux + normals[currentLeft + k];
+                aux = aux + normals[currentRight + k];
+            }
+            aux.normalize();
+            index = i*lineVerticesAmount + j;
+            verticesNormals[index] = aux;
+            transVerticesNormals[index] = aux;
+            currentLeft = currentLeft + 2;
+            currentRight = currentRight + 2;
+        }
+        currentLeft = prevRight - 1;
+        currentRight = (prevRight + lineVerticesAmount + 2)%totalTriangles;
+        prevRight = currentRight;
     }
 }
 
