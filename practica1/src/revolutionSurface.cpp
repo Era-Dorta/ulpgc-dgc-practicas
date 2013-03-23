@@ -11,16 +11,26 @@ void RevolutionSurface::calculateNormals()
 {
     Vertex aux;
     DrawableObject::calculateNormals();
-
-    //Top vertex of each of each column
+    int index;
+    //Top and bottom vertex of each column
     for(int i = 0; i < ROT; i++){
         aux.set(0,0,0);
         aux =  aux + normals[(lineVerticesAmount - 1)*2*i];
         aux =  aux + normals[((lineVerticesAmount - 1)*2*(i + 1))%totalTriangles];
         aux =  aux + normals[(((lineVerticesAmount - 1)*2*(i + 1)) + 1)%totalTriangles];
         aux.normalize();
-        verticesNormals[lineVerticesAmount*(i + 1)%totalVertices] = aux;
-        transVerticesNormals[lineVerticesAmount*(i + 1)%totalVertices] = aux;
+        index = lineVerticesAmount*(i + 1)%totalVertices;
+        verticesNormals[index] = aux;
+        transVerticesNormals[index] = aux;
+
+        aux.set(0,0,0);
+        aux =  aux + normals[(lineVerticesAmount - 1)*2*i + lineVerticesAmount];
+        aux =  aux + normals[(lineVerticesAmount - 1)*2*i + lineVerticesAmount + 1];
+        aux =  aux + normals[(((lineVerticesAmount - 1)*2*(i + 1)) + 1 + lineVerticesAmount )%totalTriangles];
+        aux.normalize();
+        index = (lineVerticesAmount*(i + 1) + lineVerticesAmount - 1)%totalVertices;
+        verticesNormals[index] = aux;
+        transVerticesNormals[index] = aux;
     }
 }
 
