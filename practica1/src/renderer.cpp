@@ -607,39 +607,41 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
     float inv_m01, inv_m02, x_i, x_f, inv_z01, inv_z02, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
     Vertex lightVector, h, s;
     float cosNL, cosNH, distance = 0;
-    float auxR = 0, auxG = 0, auxB = 0;
+    float auxR[3] = {0,0,0}, auxG[3] = {0,0,0}, auxB[3] = {0,0,0};
+    const Vertex* vertices[3] = {&vertex0, &vertex1, &vertex2},* normals[3] = {&normal0, &normal1, &normal2};
 
-    for(int i = 0; i < nLightSources;i++){
-        lightVector = lightSources[i]->getLightPosition() - vertex0;
-        lightVector.normalize();
-        s = vertex0 - observer;
-        s.normalize();
-        h = (lightVector + s ) * 0.5;
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < nLightSources;j++){
+            lightVector = lightSources[j]->getLightPosition() - *vertices[i];
+            lightVector.normalize();
+            s = vertex0 - observer;
+            s.normalize();
+            h = (lightVector + s ) * 0.5;
 
-        cosNL = normal0.dot(lightVector);
-        range(cosNL, 0, 1);
-        cosNL = kD*cosNL;
+            cosNL = (*normals[i]).dot(lightVector);
+            range(cosNL, 0, 1);
+            cosNL = kD*cosNL;
 
-        cosNH = normal0.dot(h);
-        range(cosNH, 0, 1);
-        cosNH = kS*pow(cosNH, n);
+            cosNH = (*normals[i]).dot(h);
+            range(cosNH, 0, 1);
+            cosNH = kS*pow(cosNH, n);
 
-        distance = 1.0/(lightSources[i]->getLightPosition().distance(vertex0) + 0.5);
+            distance = 1.0/(lightSources[j]->getLightPosition().distance(*vertices[i]) + 0.5);
 
-        auxR += distance*(cosNL*currentColor.r + cosNH*lightColor.r);
-        auxG += distance*(cosNL*currentColor.g + cosNH*lightColor.g);
-        auxB += distance*(cosNL*currentColor.b + cosNH*lightColor.b);
+            auxR[i] += distance*(cosNL*currentColor.r + cosNH*lightColor.r);
+            auxG[i] += distance*(cosNL*currentColor.g + cosNH*lightColor.g);
+            auxB[i] += distance*(cosNL*currentColor.b + cosNH*lightColor.b);
+        }
+        auxR[i] += currentColor.r*kA;
+        auxG[i] += currentColor.g*kA;
+        auxB[i] += currentColor.b*kA;
+
+        range(auxR[i], 0, 255);
+        range(auxG[i], 0, 255);
+        range(auxB[i], 0, 255);
     }
 
-    auxR += currentColor.r*kA;
-    auxG += currentColor.g*kA;
-    auxB += currentColor.b*kA;
-
-    range(auxR, 0, 255);
-    range(auxG, 0, 255);
-    range(auxB, 0, 255);
-
-    ofSetColor(auxR, auxG, auxB);
+    ofSetColor(auxR[0], auxG[0], auxB[0]);
 
     z_max = vertex0.getZ();
     z_min = vertex1.getZ();
@@ -735,39 +737,41 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
     float inv_m20, inv_m21, x_i, x_f, inv_z20, inv_z21, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
     Vertex lightVector, h, s;
     float cosNL, cosNH, distance = 0;
-    float auxR = 0, auxG = 0, auxB = 0;
+    float auxR[3] = {0,0,0}, auxG[3] = {0,0,0}, auxB[3] = {0,0,0};
+    const Vertex* vertices[3] = {&vertex0, &vertex1, &vertex2},* normals[3] = {&normal0, &normal1, &normal2};
 
-    for(int i = 0; i < nLightSources;i++){
-        lightVector = lightSources[i]->getLightPosition() - vertex0;
-        lightVector.normalize();
-        s = vertex0 - observer;
-        s.normalize();
-        h = (lightVector + s ) * 0.5;
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < nLightSources;j++){
+            lightVector = lightSources[j]->getLightPosition() - *vertices[i];
+            lightVector.normalize();
+            s = vertex0 - observer;
+            s.normalize();
+            h = (lightVector + s ) * 0.5;
 
-        cosNL = normal0.dot(lightVector);
-        range(cosNL, 0, 1);
-        cosNL = kD*cosNL;
+            cosNL = (*normals[i]).dot(lightVector);
+            range(cosNL, 0, 1);
+            cosNL = kD*cosNL;
 
-        cosNH = normal0.dot(h);
-        range(cosNH, 0, 1);
-        cosNH = kS*pow(cosNH, n);
+            cosNH = (*normals[i]).dot(h);
+            range(cosNH, 0, 1);
+            cosNH = kS*pow(cosNH, n);
 
-        distance = 1.0/(lightSources[i]->getLightPosition().distance(vertex0) + 0.5);
+            distance = 1.0/(lightSources[j]->getLightPosition().distance(*vertices[i]) + 0.5);
 
-        auxR += distance*(cosNL*currentColor.r + cosNH*lightColor.r);
-        auxG += distance*(cosNL*currentColor.g + cosNH*lightColor.g);
-        auxB += distance*(cosNL*currentColor.b + cosNH*lightColor.b);
+            auxR[i] += distance*(cosNL*currentColor.r + cosNH*lightColor.r);
+            auxG[i] += distance*(cosNL*currentColor.g + cosNH*lightColor.g);
+            auxB[i] += distance*(cosNL*currentColor.b + cosNH*lightColor.b);
+        }
+        auxR[i] += currentColor.r*kA;
+        auxG[i] += currentColor.g*kA;
+        auxB[i] += currentColor.b*kA;
+
+        range(auxR[i], 0, 255);
+        range(auxG[i], 0, 255);
+        range(auxB[i], 0, 255);
     }
 
-    auxR += currentColor.r*kA;
-    auxG += currentColor.g*kA;
-    auxB += currentColor.b*kA;
-
-    range(auxR, 0, 255);
-    range(auxG, 0, 255);
-    range(auxB, 0, 255);
-
-    ofSetColor(auxR, auxG, auxB);
+    ofSetColor(auxR[0], auxG[0], auxB[0]);
 
     z_max = vertex0.getZ();
     z_min = vertex1.getZ();

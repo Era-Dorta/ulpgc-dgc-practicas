@@ -4,7 +4,7 @@
 
 //ROT defines how many times a revolution object
 //is rotated
-#define ROT 4
+#define ROT 32
 
 //--------------------------------------------------------------
 void RevolutionSurface::calculateNormals()
