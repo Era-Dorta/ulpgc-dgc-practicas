@@ -174,53 +174,51 @@ void testApp::mousePressed(int x, int y, int button){
             buttonList[i]->update();
         }
 
-        switch(state){
-        case DRAW_CUBE:
-            currentColor = ofColor::fromHex(rand());
-            objectList.push_back( new Cube(currentColor) );
-            currentObject = objectList.back();
-            currentObject->setFillTriangles(zbuffer);
-            break;
-        case DRAW_TRIANGLE:
-            currentColor = ofColor::fromHex(rand());
-            objectList.push_back( new Triangle(currentColor) );
-            currentObject = objectList.back();
-            currentObject->setFillTriangles(zbuffer);
-            break;
-        case DRAW_REVOLUTION:
-            //First click on revolution, and previous object is not
-            //a revolution object
-            if( objectList.size() == 0 || objectList.back()->getSubtype() != REVOLUTION ){
+        //If not opReady the user only clicked the button
+        if(opReady){
+            switch(state){
+            case DRAW_CUBE:
                 currentColor = ofColor::fromHex(rand());
-                objectList.push_back( new RevolutionSurface(currentColor) );
+                objectList.push_back( new Cube(currentColor) );
                 currentObject = objectList.back();
-            }else{
-                RevolutionSurface* revObject = (RevolutionSurface*)objectList.back();
-                //Previous object is done, so make a new one
-                if( revObject->hasAllVertices() ){
+                currentObject->setFillTriangles(zbuffer);
+                break;
+            case DRAW_TRIANGLE:
+                currentColor = ofColor::fromHex(rand());
+                objectList.push_back( new Triangle(currentColor) );
+                currentObject = objectList.back();
+                currentObject->setFillTriangles(zbuffer);
+                break;
+            case DRAW_REVOLUTION:
+                //First click on revolution, and previous object is not
+                //a revolution object
+                if( objectList.size() == 0 || objectList.back()->getSubtype() != REVOLUTION ){
                     currentColor = ofColor::fromHex(rand());
                     objectList.push_back( new RevolutionSurface(currentColor) );
                     currentObject = objectList.back();
+                }else{
+                    RevolutionSurface* revObject = (RevolutionSurface*)objectList.back();
+                    //Previous object is done, so make a new one
+                    if( revObject->hasAllVertices() ){
+                        currentColor = ofColor::fromHex(rand());
+                        objectList.push_back( new RevolutionSurface(currentColor) );
+                        currentObject = objectList.back();
+                    }
                 }
-            }
-
-            //If not opReady the user only clicked the button, so that is
-            //not a valid vertex
-            if(opReady){
                 //Add vertex to revolution object
                 ((RevolutionSurface*)currentObject)->setVertex( pmouse );
                 //The user just clicked so avoid drawing a new line
                 ((RevolutionSurface*)currentObject)->setDrawHelper(pmouse);
+                currentObject->setFillTriangles(zbuffer);
+                break;
+            case DRAW_LIGHT:
+                objectList.push_back( new LightSource() );
+                currentObject = objectList.back();
+                renderer.addLight((LightSource*)currentObject);
+                break;
+            default:
+                break;
             }
-            currentObject->setFillTriangles(zbuffer);
-            break;
-        case DRAW_LIGHT:
-            objectList.push_back( new LightSource() );
-            currentObject = objectList.back();
-            renderer.addLight((LightSource*)currentObject);
-            break;
-        default:
-            break;
         }
         break;
     case R_MOUSE:
