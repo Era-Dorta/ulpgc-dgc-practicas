@@ -888,6 +888,8 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
             triangleFillTopFlat(vertices[0].first, vertices[1].first, vertices[2].first, triangleNormal, centroid);
             break;
         case GOURAUD_SHADING:
+            triangleFillTotFlatGouraud(vertices[0].first, vertices[0].second, vertices[1].first, vertices[1].second,
+                vertices[2].first, vertices[2].second);
             break;
         case PHONG_SHADING:
             break;
@@ -920,6 +922,13 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
     //Interpolate where vertex1.z cuts the line vertex0-vertex2
     v3.setZ( vertices[2].first.getZ()*( (vertices[0].first.getY() - vertices[1].first.getY()) / (vertices[0].first.getY() - vertices[2].first.getY()) ) +
         vertices[0].first.getZ()*( 1 - (vertices[0].first.getY() - vertices[1].first.getY()) / (vertices[0].first.getY() - vertices[2].first.getY())) );
+
+    Vertex n3;
+    if(lightingMode == GOURAUD_SHADING){
+        //FIXME Interpolate normal0 and normal2
+        n3 = vertices[0].second + vertices[2].second;
+        n3.normalize();
+    }
     if(v3.getX() > vertices[1].first.getX()){
         //Triangle is d shape
         switch(lightingMode){
@@ -932,6 +941,8 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
             triangleFillTopFlat(vertices[1].first, v3, vertices[2].first, triangleNormal, centroid);
             break;
         case GOURAUD_SHADING:
+            triangleFillBotFlatGouraud(vertices[0].first, vertices[0].second, vertices[1].first, vertices[0].second, v3, n3);
+            triangleFillTotFlatGouraud(vertices[1].first, vertices[1].second, v3, n3, vertices[2].first, vertices[2].second);
             break;
         case PHONG_SHADING:
             break;
@@ -948,6 +959,8 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
             triangleFillTopFlat(v3, vertices[1].first, vertices[2].first, triangleNormal, centroid);
             break;
         case GOURAUD_SHADING:
+            triangleFillBotFlatGouraud(vertices[0].first, vertices[0].second, v3, n3, vertices[1].first, vertices[1].second);
+            triangleFillTotFlatGouraud(v3, n3, vertices[1].first, vertices[1].second, vertices[2].first, vertices[2].second);
             break;
         case PHONG_SHADING:
             break;
