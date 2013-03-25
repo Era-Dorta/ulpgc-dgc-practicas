@@ -866,13 +866,13 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
     VertexNormal aux;
     vector<VertexNormal> vertices;
     vertices.reserve(3);
-    aux.first = vertex0;
+    aux.first = applyPerspective(vertex0);
     aux.second = normal0;
     vertices.push_back(aux);
-    aux.first = vertex1;
+    aux.first = applyPerspective(vertex1);
     aux.second = normal1;
     vertices.push_back(aux);
-    aux.first = vertex2;
+    aux.first = applyPerspective(vertex2);
     aux.second = normal2;
     vertices.push_back(aux);
 
