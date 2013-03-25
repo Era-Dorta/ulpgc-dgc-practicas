@@ -64,6 +64,8 @@ class testApp : public ofBaseApp{
 		bool getZBuffer() const;
 		void setPhongReflection( const bool active );
 		bool getPhongReflection() const;
+		void setGouraudShading( const bool active );
+		bool getGouraudShading() const;
 		DrawableObject* getCurrentObject() const;
 		AppStates getState() const;
 };

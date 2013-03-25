@@ -415,17 +415,34 @@ bool testApp::getZBuffer() const{
 //--------------------------------------------------------------
 void testApp::setPhongReflection( const bool active ){
     if(active){
-        setZBuffer(true);
         renderer.setLightingMode(PHONG_REFLECTION);
     }else{
         renderer.setLightingMode(NONE);
     }
-
+    setZBuffer(active);
 }
 
 //--------------------------------------------------------------
 bool testApp::getPhongReflection() const{
-    return renderer.getLightingMode() == PHONG_REFLECTION;
+    return renderer.getLightingMode() == PHONG_REFLECTION ||
+        renderer.getLightingMode() == GOURAUD_SHADING;
+}
+
+
+//--------------------------------------------------------------
+void testApp::setGouraudShading( const bool active ){
+    if(active){
+        setZBuffer(true);
+        renderer.setLightingMode(GOURAUD_SHADING);
+    }else{
+        setZBuffer(true);
+        renderer.setLightingMode(PHONG_REFLECTION);
+    }
+}
+
+//--------------------------------------------------------------
+bool testApp::getGouraudShading() const{
+    return renderer.getLightingMode() == GOURAUD_SHADING;
 }
 
 //--------------------------------------------------------------

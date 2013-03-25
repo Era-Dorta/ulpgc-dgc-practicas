@@ -7,7 +7,10 @@ class testApp : public ofBaseApp{
 		DrawableObject* getCurrentObject() const;
 		void setPerspective( const bool active );
 		void setZBuffer( const bool active );
+		bool getZBuffer() const;
 		void setPhongReflection( const bool active );
+        bool getPhongReflection() const;
+        void setGouraudShading( const bool active );
 };
 
 //--------------------------------------------------------------
@@ -48,6 +51,9 @@ void StatusButton::checkPress( const Vertex mouse )
         case PHONG_R:
             app->setPhongReflection(pressed);
             break;
+        case GOURAUD_S:
+            app->setGouraudShading(pressed);
+            break;
         case PERSPECTIVE:
             app->setPerspective(pressed);
             break;
@@ -77,6 +83,20 @@ void StatusButton::update(){
         break;
     case DRAW_NORMALS:
         if(app->getCurrentObject() && app->getCurrentObject()->getNormals()){
+            pressed = true;
+        }else{
+            pressed = false;
+        }
+        break;
+    case Z_BUFFER:
+        if(app->getZBuffer()){
+            pressed = true;
+        }else{
+            pressed = false;
+        }
+        break;
+    case PHONG_R:
+        if(app->getPhongReflection()){
             pressed = true;
         }else{
             pressed = false;
