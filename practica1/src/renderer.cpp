@@ -597,6 +597,12 @@ void Renderer::triangleFillTopFlat(const Vertex& vertex0, const Vertex& vertex1,
     }
 }
 
+/*
+   v0
+   /\
+  /__\
+v1    v2
+*/
 //--------------------------------------------------------------
 void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& normal0,
             const Vertex& vertex1, const Vertex& normal1,
@@ -607,7 +613,9 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
     float inv_m01, inv_m02, x_i, x_f, inv_z01, inv_z02, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
     Vertex lightVector, h, s;
     float cosNL, cosNH, distance = 0;
+    //FIXME CAMBIAR auxR,G,B por una matriz, continuar el calculo de invColor
     float auxR[3] = {0,0,0}, auxG[3] = {0,0,0}, auxB[3] = {0,0,0};
+    float iI[3], iF[3], invColor01[3], invColor02[3];
     const Vertex* vertices[3] = {&vertex0, &vertex1, &vertex2},* normals[3] = {&normal0, &normal1, &normal2};
 
     for(int i = 0; i < 3; i++){
@@ -688,6 +696,20 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
         inv_z02 = (vertex2.getZ() - vertex0.getZ())/inv_z02;
     }
 
+    for(int i = 0; i < 3; i++){
+        invColor01[i] = vertex1.getY() - vertex0.getY();
+        if(invColor01[i]){
+            invColor01[i] = (vertex1.getX() - vertex0.getX())/inv_m01;
+        }
+
+        invColor02[i] = vertex2.getY() - vertex0.getY();
+        if(invColor02[i]){
+            invColor02[i] = (vertex2.getX() - vertex0.getX())/inv_m02;
+        }
+    }
+
+
+
     x_i = vertex0.getX();
     x_f = vertex0.getX();
     z_i = vertex0.getZ();
@@ -695,6 +717,12 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
     inv_mzp = 0;
     z_p = z_i;
 
+    iI[0] = auxR[0];
+    iI[1] = auxG[0];
+    iI[2] = auxB[0];
+    iF[0] = auxR[0];
+    iF[1] = auxG[0];
+    iF[2] = auxB[0];
 
 
     for(int j = vertex0.getY() - 0.5; j <= vertex1.getY() + 0.5; j++){
@@ -727,6 +755,10 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
     }
 }
 
+// v0___v1
+//   \ /
+//    \/
+//     v2
 //--------------------------------------------------------------
 void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& normal0,
             const Vertex& vertex1, const Vertex& normal1,
@@ -738,6 +770,7 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
     Vertex lightVector, h, s;
     float cosNL, cosNH, distance = 0;
     float auxR[3] = {0,0,0}, auxG[3] = {0,0,0}, auxB[3] = {0,0,0};
+    float iI, iF;
     const Vertex* vertices[3] = {&vertex0, &vertex1, &vertex2},* normals[3] = {&normal0, &normal1, &normal2};
 
     for(int i = 0; i < 3; i++){
