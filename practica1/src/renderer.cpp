@@ -16,9 +16,9 @@ const int k = 400;
 const float invK = 1.0/k;
 const float kD = 100;
 const float kA = 0.2;
-const float kS = 100;
+const float kS = 10;
 const Vertex observer(0,0,k);
-const float n = 1;
+const float n = 2;
 const ofColor lightColor = ofColor::white;
 
 //--------------------------------------------------------------
@@ -630,9 +630,9 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
 
     for(int i = 0; i < 3; i++){
         for(int j = 0; j < nLightSources;j++){
-            lightVector = lightSources[j]->getLightPosition() - *vertices[i];
+            lightVector = lightSources[j]->getLightPosition() - (*vertices[i]);
             lightVector.normalize();
-            s = *vertices[i] - observer;
+            s = (*vertices[i]) - observer;
             s.normalize();
             h = (lightVector + s ) * 0.5;
 
@@ -656,8 +656,6 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
             range(auxColor[i][k], 0, 255);
         }
     }
-
-    ofSetColor(auxColor[0][R], auxColor[0][G], auxColor[0][B]);
 
     z_max = vertex0.getZ();
     z_min = vertex1.getZ();
@@ -741,6 +739,7 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
 
             for(int i = R; i <= B; i++){
                 iP[i] += invColorP[i];
+                range(iP[i], 0, 255);
             }
         }
 
@@ -805,9 +804,9 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
 
     for(int i = 0; i < 3; i++){
         for(int j = 0; j < nLightSources;j++){
-            lightVector = lightSources[j]->getLightPosition() - *vertices[i];
+            lightVector = lightSources[j]->getLightPosition() - (*vertices[i]);
             lightVector.normalize();
-            s = *vertices[i] - observer;
+            s = (*vertices[i]) - observer;
             s.normalize();
             h = (lightVector + s ) * 0.5;
 
@@ -831,8 +830,6 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
             range(auxColor[i][k], 0, 255);
         }
     }
-
-    ofSetColor(auxColor[0][R], auxColor[0][G], auxColor[0][B]);
 
     z_max = vertex0.getZ();
     z_min = vertex1.getZ();
@@ -916,6 +913,7 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
 
             for(int i = R; i <= B; i++){
                 iP[i] += invColorP[i];
+                range(iP[i], 0, 255);
             }
         }
 
