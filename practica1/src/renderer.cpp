@@ -6,6 +6,10 @@
 #include <cfloat>       // std::FLT_MAX
 #include <climits>      //std::INT_MIN
 
+#define R 0
+#define G 1
+#define B 2
+
 using namespace std;
 
 const int k = 400;
@@ -613,16 +617,22 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
     float inv_m01, inv_m02, x_i, x_f, inv_z01, inv_z02, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
     Vertex lightVector, h, s;
     float cosNL, cosNH, distance = 0;
-    //FIXME CAMBIAR auxR,G,B por una matriz, continuar el calculo de invColor
-    float auxR[3] = {0,0,0}, auxG[3] = {0,0,0}, auxB[3] = {0,0,0};
-    float iI[3], iF[3], invColor01[3], invColor02[3];
+    //Rows belong to vertices and columns to RGB
+    float auxColor[3][3];
+    float iI[3], iF[3], iP[3], invColor01[3], invColor02[3], invColorP[3];
     const Vertex* vertices[3] = {&vertex0, &vertex1, &vertex2},* normals[3] = {&normal0, &normal1, &normal2};
+
+    for(int i = 0; i < 3; i++){
+        for(int j = R; j <= B; j++){
+            auxColor[i][j] = 0;
+        }
+    }
 
     for(int i = 0; i < 3; i++){
         for(int j = 0; j < nLightSources;j++){
             lightVector = lightSources[j]->getLightPosition() - *vertices[i];
             lightVector.normalize();
-            s = vertex0 - observer;
+            s = *vertices[i] - observer;
             s.normalize();
             h = (lightVector + s ) * 0.5;
 
@@ -636,20 +646,18 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
 
             distance = 1.0/(lightSources[j]->getLightPosition().distance(*vertices[i]) + 0.5);
 
-            auxR[i] += distance*(cosNL*currentColor.r + cosNH*lightColor.r);
-            auxG[i] += distance*(cosNL*currentColor.g + cosNH*lightColor.g);
-            auxB[i] += distance*(cosNL*currentColor.b + cosNH*lightColor.b);
+            for(int k = R; k <= B; k++){
+                auxColor[i][k] += distance*(cosNL*auxColor[i][k] + cosNH*auxColor[i][k]);
+            }
         }
-        auxR[i] += currentColor.r*kA;
-        auxG[i] += currentColor.g*kA;
-        auxB[i] += currentColor.b*kA;
 
-        range(auxR[i], 0, 255);
-        range(auxG[i], 0, 255);
-        range(auxB[i], 0, 255);
+        for(int k = R; k <= B; k++){
+            auxColor[i][k] += auxColor[i][k]*kA;
+            range(auxColor[i][k], 0, 255);
+        }
     }
 
-    ofSetColor(auxR[0], auxG[0], auxB[0]);
+    ofSetColor(auxColor[0][R], auxColor[0][G], auxColor[0][B]);
 
     z_max = vertex0.getZ();
     z_min = vertex1.getZ();
@@ -696,19 +704,17 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
         inv_z02 = (vertex2.getZ() - vertex0.getZ())/inv_z02;
     }
 
-    for(int i = 0; i < 3; i++){
+    for(int i = R; i <= B; i++){
         invColor01[i] = vertex1.getY() - vertex0.getY();
         if(invColor01[i]){
-            invColor01[i] = (vertex1.getX() - vertex0.getX())/inv_m01;
+            invColor01[i] = (auxColor[1][i] - auxColor[0][i])/invColor01[i];
         }
 
         invColor02[i] = vertex2.getY() - vertex0.getY();
         if(invColor02[i]){
-            invColor02[i] = (vertex2.getX() - vertex0.getX())/inv_m02;
+            invColor02[i] = (auxColor[2][i] - auxColor[0][i])/invColor02[i];
         }
     }
-
-
 
     x_i = vertex0.getX();
     x_f = vertex0.getX();
@@ -717,19 +723,25 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
     inv_mzp = 0;
     z_p = z_i;
 
-    iI[0] = auxR[0];
-    iI[1] = auxG[0];
-    iI[2] = auxB[0];
-    iF[0] = auxR[0];
-    iF[1] = auxG[0];
-    iF[2] = auxB[0];
-
+    for(int i = R; i <= B; i++){
+        iI[i] = auxColor[0][i];
+        iF[i] = auxColor[0][i];
+        iP[i] = auxColor[0][i];
+        invColorP[i] = 0;
+    }
 
     for(int j = vertex0.getY() - 0.5; j <= vertex1.getY() + 0.5; j++){
         for(int i = x_i - 0.5; i <= x_f + 0.5; i++){
             range(z_p, z_min, z_max);
+
+            ofSetColor(iP[R], iP[G], iP[B]);
+
             rPixel(i, j, z_p);
             z_p += inv_mzp;
+
+            for(int i = R; i <= B; i++){
+                iP[i] += invColorP[i];
+            }
         }
 
         x_i += inv_m01;
@@ -752,6 +764,17 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
 
         inv_mzp = (z_f - z_i)/(x_f - x_i);
         z_p = z_i;
+
+        for(int i = R; i <= B; i++){
+            iI[i] += invColor01[i];
+            iF[i] += invColor02[i];
+            iP[i] = iI[i];
+        }
+
+        for(int i = R; i <= B; i++){
+            invColorP[i] = (iF[i] - iI[i])/(x_f - x_i);
+        }
+
     }
 }
 
@@ -769,15 +792,22 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
     float inv_m20, inv_m21, x_i, x_f, inv_z20, inv_z21, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
     Vertex lightVector, h, s;
     float cosNL, cosNH, distance = 0;
-    float auxR[3] = {0,0,0}, auxG[3] = {0,0,0}, auxB[3] = {0,0,0};
-    float iI, iF;
+    //Rows belong to vertices and columns to RGB
+    float auxColor[3][3];
+    float iI[3], iF[3], iP[3], invColor20[3], invColor21[3], invColorP[3];
     const Vertex* vertices[3] = {&vertex0, &vertex1, &vertex2},* normals[3] = {&normal0, &normal1, &normal2};
+
+    for(int i = 0; i < 3; i++){
+        for(int j = R; j <= B; j++){
+            auxColor[i][j] = 0;
+        }
+    }
 
     for(int i = 0; i < 3; i++){
         for(int j = 0; j < nLightSources;j++){
             lightVector = lightSources[j]->getLightPosition() - *vertices[i];
             lightVector.normalize();
-            s = vertex0 - observer;
+            s = *vertices[i] - observer;
             s.normalize();
             h = (lightVector + s ) * 0.5;
 
@@ -791,20 +821,18 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
 
             distance = 1.0/(lightSources[j]->getLightPosition().distance(*vertices[i]) + 0.5);
 
-            auxR[i] += distance*(cosNL*currentColor.r + cosNH*lightColor.r);
-            auxG[i] += distance*(cosNL*currentColor.g + cosNH*lightColor.g);
-            auxB[i] += distance*(cosNL*currentColor.b + cosNH*lightColor.b);
+            for(int k = R; k <= B; k++){
+                auxColor[i][k] += distance*(cosNL*auxColor[i][k] + cosNH*auxColor[i][k]);
+            }
         }
-        auxR[i] += currentColor.r*kA;
-        auxG[i] += currentColor.g*kA;
-        auxB[i] += currentColor.b*kA;
 
-        range(auxR[i], 0, 255);
-        range(auxG[i], 0, 255);
-        range(auxB[i], 0, 255);
+        for(int k = R; k <= B; k++){
+            auxColor[i][k] += auxColor[i][k]*kA;
+            range(auxColor[i][k], 0, 255);
+        }
     }
 
-    ofSetColor(auxR[0], auxG[0], auxB[0]);
+    ofSetColor(auxColor[0][R], auxColor[0][G], auxColor[0][B]);
 
     z_max = vertex0.getZ();
     z_min = vertex1.getZ();
@@ -853,6 +881,18 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
         inv_z21 = (vertex1.getZ() - vertex2.getZ())/inv_z21;
     }
 
+    for(int i = R; i <= B; i++){
+        invColor20[i] = vertex0.getY() - vertex2.getY();
+        if(invColor20[i]){
+            invColor20[i] = (auxColor[0][i] - auxColor[2][i])/invColor20[i];
+        }
+
+        invColor21[i] = vertex1.getY() - vertex2.getY();
+        if(invColor21[i]){
+            invColor21[i] = (auxColor[1][i] - auxColor[2][i])/invColor21[i];
+        }
+    }
+
     x_i = vertex2.getX();
     x_f = vertex2.getX();
     z_i = vertex2.getZ();
@@ -860,11 +900,23 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
     inv_mzp = 0;
     z_p = z_i;
 
+    for(int i = R; i <= B; i++){
+        iI[i] = auxColor[0][i];
+        iF[i] = auxColor[0][i];
+        iP[i] = auxColor[0][i];
+        invColorP[i] = 0;
+    }
+
     for(int j = vertex2.getY() + 0.5; j >= vertex0.getY() - 0.5; j--){
         for(int i = x_i - 0.5; i <= x_f + 0.5; i++){
             range(z_p, z_min, z_max);
+            ofSetColor(iP[R], iP[G], iP[B]);
             rPixel(i, j, z_p);
             z_p += inv_mzp;
+
+            for(int i = R; i <= B; i++){
+                iP[i] += invColorP[i];
+            }
         }
 
         x_i -= inv_m20;
@@ -887,6 +939,16 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
 
         inv_mzp = (z_f - z_i)/(x_f - x_i);
         z_p = z_i;
+
+        for(int i = R; i <= B; i++){
+            iI[i] -= invColor20[i];
+            iF[i] -= invColor21[i];
+            iP[i] = iI[i];
+        }
+
+        for(int i = R; i <= B; i++){
+            invColorP[i] = (iF[i] - iI[i])/(x_f - x_i);
+        }
     }
 }
 
