@@ -647,12 +647,12 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
             distance = 1.0/(lightSources[j]->getLightPosition().distance(*vertices[i]) + 0.5);
 
             for(int k = R; k <= B; k++){
-                auxColor[i][k] += distance*(cosNL*auxColor[i][k] + cosNH*auxColor[i][k]);
+                auxColor[i][k] += distance*(cosNL*currentColor[k] + cosNH*lightColor[k]);
             }
         }
 
         for(int k = R; k <= B; k++){
-            auxColor[i][k] += auxColor[i][k]*kA;
+            auxColor[i][k] += currentColor[k]*kA;
             range(auxColor[i][k], 0, 255);
         }
     }
@@ -822,12 +822,12 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
             distance = 1.0/(lightSources[j]->getLightPosition().distance(*vertices[i]) + 0.5);
 
             for(int k = R; k <= B; k++){
-                auxColor[i][k] += distance*(cosNL*auxColor[i][k] + cosNH*auxColor[i][k]);
+                auxColor[i][k] += distance*(cosNL*currentColor[k] + cosNH*lightColor[k]);
             }
         }
 
         for(int k = R; k <= B; k++){
-            auxColor[i][k] += auxColor[i][k]*kA;
+            auxColor[i][k] += currentColor[k]*kA;
             range(auxColor[i][k], 0, 255);
         }
     }

@@ -307,6 +307,7 @@ void testApp::mouseReleased(int x, int y, int button){
                 nextObjButPos.setX(nextObjButPos.getX() + 40);
                 break;
             case DRAW_LIGHT:
+                current.setZ(-30);
                 ((LightSource*)objectList.back())->setVertex( current );
                 auxButton = new ObjectButton(this, nextObjButPos, "LS", objectList.back(), ofColor::white);
                 buttonList.push_back( auxButton );
