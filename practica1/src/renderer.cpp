@@ -186,9 +186,11 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     if(z_max < vertex1.getZ()){
         z_min = vertex0.getZ();
         z_max = vertex1.getZ();
-        if(z_max < vertex2.getZ()){
-            z_max = vertex2.getZ();
-        }
+
+    }
+
+    if(z_max < vertex2.getZ()){
+        z_max = vertex2.getZ();
     }
 
     if(z_min > vertex2.getZ()){
@@ -406,9 +408,11 @@ void Renderer::triangleFillBotFlat(const Vertex& vertex0, const Vertex& vertex1,
     if(z_max < vertex1.getZ()){
         z_min = vertex0.getZ();
         z_max = vertex1.getZ();
-        if(z_max < vertex2.getZ()){
-            z_max = vertex2.getZ();
-        }
+
+    }
+
+    if(z_max < vertex2.getZ()){
+        z_max = vertex2.getZ();
     }
 
     if(z_min > vertex2.getZ()){
@@ -619,7 +623,7 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
     float cosNL, cosNH, distance = 0;
     //Rows belong to vertices and columns to RGB
     float auxColor[3][3];
-    float iI[3], iF[3], iP[3], invColor01[3], invColor02[3], invColorP[3];
+    float iI[3], iF[3], iP[3], invColor01[3], invColor02[3], invColorP[3], colorMax[3], colorMin[3];
     const Vertex* vertices[3] = {&vertex0, &vertex1, &vertex2},* normals[3] = {&normal0, &normal1, &normal2};
 
     for(int i = 0; i < 3; i++){
@@ -662,6 +666,11 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
     x_max = vertex2.getX();
     x_min = vertex1.getX();
 
+    for(int i = R; i <= B; i++){
+        colorMax[i] = auxColor[0][i];
+        colorMin[i] = auxColor[1][i];
+    }
+
     if(x_max < vertex0.getX()){
         x_max = vertex0.getX();
     }
@@ -673,9 +682,11 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
     if(z_max < vertex1.getZ()){
         z_min = vertex0.getZ();
         z_max = vertex1.getZ();
-        if(z_max < vertex2.getZ()){
-            z_max = vertex2.getZ();
-        }
+
+    }
+
+    if(z_max < vertex2.getZ()){
+        z_max = vertex2.getZ();
     }
 
     if(z_min > vertex2.getZ()){
