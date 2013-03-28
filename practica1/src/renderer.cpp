@@ -793,7 +793,7 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
     float cosNL, cosNH, distance = 0;
     //Rows belong to vertices and columns to RGB
     float auxColor[3][3];
-    float iI[3], iF[3], iP[3], invColor20[3], invColor21[3], invColorP[3];
+    float iI[3], iF[3], iP[3], invColor20[3], invColor21[3], invColorP[3], colorMax[3], colorMin[3];
     const Vertex* vertices[3] = {&vertex0, &vertex1, &vertex2},* normals[3] = {&normal0, &normal1, &normal2};
 
     for(int i = 0; i < 3; i++){
@@ -836,6 +836,11 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
     x_max = vertex1.getX();
     x_min = vertex0.getX();
 
+    for(int i = R; i <= B; i++){
+        colorMax[i] = auxColor[0][i];
+        colorMin[i] = auxColor[1][i];
+    }
+
     if(x_max < vertex2.getX()){
         x_max = vertex2.getX();
     }
@@ -856,6 +861,21 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
 
     if(z_min > vertex2.getZ()){
         z_min = vertex2.getZ();
+    }
+
+    for(int i = R; i <= B; i++){
+        if( colorMax[i] < auxColor[1][i]){
+            colorMax[i] = auxColor[1][i];
+            colorMin[i] = auxColor[0][i];
+        }
+
+        if( colorMax[i] < auxColor[2][i]){
+            colorMax[i] = auxColor[2][i];
+        }
+
+        if( colorMin[i] > auxColor[2][i]){
+            colorMin[i] = auxColor[2][i];
+        }
     }
 
     inv_m20 = vertex0.getY() - vertex2.getY();
@@ -913,7 +933,7 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
 
             for(int i = R; i <= B; i++){
                 iP[i] += invColorP[i];
-                range(iP[i], 0, 255);
+                range(iP[i], colorMin[i], colorMax[i]);
             }
         }
 
