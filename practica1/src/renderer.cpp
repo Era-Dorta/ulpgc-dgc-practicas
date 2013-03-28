@@ -944,9 +944,9 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
     z_p = z_i;
 
     for(int i = R; i <= B; i++){
-        iI[i] = auxColor[0][i];
-        iF[i] = auxColor[0][i];
-        iP[i] = auxColor[0][i];
+        iI[i] = auxColor[2][i];
+        iF[i] = auxColor[2][i];
+        iP[i] = auxColor[2][i];
         invColorP[i] = 0;
     }
 
