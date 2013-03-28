@@ -27,7 +27,7 @@ Triangle::Triangle( const ofColor color_ )
     totalTriangles = 1;
     triangles = new int*[totalTriangles];
 
-    triangles[0] = new int[3] {0,1,2};
+    triangles[0] = new int[3] {0,2,1};
 }
 
 //--------------------------------------------------------------
@@ -41,7 +41,7 @@ Triangle::Triangle( const Vertex &vertex0, const Vertex &vertex1 )
     totalTriangles = 3;
     triangles = new int*[totalTriangles];
 
-    triangles[0] = new int[3] {0,1,2};
+    triangles[0] = new int[3] {0,2,1};
 }
 
 //--------------------------------------------------------------
