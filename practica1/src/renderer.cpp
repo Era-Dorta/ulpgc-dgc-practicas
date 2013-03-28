@@ -693,6 +693,21 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
         z_min = vertex2.getZ();
     }
 
+    for(int i = R; i <= B; i++){
+        if( colorMax[i] < auxColor[1][i]){
+            colorMax[i] = auxColor[1][i];
+            colorMin[i] = auxColor[0][i];
+        }
+
+        if( colorMax[i] < auxColor[2][i]){
+            colorMax[i] = auxColor[2][i];
+        }
+
+        if( colorMin[i] > auxColor[2][i]){
+            colorMin[i] = auxColor[2][i];
+        }
+    }
+
     inv_m01 = vertex1.getY() - vertex0.getY();
     if(inv_m01){
         inv_m01 = (vertex1.getX() - vertex0.getX())/inv_m01;
@@ -750,7 +765,7 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
 
             for(int i = R; i <= B; i++){
                 iP[i] += invColorP[i];
-                range(iP[i], 0, 255);
+                range(iP[i], colorMin[i], colorMax[i]);
             }
         }
 
