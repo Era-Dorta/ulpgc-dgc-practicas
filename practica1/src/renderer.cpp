@@ -12,12 +12,12 @@
 
 using namespace std;
 
-const int k = 400;
-const float invK = 1.0/k;
+const int kPlane = 400;
+const float invK = 1.0/kPlane;
 const float kD = 100;
 const float kA = 0.2;
 const float kS = 10;
-const Vertex observer(0,0,k);
+const Vertex observer(0,0,kPlane);
 const float n = 2;
 const ofColor lightColor = ofColor::white;
 
@@ -763,9 +763,9 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
             rPixel(i, j, z_p);
             z_p += inv_mzp;
 
-            for(int i = R; i <= B; i++){
-                iP[i] += invColorP[i];
-                range(iP[i], colorMin[i], colorMax[i]);
+            for(int k = R; k <= B; k++){
+                iP[k] += invColorP[k];
+                range(iP[k], colorMin[k], colorMax[k]);
             }
         }
 
@@ -790,14 +790,14 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
         inv_mzp = (z_f - z_i)/(x_f - x_i);
         z_p = z_i;
 
-        for(int i = R; i <= B; i++){
-            iI[i] += invColor01[i];
-            iF[i] += invColor02[i];
-            iP[i] = iI[i];
+        for(int k = R; k <= B; k++){
+            iI[k] += invColor01[k];
+            iF[k] += invColor02[k];
+            iP[k] = iI[k];
         }
 
-        for(int i = R; i <= B; i++){
-            invColorP[i] = (iF[i] - iI[i])/(x_f - x_i);
+        for(int k = R; k <= B; k++){
+            invColorP[k] = (iF[k] - iI[k])/(x_f - x_i);
         }
 
     }
@@ -957,9 +957,9 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
             rPixel(i, j, z_p);
             z_p += inv_mzp;
 
-            for(int i = R; i <= B; i++){
-                iP[i] += invColorP[i];
-                range(iP[i], colorMin[i], colorMax[i]);
+            for(int k = R; k <= B; k++){
+                iP[k] += invColorP[k];
+                range(iP[k], colorMin[k], colorMax[k]);
             }
         }
 
@@ -984,14 +984,14 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
         inv_mzp = (z_f - z_i)/(x_f - x_i);
         z_p = z_i;
 
-        for(int i = R; i <= B; i++){
-            iI[i] -= invColor20[i];
-            iF[i] -= invColor21[i];
-            iP[i] = iI[i];
+        for(int k = R; k <= B; k++){
+            iI[k] -= invColor20[k];
+            iF[k] -= invColor21[k];
+            iP[k] = iI[k];
         }
 
-        for(int i = R; i <= B; i++){
-            invColorP[i] = (iF[i] - iI[i])/(x_f - x_i);
+        for(int k = R; k <= B; k++){
+            invColorP[k] = (iF[k] - iI[k])/(x_f - x_i);
         }
     }
 }
