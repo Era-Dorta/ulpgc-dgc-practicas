@@ -6,7 +6,7 @@
 #include "lightSource.hpp"
 
 #define N_ACTION_BUTTONS 10
-#define N_STATUS_BUTTONS 7
+#define N_STATUS_BUTTONS 8
 #define N_BUTTONS N_ACTION_BUTTONS + N_STATUS_BUTTONS
 
 //Center of the screen
@@ -49,7 +49,7 @@ void testApp::setup(){
         buttonList.push_back( new Button(this, auxVertex, buttonNames[i], (AppStates)i, width, height, ofColor::yellow) );
     }
 
-    string sButtonNames[N_STATUS_BUTTONS] = { "Perspective","Triangles", "Normals", "Fill trian", "Z-Buffer", "Phong", "Gouraud" };
+    string sButtonNames[N_STATUS_BUTTONS] = { "Perspective","Triangles", "Normals", "Fill trian", "Z-Buffer", "Phong Refl", "Gouraud", "Phong Shad" };
     for(i = N_ACTION_BUTTONS; i < N_BUTTONS; i++){
         auxVertex.set( x, y + i*(height + buttonsDistance), 0 );
         buttonList.push_back( new StatusButton(this, auxVertex, sButtonNames[i - N_ACTION_BUTTONS], (AppStates)i, width, height, ofColor::green) );
@@ -444,6 +444,22 @@ void testApp::setGouraudShading( const bool active ){
 //--------------------------------------------------------------
 bool testApp::getGouraudShading() const{
     return renderer.getLightingMode() == GOURAUD_SHADING;
+}
+
+//--------------------------------------------------------------
+void testApp::setPhongShading( const bool active ){
+    if(active){
+        setZBuffer(true);
+        renderer.setLightingMode(PHONG_SHADING);
+    }else{
+        setZBuffer(true);
+        renderer.setLightingMode(PHONG_REFLECTION);
+    }
+}
+
+//--------------------------------------------------------------
+bool testApp::getPhongShading() const{
+    return renderer.getLightingMode() == PHONG_SHADING;
 }
 
 //--------------------------------------------------------------

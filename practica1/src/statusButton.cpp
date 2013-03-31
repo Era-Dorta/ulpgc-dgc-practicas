@@ -11,6 +11,8 @@ class testApp : public ofBaseApp{
 		void setPhongReflection( const bool active );
         bool getPhongReflection() const;
         void setGouraudShading( const bool active );
+		void setPhongShading( const bool active );
+		bool getPhongShading() const;
 };
 
 //--------------------------------------------------------------
@@ -53,6 +55,9 @@ void StatusButton::checkPress( const Vertex mouse )
             break;
         case GOURAUD_S:
             app->setGouraudShading(pressed);
+            break;
+        case PHONG_S:
+            app->setPhongShading(pressed);
             break;
         case PERSPECTIVE:
             app->setPerspective(pressed);

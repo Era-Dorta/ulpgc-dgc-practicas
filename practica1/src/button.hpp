@@ -13,7 +13,7 @@ class testApp;
 enum AppStates { ROTATING_X,ROTATING_Y,ROTATING_Z, TRANSLATING, SCALING,
     DRAW_TRIANGLE, DRAW_CUBE, DRAW_REVOLUTION, DRAW_LIGHT, DELETE, PERSPECTIVE,
     DRAW_TRIANGLES, DRAW_NORMALS, FILL_TRIANGLES, Z_BUFFER, PHONG_R, GOURAUD_S,
-    OBJECT_BUTTON };
+    PHONG_S, OBJECT_BUTTON };
 //Class button is declared here to avoid some nasty
 //circular problems
 class Button{

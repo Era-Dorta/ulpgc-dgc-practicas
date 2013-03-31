@@ -66,6 +66,8 @@ class testApp : public ofBaseApp{
 		bool getPhongReflection() const;
 		void setGouraudShading( const bool active );
 		bool getGouraudShading() const;
+		void setPhongShading( const bool active );
+		bool getPhongShading() const;
 		DrawableObject* getCurrentObject() const;
 		AppStates getState() const;
 };
