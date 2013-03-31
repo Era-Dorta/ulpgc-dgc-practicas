@@ -996,6 +996,398 @@ void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& no
     }
 }
 
+
+/*
+   v0
+   /\
+  /__\
+v1    v2
+*/
+//--------------------------------------------------------------
+void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& normal0,
+            const Vertex& vertex1, const Vertex& normal1,
+            const Vertex& vertex2, const Vertex& normal2 ) const{
+    if( vertex0.getY() == vertex1.getY() || vertex1.getX() == vertex2.getX() ){
+        return;
+    }
+    float inv_m01, inv_m02, x_i, x_f, inv_z01, inv_z02, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
+    Vertex lightVector, h, s;
+    float cosNL, cosNH, distance = 0;
+    //Rows belong to vertices and columns to RGB
+    float auxColor[3][3];
+    float iI[3], iF[3], iP[3], invColor01[3], invColor02[3], invColorP[3], colorMax[3], colorMin[3];
+    const Vertex* vertices[3] = {&vertex0, &vertex1, &vertex2},* normals[3] = {&normal0, &normal1, &normal2};
+
+    for(int i = 0; i < 3; i++){
+        for(int j = R; j <= B; j++){
+            auxColor[i][j] = 0;
+        }
+    }
+
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < nLightSources;j++){
+            lightVector = lightSources[j]->getLightPosition() - (*vertices[i]);
+            lightVector.normalize();
+            s = (*vertices[i]) - observer;
+            s.normalize();
+            h = (lightVector + s ) * 0.5;
+
+            cosNL = (*normals[i]).dot(lightVector);
+            range(cosNL, 0, 1);
+            cosNL = kD*cosNL;
+
+            cosNH = (*normals[i]).dot(h);
+            range(cosNH, 0, 1);
+            cosNH = kS*pow(cosNH, n);
+
+            distance = 1.0/(lightSources[j]->getLightPosition().distance(*vertices[i]) + 0.5);
+
+            for(int k = R; k <= B; k++){
+                auxColor[i][k] += distance*(cosNL*currentColor[k] + cosNH*lightColor[k]);
+            }
+        }
+
+        for(int k = R; k <= B; k++){
+            auxColor[i][k] += currentColor[k]*kA;
+            range(auxColor[i][k], 0, 255);
+        }
+    }
+
+    z_max = vertex0.getZ();
+    z_min = vertex1.getZ();
+    x_max = vertex2.getX();
+    x_min = vertex1.getX();
+
+    for(int i = R; i <= B; i++){
+        colorMax[i] = auxColor[0][i];
+        colorMin[i] = auxColor[1][i];
+    }
+
+    if(x_max < vertex0.getX()){
+        x_max = vertex0.getX();
+    }
+
+    if(x_min > vertex0.getX()){
+        x_min = vertex0.getX();
+    }
+
+    if(z_max < vertex1.getZ()){
+        z_min = vertex0.getZ();
+        z_max = vertex1.getZ();
+
+    }
+
+    if(z_max < vertex2.getZ()){
+        z_max = vertex2.getZ();
+    }
+
+    if(z_min > vertex2.getZ()){
+        z_min = vertex2.getZ();
+    }
+
+    for(int i = R; i <= B; i++){
+        if( colorMax[i] < auxColor[1][i]){
+            colorMax[i] = auxColor[1][i];
+            colorMin[i] = auxColor[0][i];
+        }
+
+        if( colorMax[i] < auxColor[2][i]){
+            colorMax[i] = auxColor[2][i];
+        }
+
+        if( colorMin[i] > auxColor[2][i]){
+            colorMin[i] = auxColor[2][i];
+        }
+    }
+
+    inv_m01 = vertex1.getY() - vertex0.getY();
+    if(inv_m01){
+        inv_m01 = (vertex1.getX() - vertex0.getX())/inv_m01;
+    }
+
+    inv_m02 = vertex2.getY() - vertex0.getY();
+    if(inv_m02){
+        inv_m02 = (vertex2.getX() - vertex0.getX())/inv_m02;
+    }
+
+    inv_z01 = vertex1.getY() - vertex0.getY();
+    if(inv_z01){
+        inv_z01 = (vertex1.getZ() - vertex0.getZ())/inv_z01;
+    }
+
+    inv_z02 = vertex2.getY() - vertex0.getY();
+    if(inv_z02){
+        inv_z02 = (vertex2.getZ() - vertex0.getZ())/inv_z02;
+    }
+
+    for(int i = R; i <= B; i++){
+        invColor01[i] = vertex1.getY() - vertex0.getY();
+        if(invColor01[i]){
+            invColor01[i] = (auxColor[1][i] - auxColor[0][i])/invColor01[i];
+        }
+
+        invColor02[i] = vertex2.getY() - vertex0.getY();
+        if(invColor02[i]){
+            invColor02[i] = (auxColor[2][i] - auxColor[0][i])/invColor02[i];
+        }
+    }
+
+    x_i = vertex0.getX();
+    x_f = vertex0.getX();
+    z_i = vertex0.getZ();
+    z_f = vertex0.getZ();
+    inv_mzp = 0;
+    z_p = z_i;
+
+    for(int i = R; i <= B; i++){
+        iI[i] = auxColor[0][i];
+        iF[i] = auxColor[0][i];
+        iP[i] = auxColor[0][i];
+        invColorP[i] = 0;
+    }
+
+    for(int j = vertex0.getY() - 0.5; j <= vertex1.getY() + 0.5; j++){
+        for(int i = x_i - 0.5; i <= x_f + 0.5; i++){
+            range(z_p, z_min, z_max);
+
+            ofSetColor(iP[R], iP[G], iP[B]);
+
+            rPixel(i, j, z_p);
+            z_p += inv_mzp;
+
+            for(int k = R; k <= B; k++){
+                iP[k] += invColorP[k];
+                range(iP[k], colorMin[k], colorMax[k]);
+            }
+        }
+
+        x_i += inv_m01;
+
+        if(x_i < x_min){
+            x_i = x_min;
+        }
+
+        x_f += inv_m02;
+
+        if(x_f > x_max){
+            x_f = x_max;
+        }
+
+        z_i += inv_z01;
+        range(z_i, z_min, z_max);
+
+        z_f += inv_z02;
+        range(z_f, z_min, z_max);
+
+        inv_mzp = (z_f - z_i)/(x_f - x_i);
+        z_p = z_i;
+
+        for(int k = R; k <= B; k++){
+            iI[k] += invColor01[k];
+            iF[k] += invColor02[k];
+            iP[k] = iI[k];
+        }
+
+        for(int k = R; k <= B; k++){
+            invColorP[k] = (iF[k] - iI[k])/(x_f - x_i);
+        }
+
+    }
+}
+
+// v0___v1
+//   \ /
+//    \/
+//     v2
+//--------------------------------------------------------------
+void Renderer::triangleFillTotFlatPhong(const Vertex& vertex0,const Vertex& normal0,
+            const Vertex& vertex1, const Vertex& normal1,
+            const Vertex& vertex2, const Vertex& normal2 ) const{
+    if( vertex0.getY() == vertex2.getY() || vertex0.getX() == vertex1.getX() ){
+        return;
+    }
+    float inv_m20, inv_m21, x_i, x_f, inv_z20, inv_z21, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
+    Vertex lightVector, h, s;
+    float cosNL, cosNH, distance = 0;
+    //Rows belong to vertices and columns to RGB
+    float auxColor[3][3];
+    float iI[3], iF[3], iP[3], invColor20[3], invColor21[3], invColorP[3], colorMax[3], colorMin[3];
+    const Vertex* vertices[3] = {&vertex0, &vertex1, &vertex2},* normals[3] = {&normal0, &normal1, &normal2};
+
+    for(int i = 0; i < 3; i++){
+        for(int j = R; j <= B; j++){
+            auxColor[i][j] = 0;
+        }
+    }
+
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < nLightSources;j++){
+            lightVector = lightSources[j]->getLightPosition() - (*vertices[i]);
+            lightVector.normalize();
+            s = (*vertices[i]) - observer;
+            s.normalize();
+            h = (lightVector + s ) * 0.5;
+
+            cosNL = (*normals[i]).dot(lightVector);
+            range(cosNL, 0, 1);
+            cosNL = kD*cosNL;
+
+            cosNH = (*normals[i]).dot(h);
+            range(cosNH, 0, 1);
+            cosNH = kS*pow(cosNH, n);
+
+            distance = 1.0/(lightSources[j]->getLightPosition().distance(*vertices[i]) + 0.5);
+
+            for(int k = R; k <= B; k++){
+                auxColor[i][k] += distance*(cosNL*currentColor[k] + cosNH*lightColor[k]);
+            }
+        }
+
+        for(int k = R; k <= B; k++){
+            auxColor[i][k] += currentColor[k]*kA;
+            range(auxColor[i][k], 0, 255);
+        }
+    }
+
+    z_max = vertex0.getZ();
+    z_min = vertex1.getZ();
+    x_max = vertex1.getX();
+    x_min = vertex0.getX();
+
+    for(int i = R; i <= B; i++){
+        colorMax[i] = auxColor[0][i];
+        colorMin[i] = auxColor[1][i];
+    }
+
+    if(x_max < vertex2.getX()){
+        x_max = vertex2.getX();
+    }
+
+    if(x_min > vertex2.getX()){
+        x_min = vertex2.getX();
+    }
+
+    if(z_max < vertex1.getZ()){
+        z_min = vertex0.getZ();
+        z_max = vertex1.getZ();
+
+    }
+
+    if(z_max < vertex2.getZ()){
+        z_max = vertex2.getZ();
+    }
+
+    if(z_min > vertex2.getZ()){
+        z_min = vertex2.getZ();
+    }
+
+    for(int i = R; i <= B; i++){
+        if( colorMax[i] < auxColor[1][i]){
+            colorMax[i] = auxColor[1][i];
+            colorMin[i] = auxColor[0][i];
+        }
+
+        if( colorMax[i] < auxColor[2][i]){
+            colorMax[i] = auxColor[2][i];
+        }
+
+        if( colorMin[i] > auxColor[2][i]){
+            colorMin[i] = auxColor[2][i];
+        }
+    }
+
+    inv_m20 = vertex0.getY() - vertex2.getY();
+    if(inv_m20){
+        inv_m20 = (vertex0.getX() - vertex2.getX())/inv_m20;
+    }
+
+    inv_m21 = vertex1.getY() - vertex2.getY();
+    if(inv_m21){
+        inv_m21 = (vertex1.getX() - vertex2.getX())/inv_m21;
+    }
+
+    inv_z20 = vertex0.getY() - vertex2.getY();
+    if(inv_z20){
+        inv_z20 = (vertex0.getZ() - vertex2.getZ())/inv_z20;
+    }
+
+    inv_z21 = vertex1.getY() - vertex2.getY();
+    if(inv_z21){
+        inv_z21 = (vertex1.getZ() - vertex2.getZ())/inv_z21;
+    }
+
+    for(int i = R; i <= B; i++){
+        invColor20[i] = vertex0.getY() - vertex2.getY();
+        if(invColor20[i]){
+            invColor20[i] = (auxColor[0][i] - auxColor[2][i])/invColor20[i];
+        }
+
+        invColor21[i] = vertex1.getY() - vertex2.getY();
+        if(invColor21[i]){
+            invColor21[i] = (auxColor[1][i] - auxColor[2][i])/invColor21[i];
+        }
+    }
+
+    x_i = vertex2.getX();
+    x_f = vertex2.getX();
+    z_i = vertex2.getZ();
+    z_f = vertex2.getZ();
+    inv_mzp = 0;
+    z_p = z_i;
+
+    for(int i = R; i <= B; i++){
+        iI[i] = auxColor[2][i];
+        iF[i] = auxColor[2][i];
+        iP[i] = auxColor[2][i];
+        invColorP[i] = 0;
+    }
+
+    for(int j = vertex2.getY() + 0.5; j >= vertex0.getY() - 0.5; j--){
+        for(int i = x_i - 0.5; i <= x_f + 0.5; i++){
+            range(z_p, z_min, z_max);
+            ofSetColor(iP[R], iP[G], iP[B]);
+            rPixel(i, j, z_p);
+            z_p += inv_mzp;
+
+            for(int k = R; k <= B; k++){
+                iP[k] += invColorP[k];
+                range(iP[k], colorMin[k], colorMax[k]);
+            }
+        }
+
+        x_i -= inv_m20;
+
+        if(x_i < x_min){
+            x_i = x_min;
+        }
+
+        x_f -= inv_m21;
+
+        if(x_f > x_max){
+            x_f = x_max;
+        }
+
+        z_i -= inv_z20;
+        range(z_i, z_min, z_max);
+
+        z_f -= inv_z21;
+        range(z_f, z_min, z_max);
+
+        inv_mzp = (z_f - z_i)/(x_f - x_i);
+        z_p = z_i;
+
+        for(int k = R; k <= B; k++){
+            iI[k] -= invColor20[k];
+            iF[k] -= invColor21[k];
+            iP[k] = iI[k];
+        }
+
+        for(int k = R; k <= B; k++){
+            invColorP[k] = (iF[k] - iI[k])/(x_f - x_i);
+        }
+    }
+}
+
 typedef std::pair<Vertex,Vertex> VertexNormal;
 
 bool compareVertexNormal ( const VertexNormal& l, const VertexNormal& r){
@@ -1035,6 +1427,8 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
                 vertices[2].first, vertices[2].second);
             break;
         case PHONG_SHADING:
+            triangleFillTotFlatPhong(vertices[0].first, vertices[0].second, vertices[1].first, vertices[1].second,
+                vertices[2].first, vertices[2].second);
             break;
         }
         return;
@@ -1052,6 +1446,8 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
                     vertices[1].second, vertices[2].first, vertices[2].second);
                 break;
             case PHONG_SHADING:
+                triangleFillBotFlatPhong(vertices[0].first, vertices[0].second, vertices[1].first,
+                        vertices[1].second, vertices[2].first, vertices[2].second);
                 break;
             }
         }
@@ -1088,6 +1484,8 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
             triangleFillTotFlatGouraud(vertices[1].first, vertices[1].second, v3, n3, vertices[2].first, vertices[2].second);
             break;
         case PHONG_SHADING:
+            triangleFillBotFlatPhong(vertices[0].first, vertices[0].second, vertices[1].first, vertices[0].second, v3, n3);
+            triangleFillTotFlatPhong(vertices[1].first, vertices[1].second, v3, n3, vertices[2].first, vertices[2].second);
             break;
         }
     }else{
@@ -1106,6 +1504,8 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
             triangleFillTotFlatGouraud(v3, n3, vertices[1].first, vertices[1].second, vertices[2].first, vertices[2].second);
             break;
         case PHONG_SHADING:
+            triangleFillBotFlatPhong(vertices[0].first, vertices[0].second, v3, n3, vertices[1].first, vertices[1].second);
+            triangleFillTotFlatPhong(v3, n3, vertices[1].first, vertices[1].second, vertices[2].first, vertices[2].second);
             break;
         }
     }

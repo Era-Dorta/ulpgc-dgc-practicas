@@ -11,6 +11,7 @@ class testApp : public ofBaseApp{
 		void setPhongReflection( const bool active );
         bool getPhongReflection() const;
         void setGouraudShading( const bool active );
+        bool getGouraudShading() const;
 		void setPhongShading( const bool active );
 		bool getPhongShading() const;
 };
@@ -101,7 +102,21 @@ void StatusButton::update(){
         }
         break;
     case PHONG_R:
-        if(app->getPhongReflection()){
+        if(app->getPhongReflection() || app->getGouraudShading() || app->getPhongShading()){
+            pressed = true;
+        }else{
+            pressed = false;
+        }
+        break;
+    case GOURAUD_S:
+        if(app->getGouraudShading()){
+            pressed = true;
+        }else{
+            pressed = false;
+        }
+        break;
+    case PHONG_S:
+        if(app->getPhongShading()){
             pressed = true;
         }else{
             pressed = false;
