@@ -39,13 +39,13 @@ class Renderer{
         void triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& normal0,
             const Vertex& vertex1, const Vertex& normal1,
             const Vertex& vertex2, const Vertex& normal2 ) const;
-        void triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& normal0,
+        void triangleFillTopFlatGouraud(const Vertex& vertex0,const Vertex& normal0,
             const Vertex& vertex1, const Vertex& normal1,
             const Vertex& vertex2, const Vertex& normal2 ) const;
         void triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& normal0,
             const Vertex& vertex1, const Vertex& normal1,
             const Vertex& vertex2, const Vertex& normal2 ) const;
-        void triangleFillTotFlatPhong(const Vertex& vertex0,const Vertex& normal0,
+        void triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& normal0,
             const Vertex& vertex1, const Vertex& normal1,
             const Vertex& vertex2, const Vertex& normal2 ) const;
 

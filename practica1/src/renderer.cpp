@@ -808,7 +808,7 @@ void Renderer::triangleFillBotFlatGouraud(const Vertex& vertex0,const Vertex& no
 //    \/
 //     v2
 //--------------------------------------------------------------
-void Renderer::triangleFillTotFlatGouraud(const Vertex& vertex0,const Vertex& normal0,
+void Renderer::triangleFillTopFlatGouraud(const Vertex& vertex0,const Vertex& normal0,
             const Vertex& vertex1, const Vertex& normal1,
             const Vertex& vertex2, const Vertex& normal2 ) const{
     if( vertex0.getY() == vertex2.getY() || vertex0.getX() == vertex1.getX() ){
@@ -1200,7 +1200,7 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
 //    \/
 //     v2
 //--------------------------------------------------------------
-void Renderer::triangleFillTotFlatPhong(const Vertex& vertex0,const Vertex& normal0,
+void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& normal0,
             const Vertex& vertex1, const Vertex& normal1,
             const Vertex& vertex2, const Vertex& normal2 ) const{
     if( vertex0.getY() == vertex2.getY() || vertex0.getX() == vertex1.getX() ){
@@ -1423,11 +1423,11 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
             triangleFillTopFlat(vertices[0].first, vertices[1].first, vertices[2].first, triangleNormal, centroid);
             break;
         case GOURAUD_SHADING:
-            triangleFillTotFlatGouraud(vertices[0].first, vertices[0].second, vertices[1].first, vertices[1].second,
+            triangleFillTopFlatGouraud(vertices[0].first, vertices[0].second, vertices[1].first, vertices[1].second,
                 vertices[2].first, vertices[2].second);
             break;
         case PHONG_SHADING:
-            triangleFillTotFlatPhong(vertices[0].first, vertices[0].second, vertices[1].first, vertices[1].second,
+            triangleFillTopFlatPhong(vertices[0].first, vertices[0].second, vertices[1].first, vertices[1].second,
                 vertices[2].first, vertices[2].second);
             break;
         }
@@ -1485,11 +1485,11 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
             break;
         case GOURAUD_SHADING:
             triangleFillBotFlatGouraud(vertices[0].first, vertices[0].second, vertices[1].first, vertices[1].second, v3, n3);
-            triangleFillTotFlatGouraud(vertices[1].first, vertices[1].second, v3, n3, vertices[2].first, vertices[2].second);
+            triangleFillTopFlatGouraud(vertices[1].first, vertices[1].second, v3, n3, vertices[2].first, vertices[2].second);
             break;
         case PHONG_SHADING:
             triangleFillBotFlatPhong(vertices[0].first, vertices[0].second, vertices[1].first, vertices[1].second, v3, n3);
-            triangleFillTotFlatPhong(vertices[1].first, vertices[1].second, v3, n3, vertices[2].first, vertices[2].second);
+            triangleFillTopFlatPhong(vertices[1].first, vertices[1].second, v3, n3, vertices[2].first, vertices[2].second);
             break;
         }
     }else{
@@ -1505,11 +1505,11 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
             break;
         case GOURAUD_SHADING:
             triangleFillBotFlatGouraud(vertices[0].first, vertices[0].second, v3, n3, vertices[1].first, vertices[1].second);
-            triangleFillTotFlatGouraud(v3, n3, vertices[1].first, vertices[1].second, vertices[2].first, vertices[2].second);
+            triangleFillTopFlatGouraud(v3, n3, vertices[1].first, vertices[1].second, vertices[2].first, vertices[2].second);
             break;
         case PHONG_SHADING:
             triangleFillBotFlatPhong(vertices[0].first, vertices[0].second, v3, n3, vertices[1].first, vertices[1].second);
-            triangleFillTotFlatPhong(v3, n3, vertices[1].first, vertices[1].second, vertices[2].first, vertices[2].second);
+            triangleFillTopFlatPhong(v3, n3, vertices[1].first, vertices[1].second, vertices[2].first, vertices[2].second);
             break;
         }
     }
