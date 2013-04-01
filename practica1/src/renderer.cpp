@@ -1455,17 +1455,21 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
 
     Vertex v3;
     v3 = vertices[1].first;
+    float firstFactor, secondFactor;
+    firstFactor = (vertices[0].first.getY() - vertices[1].first.getY()) / (vertices[0].first.getY() - vertices[2].first.getY());
+    secondFactor = 1 - (vertices[0].first.getY() - vertices[1].first.getY()) / (vertices[0].first.getY() - vertices[2].first.getY());
     //Interpolate where vertex1.x cuts the line vertex0-vertex2
-    v3.setX( vertices[2].first.getX()*( (vertices[0].first.getY() - vertices[1].first.getY()) / (vertices[0].first.getY() - vertices[2].first.getY()) ) +
-        vertices[0].first.getX()*( 1 - (vertices[0].first.getY() - vertices[1].first.getY()) / (vertices[0].first.getY() - vertices[2].first.getY())) );
+    v3.setX( vertices[2].first.getX()*firstFactor + vertices[0].first.getX()*secondFactor);
     //Interpolate where vertex1.z cuts the line vertex0-vertex2
-    v3.setZ( vertices[2].first.getZ()*( (vertices[0].first.getY() - vertices[1].first.getY()) / (vertices[0].first.getY() - vertices[2].first.getY()) ) +
-        vertices[0].first.getZ()*( 1 - (vertices[0].first.getY() - vertices[1].first.getY()) / (vertices[0].first.getY() - vertices[2].first.getY())) );
+    v3.setZ( vertices[2].first.getZ()*firstFactor + vertices[0].first.getZ()*secondFactor);
 
     Vertex n3;
     if(lightingMode == GOURAUD_SHADING){
-        //FIXME Interpolate normal0 and normal2
-        n3 = vertices[0].second + vertices[2].second;
+        //Interpolate normal0 and normal2
+        n3.setX( vertices[2].second.getX()*firstFactor + vertices[0].second.getX()*secondFactor);
+        n3.setY( vertices[2].second.getY()*firstFactor + vertices[0].second.getY()*secondFactor);
+        n3.setZ( vertices[2].second.getZ()*firstFactor + vertices[0].second.getZ()*secondFactor);
+
         n3.normalize();
     }
     if(v3.getX() > vertices[1].first.getX()){
