@@ -102,7 +102,7 @@ void StatusButton::update(){
         }
         break;
     case PHONG_R:
-        if(app->getZBuffer() && (app->getPhongReflection() || app->getGouraudShading() || app->getPhongShading())){
+        if(app->getPhongReflection() || app->getGouraudShading() || app->getPhongShading()){
             pressed = true;
         }else{
             pressed = false;
