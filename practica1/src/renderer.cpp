@@ -1012,7 +1012,7 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
     }
     float inv_m01, inv_m02, x_i, x_f, inv_z01, inv_z02, z_i, z_f, z_p, inv_mzp,
         z_max, z_min, x_max, x_min;
-    Vertex lightVector, h, s, inv_n02, inv_n01, n_i, n_f, n_p, inv_np;
+    Vertex lightVector, h, s, inv_n02, inv_n01, n_i, n_f, n_p, inv_np, n_min, n_max;
     float cosNL, cosNH, distance = 0;
     float auxColor[3], colorMax[3], colorMin[3], pixelColor[3];
     const Vertex* vertices[3] = {&vertex0, &vertex1, &vertex2},* normals[3] = {&normal0, &normal1, &normal2};
@@ -1066,8 +1066,11 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
 
     z_max = vertex0.getZ();
     z_min = vertex1.getZ();
+    n_max = normal0;
+    n_min = normal1;
     x_max = vertex2.getX();
     x_min = vertex1.getX();
+
 
     if(x_max < vertex0.getX()){
         x_max = vertex0.getX();
@@ -1089,6 +1092,22 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
 
     if(z_min > vertex2.getZ()){
         z_min = vertex2.getZ();
+    }
+
+    for(int i = 0; i < 3; i++){
+        if(n_max[i] < normal1.get(i)){
+            n_min[i] = normal0.get(i);
+            n_max[i] = normal1.get(i);
+
+        }
+
+        if(n_max[i] < normal2.get(i)){
+            n_max[i] = normal2.get(i);
+        }
+
+        if(n_min[i] > normal2.get(i)){
+            n_min[i] = normal2.get(i);
+        }
     }
 
     inv_m01 = vertex1.getY() - vertex0.getY();
@@ -1176,8 +1195,7 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
 
             for(int k = 0; k < 3; k++){
                 n_p[k] += inv_np[k];
-                //FIXME Comprobar rango de n_p
-                //range(n_p[k], colorMin[k], colorMax[k]);
+                range(n_p[k], n_min[k], n_max[k]);
             }
         }
 
@@ -1204,9 +1222,10 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
 
 
         for(int k = 0; k < 3; k++){
-            //FIXME Falta comprobar rango de n_i y n_f
             n_i[k] += inv_n01[k];
+            range(n_i[k], n_min[k], n_max[k]);
             n_f[k] += inv_n02[k];
+            range(n_f[k], n_min[k], n_max[k]);
             n_p[k] = n_i[k];
         }
 
@@ -1229,7 +1248,7 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
     }
     float inv_m20, inv_m21, x_i, x_f, inv_z20, inv_z21, z_i, z_f, z_p, inv_mzp,
         z_max, z_min, x_max, x_min;
-    Vertex lightVector, h, s, inv_n20, inv_n21, n_i, n_f, n_p, inv_np;
+    Vertex lightVector, h, s, inv_n20, inv_n21, n_i, n_f, n_p, inv_np, n_min, n_max;
     float cosNL, cosNH, distance = 0;
     float auxColor[3], colorMax[3], colorMin[3], pixelColor[3];
     const Vertex* vertices[3] = {&vertex0, &vertex1, &vertex2},* normals[3] = {&normal0, &normal1, &normal2};
@@ -1283,6 +1302,8 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
 
     z_max = vertex0.getZ();
     z_min = vertex1.getZ();
+    n_max = normal0;
+    n_min = normal1;
     x_max = vertex1.getX();
     x_min = vertex0.getX();
 
@@ -1306,6 +1327,22 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
 
     if(z_min > vertex2.getZ()){
         z_min = vertex2.getZ();
+    }
+
+    for(int i = 0; i < 3; i++){
+        if(n_max[i] < normal1.get(i)){
+            n_min[i] = normal0.get(i);
+            n_max[i] = normal1.get(i);
+
+        }
+
+        if(n_max[i] < normal2.get(i)){
+            n_max[i] = normal2.get(i);
+        }
+
+        if(n_min[i] > normal2.get(i)){
+            n_min[i] = normal2.get(i);
+        }
     }
 
     inv_m20 = vertex0.getY() - vertex2.getY();
@@ -1393,8 +1430,7 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
 
             for(int k = 0; k < 3; k++){
                 n_p[k] += inv_np[k];
-                //FIXME Comprobar rango de n_p
-                //range(n_p[k], colorMin[k], colorMax[k]);
+                range(n_p[k], n_min[k], n_max[k]);
             }
         }
 
@@ -1420,9 +1456,10 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
         z_p = z_i;
 
         for(int k = 0; k < 3; k++){
-            //FIXME Falta comprobar rango de n_i y n_f
             n_i[k] -= inv_n20[k];
+            range(n_i[k], n_min[k], n_max[k]);
             n_f[k] -= inv_n21[k];
+            range(n_f[k], n_min[k], n_max[k]);
             n_p[k] = n_i[k];
         }
 
