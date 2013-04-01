@@ -44,6 +44,7 @@ class Vertex {
         Vertex operator+( const Vertex &otherVertex ) const;
         Vertex operator/( const float &val ) const;
         Vertex operator*( const float &val ) const;
+        float& operator[]( const int i);
 };
 
 typedef struct Vertex Vertex;

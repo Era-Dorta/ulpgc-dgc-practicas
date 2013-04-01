@@ -1010,21 +1010,24 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
     if( vertex0.getY() == vertex1.getY() || vertex1.getX() == vertex2.getX() ){
         return;
     }
-    float inv_m01, inv_m02, x_i, x_f, inv_z01, inv_z02, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
-    Vertex lightVector, h, s;
+    float inv_m01, inv_m02, x_i, x_f, inv_z01, inv_z02, z_i, z_f, z_p, inv_mzp,
+        z_max, z_min, x_max, x_min;
+    Vertex lightVector, h, s, inv_n02, inv_n01, n_i, n_f, n_p, inv_np;
     float cosNL, cosNH, distance = 0;
-    //Rows belong to vertices and columns to RGB
-    float auxColor[3][3];
-    float iI[3], iF[3], iP[3], invColor01[3], invColor02[3], invColorP[3], colorMax[3], colorMin[3];
+    float auxColor[3], colorMax[3], colorMin[3], pixelColor[3];
     const Vertex* vertices[3] = {&vertex0, &vertex1, &vertex2},* normals[3] = {&normal0, &normal1, &normal2};
 
-    for(int i = 0; i < 3; i++){
-        for(int j = R; j <= B; j++){
-            auxColor[i][j] = 0;
-        }
+    for(int i = R; i <= B; i++){
+        colorMax[i] = 0;
+        colorMin[i] = 0;
     }
 
     for(int i = 0; i < 3; i++){
+
+        for(int j = R; j <= B; j++){
+            auxColor[j] = 0;
+        }
+
         for(int j = 0; j < nLightSources;j++){
             lightVector = lightSources[j]->getLightPosition() - (*vertices[i]);
             lightVector.normalize();
@@ -1043,13 +1046,21 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
             distance = 1.0/(lightSources[j]->getLightPosition().distance(*vertices[i]) + 0.5);
 
             for(int k = R; k <= B; k++){
-                auxColor[i][k] += distance*(cosNL*currentColor[k] + cosNH*lightColor[k]);
+                auxColor[k] += distance*(cosNL*currentColor[k] + cosNH*lightColor[k]);
             }
         }
 
         for(int k = R; k <= B; k++){
-            auxColor[i][k] += currentColor[k]*kA;
-            range(auxColor[i][k], 0, 255);
+            auxColor[k] += currentColor[k]*kA;
+            range(auxColor[k], 0, 255);
+
+            if( colorMax[i] < auxColor[i]){
+                colorMax[i] = auxColor[i];
+            }
+
+            if( colorMin[i] > auxColor[i]){
+                colorMin[i] = auxColor[i];
+            }
         }
     }
 
@@ -1057,11 +1068,6 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
     z_min = vertex1.getZ();
     x_max = vertex2.getX();
     x_min = vertex1.getX();
-
-    for(int i = R; i <= B; i++){
-        colorMax[i] = auxColor[0][i];
-        colorMin[i] = auxColor[1][i];
-    }
 
     if(x_max < vertex0.getX()){
         x_max = vertex0.getX();
@@ -1085,21 +1091,6 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
         z_min = vertex2.getZ();
     }
 
-    for(int i = R; i <= B; i++){
-        if( colorMax[i] < auxColor[1][i]){
-            colorMax[i] = auxColor[1][i];
-            colorMin[i] = auxColor[0][i];
-        }
-
-        if( colorMax[i] < auxColor[2][i]){
-            colorMax[i] = auxColor[2][i];
-        }
-
-        if( colorMin[i] > auxColor[2][i]){
-            colorMin[i] = auxColor[2][i];
-        }
-    }
-
     inv_m01 = vertex1.getY() - vertex0.getY();
     if(inv_m01){
         inv_m01 = (vertex1.getX() - vertex0.getX())/inv_m01;
@@ -1120,15 +1111,15 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
         inv_z02 = (vertex2.getZ() - vertex0.getZ())/inv_z02;
     }
 
-    for(int i = R; i <= B; i++){
-        invColor01[i] = vertex1.getY() - vertex0.getY();
-        if(invColor01[i]){
-            invColor01[i] = (auxColor[1][i] - auxColor[0][i])/invColor01[i];
+    for(int i = 0; i < 3; i++){
+        inv_n01[i] = vertex1.getY() - vertex0.getY();
+        if(inv_n01[i]){
+            inv_n01[i] = (normal1.get(i) - normal0.get(i))/inv_n01[i];
         }
 
-        invColor02[i] = vertex2.getY() - vertex0.getY();
-        if(invColor02[i]){
-            invColor02[i] = (auxColor[2][i] - auxColor[0][i])/invColor02[i];
+        inv_n02[i] = vertex2.getY() - vertex0.getY();
+        if(inv_n02[i]){
+            inv_n02[i] = (normal2.get(i) - normal0.get(i))/inv_n02[i];
         }
     }
 
@@ -1136,28 +1127,57 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
     x_f = vertex0.getX();
     z_i = vertex0.getZ();
     z_f = vertex0.getZ();
+    n_i = normal0;
+    n_f = normal0;
     inv_mzp = 0;
     z_p = z_i;
 
-    for(int i = R; i <= B; i++){
-        iI[i] = auxColor[0][i];
-        iF[i] = auxColor[0][i];
-        iP[i] = auxColor[0][i];
-        invColorP[i] = 0;
-    }
+    Vertex pixelPos;
 
     for(int j = vertex0.getY() - 0.5; j <= vertex1.getY() + 0.5; j++){
         for(int i = x_i - 0.5; i <= x_f + 0.5; i++){
+
             range(z_p, z_min, z_max);
+            pixelPos.set(i, j, z_p);
+            for(int k = R; k <= B; k++){
+                pixelColor[k] = 0;
+            }
 
-            ofSetColor(iP[R], iP[G], iP[B]);
+            for(int j = 0; j < nLightSources;j++){
+                lightVector = lightSources[j]->getLightPosition() - pixelPos;
+                lightVector.normalize();
+                s = pixelPos - observer;
+                s.normalize();
+                h = (lightVector + s ) * 0.5;
 
+                cosNL = n_p.dot(lightVector);
+                range(cosNL, 0, 1);
+                cosNL = kD*cosNL;
+
+                cosNH = n_p.dot(h);
+                range(cosNH, 0, 1);
+                cosNH = kS*pow(cosNH, n);
+
+                distance = 1.0/(lightSources[j]->getLightPosition().distance(pixelPos) + 0.5);
+
+                for(int k = R; k <= B; k++){
+                    pixelColor[k] += distance*(cosNL*currentColor[k] + cosNH*lightColor[k]);
+                }
+            }
+
+            for(int k = R; k <= B; k++){
+                pixelColor[k] += currentColor[k]*kA;
+                range(pixelColor[k], colorMin[k], colorMax[k]);
+            }
+
+            ofSetColor(pixelColor[R], pixelColor[G], pixelColor[B]);
             rPixel(i, j, z_p);
             z_p += inv_mzp;
 
-            for(int k = R; k <= B; k++){
-                iP[k] += invColorP[k];
-                range(iP[k], colorMin[k], colorMax[k]);
+            for(int k = 0; k < 3; k++){
+                n_p[k] += inv_np[k];
+                //FIXME Comprobar rango de n_p
+                //range(n_p[k], colorMin[k], colorMax[k]);
             }
         }
 
@@ -1182,16 +1202,17 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
         inv_mzp = (z_f - z_i)/(x_f - x_i);
         z_p = z_i;
 
-        for(int k = R; k <= B; k++){
-            iI[k] += invColor01[k];
-            iF[k] += invColor02[k];
-            iP[k] = iI[k];
+
+        for(int k = 0; k < 3; k++){
+            //FIXME Falta comprobar rango de n_i y n_f
+            n_i[k] += inv_n01[k];
+            n_f[k] += inv_n02[k];
+            n_p[k] = n_i[k];
         }
 
         for(int k = R; k <= B; k++){
-            invColorP[k] = (iF[k] - iI[k])/(x_f - x_i);
+            inv_np[k] = (n_f[k] - n_i[k])/(x_f - x_i);
         }
-
     }
 }
 
@@ -1206,21 +1227,24 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
     if( vertex0.getY() == vertex2.getY() || vertex0.getX() == vertex1.getX() ){
         return;
     }
-    float inv_m20, inv_m21, x_i, x_f, inv_z20, inv_z21, z_i, z_f, z_p, inv_mzp, z_max, z_min, x_max, x_min;
-    Vertex lightVector, h, s;
+    float inv_m20, inv_m21, x_i, x_f, inv_z20, inv_z21, z_i, z_f, z_p, inv_mzp,
+        z_max, z_min, x_max, x_min;
+    Vertex lightVector, h, s, inv_n20, inv_n21, n_i, n_f, n_p, inv_np;
     float cosNL, cosNH, distance = 0;
-    //Rows belong to vertices and columns to RGB
-    float auxColor[3][3];
-    float iI[3], iF[3], iP[3], invColor20[3], invColor21[3], invColorP[3], colorMax[3], colorMin[3];
+    float auxColor[3], colorMax[3], colorMin[3], pixelColor[3];
     const Vertex* vertices[3] = {&vertex0, &vertex1, &vertex2},* normals[3] = {&normal0, &normal1, &normal2};
 
-    for(int i = 0; i < 3; i++){
-        for(int j = R; j <= B; j++){
-            auxColor[i][j] = 0;
-        }
+    for(int i = R; i <= B; i++){
+        colorMax[i] = 0;
+        colorMin[i] = 0;
     }
 
     for(int i = 0; i < 3; i++){
+
+        for(int j = R; j <= B; j++){
+            auxColor[j] = 0;
+        }
+
         for(int j = 0; j < nLightSources;j++){
             lightVector = lightSources[j]->getLightPosition() - (*vertices[i]);
             lightVector.normalize();
@@ -1239,13 +1263,21 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
             distance = 1.0/(lightSources[j]->getLightPosition().distance(*vertices[i]) + 0.5);
 
             for(int k = R; k <= B; k++){
-                auxColor[i][k] += distance*(cosNL*currentColor[k] + cosNH*lightColor[k]);
+                auxColor[k] += distance*(cosNL*currentColor[k] + cosNH*lightColor[k]);
             }
         }
 
         for(int k = R; k <= B; k++){
-            auxColor[i][k] += currentColor[k]*kA;
-            range(auxColor[i][k], 0, 255);
+            auxColor[k] += currentColor[k]*kA;
+            range(auxColor[k], 0, 255);
+
+            if( colorMax[i] < auxColor[i]){
+                colorMax[i] = auxColor[i];
+            }
+
+            if( colorMin[i] > auxColor[i]){
+                colorMin[i] = auxColor[i];
+            }
         }
     }
 
@@ -1253,11 +1285,6 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
     z_min = vertex1.getZ();
     x_max = vertex1.getX();
     x_min = vertex0.getX();
-
-    for(int i = R; i <= B; i++){
-        colorMax[i] = auxColor[0][i];
-        colorMin[i] = auxColor[1][i];
-    }
 
     if(x_max < vertex2.getX()){
         x_max = vertex2.getX();
@@ -1281,21 +1308,6 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
         z_min = vertex2.getZ();
     }
 
-    for(int i = R; i <= B; i++){
-        if( colorMax[i] < auxColor[1][i]){
-            colorMax[i] = auxColor[1][i];
-            colorMin[i] = auxColor[0][i];
-        }
-
-        if( colorMax[i] < auxColor[2][i]){
-            colorMax[i] = auxColor[2][i];
-        }
-
-        if( colorMin[i] > auxColor[2][i]){
-            colorMin[i] = auxColor[2][i];
-        }
-    }
-
     inv_m20 = vertex0.getY() - vertex2.getY();
     if(inv_m20){
         inv_m20 = (vertex0.getX() - vertex2.getX())/inv_m20;
@@ -1316,15 +1328,15 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
         inv_z21 = (vertex1.getZ() - vertex2.getZ())/inv_z21;
     }
 
-    for(int i = R; i <= B; i++){
-        invColor20[i] = vertex0.getY() - vertex2.getY();
-        if(invColor20[i]){
-            invColor20[i] = (auxColor[0][i] - auxColor[2][i])/invColor20[i];
+    for(int i = 0; i < 3; i++){
+        inv_n20[i] = vertex0.getY() - vertex2.getY();
+        if(inv_n20[i]){
+            inv_n20[i] = (normal0.get(i) - normal2.get(i))/inv_n20[i];
         }
 
-        invColor21[i] = vertex1.getY() - vertex2.getY();
-        if(invColor21[i]){
-            invColor21[i] = (auxColor[1][i] - auxColor[2][i])/invColor21[i];
+        inv_n21[i] = vertex1.getY() - vertex2.getY();
+        if(inv_n21[i]){
+            inv_n21[i] = (normal1.get(i) - normal2.get(i))/inv_n21[i];
         }
     }
 
@@ -1332,26 +1344,57 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
     x_f = vertex2.getX();
     z_i = vertex2.getZ();
     z_f = vertex2.getZ();
+    n_i = normal2;
+    n_f = normal2;
     inv_mzp = 0;
     z_p = z_i;
 
-    for(int i = R; i <= B; i++){
-        iI[i] = auxColor[2][i];
-        iF[i] = auxColor[2][i];
-        iP[i] = auxColor[2][i];
-        invColorP[i] = 0;
-    }
+    Vertex pixelPos;
 
     for(int j = vertex2.getY() + 0.5; j >= vertex0.getY() - 0.5; j--){
         for(int i = x_i - 0.5; i <= x_f + 0.5; i++){
+
             range(z_p, z_min, z_max);
-            ofSetColor(iP[R], iP[G], iP[B]);
+            pixelPos.set(i, j, z_p);
+            for(int k = R; k <= B; k++){
+                pixelColor[k] = 0;
+            }
+
+            for(int j = 0; j < nLightSources;j++){
+                lightVector = lightSources[j]->getLightPosition() - pixelPos;
+                lightVector.normalize();
+                s = pixelPos - observer;
+                s.normalize();
+                h = (lightVector + s ) * 0.5;
+
+                cosNL = n_p.dot(lightVector);
+                range(cosNL, 0, 1);
+                cosNL = kD*cosNL;
+
+                cosNH = n_p.dot(h);
+                range(cosNH, 0, 1);
+                cosNH = kS*pow(cosNH, n);
+
+                distance = 1.0/(lightSources[j]->getLightPosition().distance(pixelPos) + 0.5);
+
+                for(int k = R; k <= B; k++){
+                    pixelColor[k] += distance*(cosNL*currentColor[k] + cosNH*lightColor[k]);
+                }
+            }
+
+            for(int k = R; k <= B; k++){
+                pixelColor[k] += currentColor[k]*kA;
+                range(pixelColor[k], colorMin[k], colorMax[k]);
+            }
+
+            ofSetColor(pixelColor[R], pixelColor[G], pixelColor[B]);
             rPixel(i, j, z_p);
             z_p += inv_mzp;
 
-            for(int k = R; k <= B; k++){
-                iP[k] += invColorP[k];
-                range(iP[k], colorMin[k], colorMax[k]);
+            for(int k = 0; k < 3; k++){
+                n_p[k] += inv_np[k];
+                //FIXME Comprobar rango de n_p
+                //range(n_p[k], colorMin[k], colorMax[k]);
             }
         }
 
@@ -1376,14 +1419,15 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
         inv_mzp = (z_f - z_i)/(x_f - x_i);
         z_p = z_i;
 
-        for(int k = R; k <= B; k++){
-            iI[k] -= invColor20[k];
-            iF[k] -= invColor21[k];
-            iP[k] = iI[k];
+        for(int k = 0; k < 3; k++){
+            //FIXME Falta comprobar rango de n_i y n_f
+            n_i[k] -= inv_n20[k];
+            n_f[k] -= inv_n21[k];
+            n_p[k] = n_i[k];
         }
 
         for(int k = R; k <= B; k++){
-            invColorP[k] = (iF[k] - iI[k])/(x_f - x_i);
+            inv_np[k] = (n_f[k] - n_i[k])/(x_f - x_i);
         }
     }
 }

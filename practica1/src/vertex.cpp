@@ -178,9 +178,13 @@ Vertex Vertex::operator*( const float &val ) const{
 }
 
 //--------------------------------------------------------------
+float& Vertex::operator[]( const int i){
+    return coordinates[i];
+}
+
+//--------------------------------------------------------------
 ostream& operator<< (ostream &out, const Vertex &vertex){
     out << "v: " << vertex.getX() << ", " << vertex.getY() << ", " << vertex.getZ();
     return out;
 
 }
-
