@@ -1148,6 +1148,7 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
     z_f = vertex0.getZ();
     n_i = normal0;
     n_f = normal0;
+    n_p = normal0;
     inv_mzp = 0;
     z_p = z_i;
 
@@ -1162,8 +1163,8 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
                 pixelColor[k] = 0;
             }
 
-            for(int j = 0; j < nLightSources;j++){
-                lightVector = lightSources[j]->getLightPosition() - pixelPos;
+            for(int k = 0; k < nLightSources; k++){
+                lightVector = lightSources[k]->getLightPosition() - pixelPos;
                 lightVector.normalize();
                 s = pixelPos - observer;
                 s.normalize();
@@ -1177,10 +1178,10 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
                 range(cosNH, 0, 1);
                 cosNH = kS*pow(cosNH, n);
 
-                distance = 1.0/(lightSources[j]->getLightPosition().distance(pixelPos) + 0.5);
+                distance = 1.0/(lightSources[k]->getLightPosition().distance(pixelPos) + 0.5);
 
-                for(int k = R; k <= B; k++){
-                    pixelColor[k] += distance*(cosNL*currentColor[k] + cosNH*lightColor[k]);
+                for(int l = R; l <= B; l++){
+                    pixelColor[l] += distance*(cosNL*currentColor[l] + cosNH*lightColor[l]);
                 }
             }
 
@@ -1383,6 +1384,7 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
     z_f = vertex2.getZ();
     n_i = normal2;
     n_f = normal2;
+    n_p = normal2;
     inv_mzp = 0;
     z_p = z_i;
 
@@ -1397,8 +1399,8 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
                 pixelColor[k] = 0;
             }
 
-            for(int j = 0; j < nLightSources;j++){
-                lightVector = lightSources[j]->getLightPosition() - pixelPos;
+            for(int k = 0; k < nLightSources; k++){
+                lightVector = lightSources[k]->getLightPosition() - pixelPos;
                 lightVector.normalize();
                 s = pixelPos - observer;
                 s.normalize();
@@ -1412,10 +1414,10 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
                 range(cosNH, 0, 1);
                 cosNH = kS*pow(cosNH, n);
 
-                distance = 1.0/(lightSources[j]->getLightPosition().distance(pixelPos) + 0.5);
+                distance = 1.0/(lightSources[k]->getLightPosition().distance(pixelPos) + 0.5);
 
-                for(int k = R; k <= B; k++){
-                    pixelColor[k] += distance*(cosNL*currentColor[k] + cosNH*lightColor[k]);
+                for(int l = R; l <= B; l++){
+                    pixelColor[l] += distance*(cosNL*currentColor[l] + cosNH*lightColor[l]);
                 }
             }
 
