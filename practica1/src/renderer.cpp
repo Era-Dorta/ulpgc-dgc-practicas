@@ -18,7 +18,7 @@ const float kD = 100;
 const float kA = 0.2;
 const float kS = 10;
 const Vertex observer(0,0,kPlane);
-const float n = 2;
+const float n = 10;
 const ofColor lightColor = ofColor::white;
 
 //--------------------------------------------------------------
@@ -1484,11 +1484,11 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
             triangleFillTopFlat(vertices[1].first, v3, vertices[2].first, triangleNormal, centroid);
             break;
         case GOURAUD_SHADING:
-            triangleFillBotFlatGouraud(vertices[0].first, vertices[0].second, vertices[1].first, vertices[0].second, v3, n3);
+            triangleFillBotFlatGouraud(vertices[0].first, vertices[0].second, vertices[1].first, vertices[1].second, v3, n3);
             triangleFillTotFlatGouraud(vertices[1].first, vertices[1].second, v3, n3, vertices[2].first, vertices[2].second);
             break;
         case PHONG_SHADING:
-            triangleFillBotFlatPhong(vertices[0].first, vertices[0].second, vertices[1].first, vertices[0].second, v3, n3);
+            triangleFillBotFlatPhong(vertices[0].first, vertices[0].second, vertices[1].first, vertices[1].second, v3, n3);
             triangleFillTotFlatPhong(vertices[1].first, vertices[1].second, v3, n3, vertices[2].first, vertices[2].second);
             break;
         }
