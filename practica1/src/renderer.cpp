@@ -1021,7 +1021,7 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
 
     for(int i = R; i <= B; i++){
         colorMax[i] = 0;
-        colorMin[i] = 0;
+        colorMin[i] = 255;
     }
 
     for(int i = 0; i < 3; i++){
@@ -1056,12 +1056,12 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
             auxColor[k] += currentColor[k]*kA;
             range(auxColor[k], 0, 255);
 
-            if( colorMax[i] < auxColor[i]){
-                colorMax[i] = auxColor[i];
+            if( colorMax[k] < auxColor[k]){
+                colorMax[k] = auxColor[k];
             }
 
-            if( colorMin[i] > auxColor[i]){
-                colorMin[i] = auxColor[i];
+            if( colorMin[k] > auxColor[k]){
+                colorMin[k] = auxColor[k];
             }
         }
     }
@@ -1260,7 +1260,7 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
 
     for(int i = R; i <= B; i++){
         colorMax[i] = 0;
-        colorMin[i] = 0;
+        colorMin[i] = 255;
     }
 
     //Calculate each vertex color
@@ -1296,12 +1296,12 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
             auxColor[k] += currentColor[k]*kA;
             range(auxColor[k], 0, 255);
 
-            if( colorMax[i] < auxColor[i]){
-                colorMax[i] = auxColor[i];
+            if( colorMax[k] < auxColor[k]){
+                colorMax[k] = auxColor[k];
             }
 
-            if( colorMin[i] > auxColor[i]){
-                colorMin[i] = auxColor[i];
+            if( colorMin[k] > auxColor[k]){
+                colorMin[k] = auxColor[k];
             }
         }
     }
