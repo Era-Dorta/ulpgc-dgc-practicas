@@ -1007,9 +1007,11 @@ v1    v2
 void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& normal0,
             const Vertex& vertex1, const Vertex& normal1,
             const Vertex& vertex2, const Vertex& normal2 ) const{
+
     if( vertex0.getY() == vertex1.getY() || vertex1.getX() == vertex2.getX() ){
         return;
     }
+
     float inv_m01, inv_m02, x_i, x_f, inv_z01, inv_z02, z_i, z_f, z_p, inv_mzp,
         z_max, z_min, x_max, x_min;
     Vertex lightVector, h, s, inv_n02, inv_n01, n_i, n_f, n_p, inv_np, n_min, n_max;
@@ -1244,9 +1246,11 @@ void Renderer::triangleFillBotFlatPhong(const Vertex& vertex0,const Vertex& norm
 void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& normal0,
             const Vertex& vertex1, const Vertex& normal1,
             const Vertex& vertex2, const Vertex& normal2 ) const{
+
     if( vertex0.getY() == vertex2.getY() || vertex0.getX() == vertex1.getX() ){
         return;
     }
+
     float inv_m20, inv_m21, x_i, x_f, inv_z20, inv_z21, z_i, z_f, z_p, inv_mzp,
         z_max, z_min, x_max, x_min;
     Vertex lightVector, h, s, inv_n20, inv_n21, n_i, n_f, n_p, inv_np, n_min, n_max;
@@ -1550,7 +1554,7 @@ void Renderer::rTriangleFill(const Vertex& vertex0, const Vertex& normal0, const
     v3.setZ( vertices[2].first.getZ()*firstFactor + vertices[0].first.getZ()*secondFactor);
 
     Vertex n3;
-    if(lightingMode == GOURAUD_SHADING){
+    if(lightingMode == GOURAUD_SHADING || lightingMode == PHONG_SHADING ){
         //Interpolate normal0 and normal2
         n3.setX( vertices[2].second.getX()*firstFactor + vertices[0].second.getX()*secondFactor);
         n3.setY( vertices[2].second.getY()*firstFactor + vertices[0].second.getY()*secondFactor);
