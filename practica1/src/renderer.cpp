@@ -16,7 +16,7 @@ const int kPlane = 400;
 const float invK = 1.0/kPlane;
 const float kD = 100;
 const float kA = 0.2;
-const float kS = 10;
+const float kS = 1;
 const Vertex observer(0,0,kPlane);
 const float n = 10;
 const ofColor lightColor = ofColor::white;
@@ -1259,6 +1259,7 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
         colorMin[i] = 0;
     }
 
+    //Calculate each vertex color
     for(int i = 0; i < 3; i++){
 
         for(int j = R; j <= B; j++){
@@ -1399,6 +1400,7 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
                 pixelColor[k] = 0;
             }
 
+            //Calculate current pixel color
             for(int k = 0; k < nLightSources; k++){
                 lightVector = lightSources[k]->getLightPosition() - pixelPos;
                 lightVector.normalize();
@@ -1430,6 +1432,7 @@ void Renderer::triangleFillTopFlatPhong(const Vertex& vertex0,const Vertex& norm
             rPixel(i, j, z_p);
             z_p += inv_mzp;
 
+            //Set normal for the next pixel
             for(int k = 0; k < 3; k++){
                 n_p[k] += inv_np[k];
                 range(n_p[k], n_min[k], n_max[k]);
